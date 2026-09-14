@@ -1,0 +1,169 @@
+import { useState, useEffect, useRef } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import SearchBar from './SearchBar';
+import IconButton from './IconButton';
+import MenuButton from './MenuButton';
+import { Heart, ShoppingCart, X } from 'lucide-react';
+
+export default function Header() {
+  const location = useLocation();
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      // Hide header if scrolling down past its height
+      if (currentScrollY > lastScrollY.current && currentScrollY > 118) {
+        setIsHidden(true);
+      } 
+      // Show header if scrolling up
+      else if (currentScrollY < lastScrollY.current) {
+        setIsHidden(false);
+      }
+      
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const navLinks = [
+    { name: 'Home', path: '/' },
+    { name: 'Shop', path: '/shop' },
+    { name: 'Contact', path: '/contact' },
+  ];
+
+  return (
+    <>
+      <header 
+        className={`w-full h-[118px] bg-cover bg-center flex items-center justify-center z-50 sticky top-0 border-b border-[#E3F0E2]/50 shadow-sm transition-transform duration-300 ease-in-out ${isHidden ? '-translate-y-full' : 'translate-y-0'}`}
+        style={{ backgroundImage: "url('/assets/header/header-bg.png')" }}
+      >
+        <div className="w-full max-w-[1440px] mx-auto px-4 lg:px-[72px] py-[16px] flex items-center gap-[16px]">
+          
+          {/* Logo */}
+          <Link to="/" className="shrink-0 mr-4">
+            <img src="/Logo.png" alt="Beach Mart Logo" className="h-[60px] md:h-[86px] w-auto object-contain transition-all" />
+          </Link>
+
+          {/* Right Section Container: Nav, Search, Buttons */}
+          <div className="flex-1 flex items-center justify-end lg:justify-between">
+            
+            {/* Desktop Navigation */}
+            <nav className="hidden lg:flex items-center gap-[16px] px-[16px]">
+              {navLinks.map((link) => {
+                const isActive = location.pathname === link.path;
+                return (
+                  <Link
+                    key={link.name}
+                    to={link.path}
+                    className={`text-[16px] font-bold uppercase tracking-[0.7px] transition-colors font-arial ${
+                      isActive ? 'text-[#34C759]' : 'text-[#1A1A2E] hover:text-[#34C759]'
+                    }`}
+                  >
+                    {link.name}
+                  </Link>
+                );
+              })}
+            </nav>
+
+            {/* Search Bar (Middle) */}
+            <div className="hidden lg:block max-w-[400px] w-full px-4">
+              <SearchBar />
+            </div>
+            
+            {/* Action Buttons (Right) */}
+            <div className="flex items-center gap-3 xl:gap-4">
+              <IconButton className="hidden sm:flex" icon={<Heart className="w-[20px] h-[20px] text-[#34C759]" strokeWidth={1.25} />} />
+              <IconButton icon={<ShoppingCart className="w-[20px] h-[20px] text-[#34C759]" strokeWidth={1.25} />} />
+              <div className="lg:hidden">
+                <MenuButton onClick={() => setIsDrawerOpen(true)} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Side Drawer */}
+      <AnimatePresence>
+        {isDrawerOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsDrawerOpen(false)}
+              className="fixed inset-0 bg-black/40 z-50 backdrop-blur-sm"
+            />
+            
+            {/* Drawer Panel */}
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="fixed top-0 right-0 h-full w-[85%] max-w-[360px] bg-white z-50 shadow-2xl flex flex-col bg-cover bg-center"
+              style={{ backgroundImage: "url('/assets/header/header-bg.png')" }}
+            >
+              <div className="p-4 flex items-center justify-between border-b border-[#E3F0E2]/50 bg-white/70 backdrop-blur-md">
+                <img src="/Logo.png" alt="Beach Mart Logo" className="h-[40px] w-auto object-contain" />
+                <button 
+                  onClick={() => setIsDrawerOpen(false)}
+                  className="w-10 h-10 rounded-[12px] bg-[#F8FCF8] flex items-center justify-center shadow-sm border border-[#E3F0E2] text-[#1A1A2E] hover:border-[#34C759] transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="flex-1 overflow-y-auto py-6 px-4 flex flex-col gap-8 bg-white/80 backdrop-blur-sm">
+                
+                {/* Search Bar for Mobile/Tablet */}
+                <div className="lg:hidden">
+                  <SearchBar />
+                </div>
+
+                {/* Navigation */}
+                <nav className="flex flex-col gap-4">
+                  {navLinks.map((link) => {
+                    const isActive = location.pathname === link.path;
+                    return (
+                      <Link
+                        key={link.name}
+                        to={link.path}
+                        onClick={() => setIsDrawerOpen(false)}
+                        className={`text-[18px] font-bold uppercase tracking-[0.7px] transition-colors font-arial py-3 border-b border-[#E3F0E2]/50 ${
+                          isActive ? 'text-[#34C759]' : 'text-[#1A1A2E] hover:text-[#34C759]'
+                        }`}
+                      >
+                        {link.name}
+                      </Link>
+                    );
+                  })}
+                </nav>
+                
+                {/* Drawer Additional Actions */}
+                <div className="flex flex-col gap-6 mt-auto">
+                   <div className="flex items-center gap-3 text-[#1A1A2E] font-bold font-arial uppercase tracking-[0.5px] lg:hidden">
+                      <IconButton icon={<Heart className="w-[20px] h-[20px] text-[#34C759]" strokeWidth={1.25} />} />
+                      <span>Wishlist</span>
+                   </div>
+                   <div className="flex items-center gap-3 text-[#1A1A2E] font-bold font-arial uppercase tracking-[0.5px] lg:hidden">
+                      <IconButton icon={<ShoppingCart className="w-[20px] h-[20px] text-[#34C759]" strokeWidth={1.25} />} />
+                      <span>Cart</span>
+                   </div>
+                </div>
+
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </>
+  );
+}
