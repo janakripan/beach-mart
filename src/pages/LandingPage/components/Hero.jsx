@@ -22,7 +22,7 @@ export default function Hero() {
       <img 
         src="/assets/landing/hero/Mask group.png" 
         alt="Curved bottom mask" 
-        className="absolute bottom-0 left-0 w-full h-auto  object-cover object-top z-10 pointer-events-none"
+        className="absolute bottom-[-2px] left-0 w-full h-auto  object-cover object-top z-10 pointer-events-none"
       />
 
       {/* Content Container - Uses dynamic padding instead of fixed coordinates */}
