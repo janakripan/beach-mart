@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronRight, MapPin, Mail, PhoneCall } from 'lucide-react';
+import { ChevronRight, MapPin, Mail, PhoneCall, Heart, ShoppingCart } from 'lucide-react';
+import { useShop } from '../../context/ShopContext';
 
 const FacebookIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -36,6 +37,8 @@ const WavyLine = () => (
 );
 
 export default function Footer() {
+  const { setIsCartOpen, setIsWishlistOpen } = useShop();
+
   return (
     <footer 
       className="relative w-full bg-cover bg-center overflow-hidden min-h-[400px] lg:h-[400px] flex flex-col justify-between pt-16 lg:pt-14"
@@ -93,6 +96,19 @@ export default function Footer() {
               <Link to="/contact" className="flex items-center gap-2 font-poppins text-[15px] text-gray-200 hover:text-white transition-colors group">
                 <ChevronRight size={16} className="text-primary group-hover:translate-x-1 transition-transform" /> Contacts
               </Link>
+              {/* Mobile Only: Cart & Wishlist */}
+              <button 
+                onClick={() => setIsWishlistOpen(true)}
+                className="md:hidden flex items-center text-left gap-2 font-poppins text-[15px] text-gray-200 hover:text-white transition-colors group"
+              >
+                <Heart size={16} className="text-primary group-hover:translate-x-1 transition-transform" /> Wishlist
+              </button>
+              <button 
+                onClick={() => setIsCartOpen(true)}
+                className="md:hidden flex items-center text-left gap-2 font-poppins text-[15px] text-gray-200 hover:text-white transition-colors group"
+              >
+                <ShoppingCart size={16} className="text-primary group-hover:translate-x-1 transition-transform" /> Cart
+              </button>
             </nav>
           </div>
 

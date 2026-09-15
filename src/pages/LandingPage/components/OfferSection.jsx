@@ -60,7 +60,7 @@ export default function OfferSection() {
         </div>
 
         {/* Item Cards Section */}
-        <div className="w-full max-w-[1296px] bg-[#E4FFEB] rounded-[32px] lg:rounded-[56px] border-b border-[#F1F5F9] p-4 md:p-8 lg:pt-[32px] lg:pr-[72px] lg:pb-[32px] lg:pl-[72px] mx-auto">
+        <div className="w-full max-w-[1296px] bg-[#E4FFEB] rounded-[32px] lg:rounded-[56px] border-b border-[#F1F5F9] py-4 px-2 md:py-8 md:px-4 lg:pt-[32px] lg:pr-[72px] lg:pb-[32px] lg:pl-[72px] mx-auto">
           <div className="flex flex-col gap-[16px] w-full max-w-[1152px] mx-auto">
             
             {/* Top Header Container */}

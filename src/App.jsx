@@ -4,6 +4,7 @@ import Shop from './pages/Shop/Shop';
 import Contact from './pages/Contact/Contact';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
+import ScrollToTopButton from './components/ScrollToTopButton';
 import { ReactLenis } from 'lenis/react';
 
 function Layout() {
@@ -14,6 +15,7 @@ function Layout() {
         <Outlet />
       </div>
       <Footer />
+      <ScrollToTopButton />
     </>
   );
 }
