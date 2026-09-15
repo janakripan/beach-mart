@@ -1,22 +1,8 @@
 import CategoryCard from './CategoryCard';
-import { ArrowUpRight } from 'lucide-react';
+import SectionHeader from './SectionHeader';
+import { categories } from '../../../constants/data';
 
 export default function Categories() {
-  const categories = [
-    { title: 'Fresh Fruit', image: '/assets/landing/category/fruits.png' },
-    { title: 'Fresh Vegetables', image: '/assets/landing/category/vegetables.png' },
-    { title: 'Meat & Fish', image: '/assets/landing/category/meat&fish.png' },
-    { title: 'Snacks', image: '/assets/landing/category/snacks.png' },
-    { title: 'Beverages', image: '/assets/landing/category/fresh-fruit.png' }, 
-    { title: 'Beauty & Health', image: '/assets/landing/category/beauty and health.png' },
-    { title: 'Diabetic Food', image: '/assets/landing/category/diabetic food.png' },
-    { title: 'Bread & Bakery', image: '/assets/landing/category/bakery.png' },
-    { title: 'Baking Needs', image: '/assets/landing/category/baking-needs.png' },
-    { title: 'Cooking', image: '/assets/landing/category/cooking.png' },
-    { title: 'Dish Detergents', image: '/assets/landing/category/cleaning.png' },
-    { title: 'Cooking Oil', image: '/assets/landing/category/oil.png' }
-  ];
-
   return (
     <section className="relative w-full bg-white border-b border-[#F1F5F9] py-[40px] md:py-[60px] xl:py-[80px] overflow-hidden">
       
@@ -70,13 +56,9 @@ export default function Categories() {
       {/* Main Content */}
       <div className="relative w-full max-w-[1440px] mx-auto px-4 md:px-8 lg:px-[72px] xl:px-[160px] z-10">
         
-        {/* Header Title with Dashes */}
-        <div className="flex items-center justify-center gap-[12px] md:gap-[24px] mb-[40px]">
-          <div className="flex-1 max-w-[247.5px] h-[1px] border-t border-dashed border-[#34C759]" style={{ borderDasharray: '4,4' }} />
-          <h2 className="font-marcellus text-[#1A1A1A] text-[24px] md:text-[32px] font-normal leading-[120%] m-0 whitespace-nowrap uppercase">
-            Popular Categories
-          </h2>
-          <div className="flex-1 max-w-[247.5px] h-[1px] border-t border-dashed border-[#34C759]" style={{ borderDasharray: '4,4' }} />
+        {/* Header Title with Dashes & View All */}
+        <div className="max-w-[1120px] mx-auto">
+          <SectionHeader title="Popular Categories" titleColor="#1A1A1A" />
         </div>
 
         {/* Grid Container */}
@@ -90,13 +72,7 @@ export default function Categories() {
           ))}
         </div>
 
-        {/* View All Button */}
-        <div className="flex justify-end w-full max-w-[1120px] mx-auto mt-8">
-          <button className="flex items-center gap-1 text-[#34C759] hover:text-[#28a745] font-arial font-bold text-[16px] transition-colors group">
-            View All 
-            <ArrowUpRight className="w-5 h-5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" strokeWidth={2.5} />
-          </button>
-        </div>
+
 
       </div>
     </section>

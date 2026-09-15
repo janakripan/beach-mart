@@ -5,8 +5,12 @@ import SearchBar from './SearchBar';
 import IconButton from './IconButton';
 import MenuButton from './MenuButton';
 import { Heart, ShoppingCart, X } from 'lucide-react';
+import { useShop } from '../../context/ShopContext';
+import CartDrawer from '../Drawers/CartDrawer';
+import WishlistDrawer from '../Drawers/WishlistDrawer';
 
 export default function Header() {
+  const { cartItems, wishlistItems, setIsCartOpen, setIsWishlistOpen } = useShop();
   const location = useLocation();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
@@ -63,7 +67,7 @@ export default function Header() {
                     key={link.name}
                     to={link.path}
                     className={`text-[16px] font-bold uppercase tracking-[0.7px] transition-colors font-arial ${
-                      isActive ? 'text-[#34C759]' : 'text-[#1A1A2E] hover:text-[#34C759]'
+                      isActive ? 'text-primary' : 'text-text-main hover:text-primary'
                     }`}
                   >
                     {link.name}
@@ -78,9 +82,19 @@ export default function Header() {
             </div>
             
             {/* Action Buttons (Right) */}
-            <div className="flex items-center gap-3 xl:gap-4">
-              <IconButton className="hidden sm:flex" icon={<Heart className="w-[20px] h-[20px] text-[#34C759]" strokeWidth={1.25} />} />
-              <IconButton icon={<ShoppingCart className="w-[20px] h-[20px] text-[#34C759]" strokeWidth={1.25} />} />
+            <div className="flex items-center gap-3 xl:gap-4 relative">
+              <div className="relative hidden sm:flex">
+                <IconButton onClick={() => setIsWishlistOpen(true)} icon={<Heart className="w-[20px] h-[20px] text-primary" strokeWidth={1.25} />} />
+                {wishlistItems.length > 0 && (
+                  <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full border-[1.5px] border-white"></span>
+                )}
+              </div>
+              <div className="relative">
+                <IconButton onClick={() => setIsCartOpen(true)} icon={<ShoppingCart className="w-[20px] h-[20px] text-primary" strokeWidth={1.25} />} />
+                {cartItems.length > 0 && (
+                  <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full border-[1.5px] border-white"></span>
+                )}
+              </div>
               <div className="lg:hidden">
                 <MenuButton onClick={() => setIsDrawerOpen(true)} />
               </div>
@@ -164,6 +178,10 @@ export default function Header() {
           </>
         )}
       </AnimatePresence>
+      
+      {/* Global Drawers */}
+      <CartDrawer />
+      <WishlistDrawer />
     </>
   );
 }
