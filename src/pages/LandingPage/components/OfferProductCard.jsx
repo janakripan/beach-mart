@@ -21,17 +21,17 @@ export default function OfferProductCard({ product }) {
       className={`w-full max-w-[260px] h-full p-[8px] transition-all duration-300 flex flex-col items-center justify-between cursor-pointer shrink-0
         ${
           isHovered
-            ? "bg-white border-gray-200 md:border-transparent lg:border-primary lg:shadow-[0px_0px_12px_0px_rgba(32,181,38,0.32)] rounded-[56px]"
-            : "bg-white rounded-[56px] border border-gray-200 md:border-transparent"
+            ? "bg-white border-gray-200 md:border-transparent lg:border-primary lg:shadow-[0px_0px_12px_0px_rgba(32,181,38,0.32)] rounded-[24px] md:rounded-[56px]"
+            : "bg-white rounded-[24px] md:rounded-[56px] border border-gray-200 md:border-transparent"
         }
       `}
     >
       {/* Product Image Box */}
-      <div className="w-full aspect-square rounded-[48px] bg-gray-50 flex items-center justify-center overflow-hidden">
+      <div className="w-full aspect-square rounded-[16px] md:rounded-[48px] bg-gray-50 flex items-center justify-center overflow-hidden isolate">
         <img
           src={product.image}
           alt={product.name}
-          className="w-full h-full object-cover drop-shadow-md"
+          className="w-full h-full object-cover"
         />
       </div>
 
