@@ -163,12 +163,18 @@ export default function Header() {
                 
                 {/* Drawer Additional Actions */}
                 <div className="flex flex-col gap-6 mt-auto">
-                   <div className="flex items-center gap-3 text-[#1A1A2E] font-bold font-arial uppercase tracking-[0.5px] lg:hidden">
-                      <IconButton icon={<Heart className="w-[20px] h-[20px] text-[#34C759]" strokeWidth={1.25} />} />
+                   <div 
+                     className="flex items-center gap-3 text-text-main font-bold font-arial uppercase tracking-[0.5px] lg:hidden cursor-pointer hover:text-primary transition-colors"
+                     onClick={() => { setIsDrawerOpen(false); setIsWishlistOpen(true); }}
+                   >
+                      <IconButton icon={<Heart className="w-[20px] h-[20px] text-primary" strokeWidth={1.25} />} />
                       <span>Wishlist</span>
                    </div>
-                   <div className="flex items-center gap-3 text-[#1A1A2E] font-bold font-arial uppercase tracking-[0.5px] lg:hidden">
-                      <IconButton icon={<ShoppingCart className="w-[20px] h-[20px] text-[#34C759]" strokeWidth={1.25} />} />
+                   <div 
+                     className="flex items-center gap-3 text-text-main font-bold font-arial uppercase tracking-[0.5px] lg:hidden cursor-pointer hover:text-primary transition-colors"
+                     onClick={() => { setIsDrawerOpen(false); setIsCartOpen(true); }}
+                   >
+                      <IconButton icon={<ShoppingCart className="w-[20px] h-[20px] text-primary" strokeWidth={1.25} />} />
                       <span>Cart</span>
                    </div>
                 </div>

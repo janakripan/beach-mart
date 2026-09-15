@@ -55,12 +55,12 @@ export default function ProductCard({ product }) {
       <div className="flex justify-between items-center w-full p-[16px]">
         <div className="flex flex-col justify-center">
           <span
-            className={`font-poppins text-[13px] leading-[150%] transition-colors duration-300 ${isHovered ? "font-normal text-primary" : "font-light text-text-muted"}`}
+            className={`font-poppins text-[12px] md:text-[13px] leading-[150%] transition-colors duration-300 line-clamp-2 ${isHovered ? "font-normal text-primary" : "font-light text-text-muted"}`}
           >
             {product.name}
           </span>
-          <div className="flex items-center gap-1 font-poppins font-semibold text-[16px] leading-[150%] text-text-main">
-            <span className="text-[14px]">₾</span> {product.price}
+          <div className="flex items-center gap-1 font-poppins font-semibold text-[14px] md:text-[16px] leading-[150%] text-text-main">
+            <span className="text-[12px] md:text-[14px]">₾</span> {product.price}
           </div>
         </div>
 
@@ -70,16 +70,15 @@ export default function ProductCard({ product }) {
             e.stopPropagation(); 
             if (!inCart) addToCart(product); 
           }}
-          className={`w-[38px] h-[38px] shrink-0 rounded-full flex items-center justify-center transition-colors duration-300
+          className={`w-[32px] h-[32px] md:w-[38px] md:h-[38px] shrink-0 rounded-full flex items-center justify-center transition-colors duration-300
             ${inCart || isHovered ? "bg-primary" : "bg-bg-light"}
           `}
         >
           {inCart ? (
-            <Check size={18} className="text-white" strokeWidth={1.5} />
+            <Check className="w-[16px] h-[16px] md:w-[18px] md:h-[18px] text-white" strokeWidth={1.5} />
           ) : (
             <ShoppingCart
-              size={18}
-              className={isHovered ? "text-white" : "text-text-main"}
+              className={`w-[16px] h-[16px] md:w-[18px] md:h-[18px] ${isHovered ? "text-white" : "text-text-main"}`}
               strokeWidth={1.25}
             />
           )}

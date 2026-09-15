@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { toast } from 'sonner';
 
 const ShopContext = createContext();
 
@@ -17,12 +18,14 @@ export const ShopProvider = ({ children }) => {
     setCartItems((prev) => {
       const existing = prev.find((item) => item.product.id === product.id);
       if (existing) {
+        toast.success(`Increased ${product.name} quantity in cart!`);
         return prev.map((item) =>
           item.product.id === product.id
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
       }
+      toast.success(`${product.name} added to cart!`);
       return [...prev, { product, quantity: 1 }];
     });
   };
@@ -52,6 +55,7 @@ export const ShopProvider = ({ children }) => {
   const addToWishlist = (product) => {
     setWishlistItems((prev) => {
       if (!prev.find((item) => item.id === product.id)) {
+        toast.success(`${product.name} added to wishlist!`);
         return [...prev, product];
       }
       return prev;

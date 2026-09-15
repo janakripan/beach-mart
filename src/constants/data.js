@@ -38,3 +38,5 @@ export const vegetableProducts = [
   { id: 'veg-9', name: 'Green Capsicum', price: '4.99', image: '/assets/landing/products/green capsicum.jpg' },
   { id: 'veg-10', name: 'Green Chili', price: '28.99', image: '/assets/landing/products/green chilli.jpg' },
 ];
+
+export const allProducts = [...offerProducts, ...vegetableProducts];

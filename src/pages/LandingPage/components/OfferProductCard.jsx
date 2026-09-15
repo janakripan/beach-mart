@@ -30,15 +30,16 @@ export default function OfferProductCard({ product }) {
       </div>
 
       {/* Product Details & Cart */}
-      <div className="flex justify-between items-center w-full px-4 py-4">
-        <div className="flex flex-col justify-center">
+      <div className="flex justify-between items-center w-full px-3 md:px-4 py-3 md:py-4 gap-2">
+        <div className="flex flex-col justify-center min-w-0 flex-1">
           <span
-            className={`font-poppins text-[14px] leading-[150%] transition-colors duration-300 ${isHovered ? "font-normal text-primary" : "font-light text-text-muted"}`}
+            className={`font-poppins text-[11px] md:text-[13px] leading-[150%] transition-colors duration-300 truncate ${isHovered ? "font-normal text-primary" : "font-light text-text-muted"}`}
+            title={product.name}
           >
             {product.name}
           </span>
-          <div className="flex items-center gap-1 font-poppins font-medium text-[16px] leading-[150%] text-text-main">
-            <span className="text-sm">₾</span> {product.price}
+          <div className="flex items-center gap-1 font-poppins font-medium text-[13px] md:text-[15px] leading-[150%] text-text-main">
+            <span className="text-[11px] md:text-[13px]">₾</span> {product.price}
           </div>
         </div>
 
@@ -48,16 +49,15 @@ export default function OfferProductCard({ product }) {
             e.stopPropagation(); 
             if (!inCart) addToCart(product); 
           }}
-          className={`w-[42px] h-[42px] shrink-0 rounded-full flex items-center justify-center transition-colors duration-300
+          className={`w-[32px] h-[32px] md:w-[40px] md:h-[40px] shrink-0 rounded-full flex items-center justify-center transition-colors duration-300
             ${inCart || isHovered ? "bg-primary" : "bg-bg-light"}
           `}
         >
           {inCart ? (
-            <Check size={18} className="text-white" strokeWidth={1.5} />
+            <Check className="w-[16px] h-[16px] md:w-[18px] md:h-[18px] text-white" strokeWidth={1.5} />
           ) : (
             <ShoppingCart
-              size={18}
-              className={isHovered ? "text-white" : "text-text-main"}
+              className={`w-[16px] h-[16px] md:w-[18px] md:h-[18px] ${isHovered ? "text-white" : "text-text-main"}`}
               strokeWidth={1.25}
             />
           )}
