@@ -6,7 +6,7 @@ import { vegetableProducts } from '../../../constants/data';
 export default function VegetablesSection() {
   return (
     <section className="w-full flex justify-center bg-white  lg:py-8">
-      <div className="w-full max-w-[1440px] flex flex-col px-2 md:px-8 lg:px-[72px]">
+      <div className="w-full max-w-6xl flex flex-col px-2 md:px-8 lg:px-[32px]">
         
         {/* Header Container */}
         <div className="flex flex-row justify-between items-center w-full gap-2 md:gap-0 relative px-2 md:px-0 mb-4 lg:mb-6">
