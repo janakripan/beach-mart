@@ -19,11 +19,11 @@ export default function OfferProductCard({ product }) {
     <div
       onMouseEnter={handleMouseEnter}
       onMouseLeave={() => setIsHovered(false)}
-      className={`w-full max-w-[260px] h-full p-[8px] transition-all duration-300 flex flex-col items-center justify-between cursor-pointer shrink-0
+      className={`w-full max-w-[260px] h-full p-[8px] transition-all duration-300 flex flex-col items-center justify-between cursor-pointer shrink-0 bg-white border rounded-[24px] md:rounded-[56px]
         ${
           isHovered
-            ? "bg-white border-gray-200 md:border-transparent lg:border-primary lg:shadow-[0px_0px_12px_0px_rgba(32,181,38,0.32)] rounded-[24px] md:rounded-[56px]"
-            : "bg-white rounded-[24px] md:rounded-[56px] border border-gray-200 md:border-transparent"
+            ? "border-gray-200 md:border-transparent lg:border-primary lg:shadow-[0px_0px_12px_0px_rgba(32,181,38,0.32)]"
+            : "border-gray-200 md:border-transparent lg:border-transparent lg:shadow-none"
         }
       `}
     >
@@ -50,7 +50,7 @@ export default function OfferProductCard({ product }) {
 
         {/* Price & Cart Container */}
         <div className="flex flex-row justify-between items-end w-full gap-1 sm:gap-2 min-h-fit">
-          <div className="flex items-center gap-1 font-poppins font-semibold text-[18px] md:text-[20px] leading-[100%] text-text-main shrink-0">
+         <div className="flex items-center gap-1 font-poppins font-semibold text-[18px] md:text-[22px] leading-[100%] text-text-main shrink-0 pb-1 md:pb-1.5">
             <span className="flex items-center justify-center">
               <DirhamIcon className="w-4 h-4 md:w-4.5 md:h-4.5" />
             </span> 

@@ -20,11 +20,11 @@ export default function ProductCard({ product }) {
     <div 
       onMouseEnter={handleMouseEnter}
       onMouseLeave={() => setIsHovered(false)}
-      className={`relative w-full h-full transition-all duration-300 flex flex-col justify-between cursor-pointer
+      className={`relative w-full h-full transition-all duration-300 flex flex-col justify-between cursor-pointer bg-white rounded-[16px] border
         ${
           isHovered
-            ? "bg-white border-gray-200 md:border-border-light lg:border-primary lg:shadow-[0px_0px_12px_0px_rgba(32,181,38,0.32)] rounded-[16px]"
-            : "bg-white rounded-[16px] border border-gray-200 md:border-border-light"
+            ? "border-gray-200 md:border-border-light lg:border-primary lg:shadow-[0px_0px_12px_0px_rgba(32,181,38,0.32)]"
+            : "border-gray-200 md:border-border-light lg:border-border-light lg:shadow-none"
         }
       `}
     >
