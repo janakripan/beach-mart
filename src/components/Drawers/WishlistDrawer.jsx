@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Trash2, ShoppingCart } from 'lucide-react';
+import DirhamIcon from '../CustomIcons/DirhamIcon';
 import { useShop } from '../../context/ShopContext';
 import { useLenis } from 'lenis/react';
 
@@ -80,8 +81,11 @@ export default function WishlistDrawer() {
                           <Trash2 size={16} />
                         </button>
                       </div>
-                      <div className="font-poppins font-semibold text-text-main mb-2">
-                        ₾{product.price}
+                      <div className="font-poppins font-semibold text-text-main mb-2 flex items-center">
+                        <span className="flex items-center justify-center pt-0.5 pr-[2px]">
+                          <DirhamIcon className="w-3 h-3" />
+                        </span>
+                        {product.price}
                       </div>
                       
                       {/* Actions */}

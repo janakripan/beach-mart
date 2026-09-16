@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Trash2, Plus, Minus } from 'lucide-react';
+import DirhamIcon from '../CustomIcons/DirhamIcon';
 import { useShop } from '../../context/ShopContext';
 import { useLenis } from 'lenis/react';
 
@@ -80,8 +81,11 @@ export default function CartDrawer() {
                           <Trash2 size={16} />
                         </button>
                       </div>
-                      <div className="font-poppins font-semibold text-text-main">
-                        ₾{item.product.price}
+                      <div className="font-poppins font-semibold text-text-main flex items-center">
+                        <span className="flex items-center justify-center pt-0.5 pr-[2px]">
+                          <DirhamIcon className="w-3.5 h-3.5" />
+                        </span>
+                        {item.product.price}
                       </div>
                       
                       {/* Quantity */}
@@ -109,7 +113,12 @@ export default function CartDrawer() {
               <div className="p-4 border-t border-border-light bg-gray-50/50">
                 <div className="flex justify-between items-center mb-4">
                   <span className="font-poppins text-text-muted">Subtotal:</span>
-                  <span className="font-poppins font-bold text-xl text-text-main">₾{cartTotal.toFixed(2)}</span>
+                  <span className="font-poppins font-bold text-xl text-text-main flex items-center">
+                    <span className="flex items-center justify-center pt-1 pr-1">
+                      <DirhamIcon className="w-5 h-5" />
+                    </span>
+                    {cartTotal.toFixed(2)}
+                  </span>
                 </div>
                 <button className="w-full bg-primary hover:bg-secondary text-white font-poppins font-semibold text-[16px] rounded-[30px] h-[54px] transition-colors flex items-center justify-center">
                   Checkout Now

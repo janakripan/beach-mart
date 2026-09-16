@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Search, ShoppingCart } from 'lucide-react';
 import { allProducts } from '../../constants/data';
+import DirhamIcon from '../CustomIcons/DirhamIcon';
 import { useShop } from '../../context/ShopContext';
 
 export default function SearchBar() {
@@ -74,7 +75,12 @@ export default function SearchBar() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-poppins text-[14px] text-text-main font-medium truncate">{product.name}</p>
-                    <p className="font-poppins text-[13px] text-primary font-semibold">₾{product.price}</p>
+                    <p className="font-poppins text-[13px] text-primary font-semibold flex items-center">
+                      <span className="flex items-center justify-center pt-0.5 pr-[2px]">
+                        <DirhamIcon className="w-2.5 h-2.5" />
+                      </span>
+                      {product.price}
+                    </p>
                   </div>
                   <button 
                     onClick={(e) => {

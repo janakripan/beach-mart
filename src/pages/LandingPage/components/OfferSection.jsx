@@ -9,7 +9,7 @@ export default function OfferSection() {
     <section className="w-full flex justify-center bg-white py-6 lg:py-12">
       <div className="w-full max-w-[1440px] flex flex-col gap-[24px] px-4 md:px-8 lg:px-[72px]">
         {/* Offer Banner */}
-        <div className="relative w-full max-w-[1296px] min-h-[358px] rounded-[10px] overflow-hidden bg-[#00380E] flex flex-col lg:flex-row mx-auto">
+        <div className="relative w-full max-w-[1296px] min-h-[160px] md:min-h-[358px] rounded-[10px] overflow-hidden bg-[#00380E] flex flex-col lg:flex-row mx-auto">
           {/* Background image container that stays absolute on lg+ to prevent pushing content */}
           <div className="absolute left-0 top-0 w-full lg:w-[50%] h-full hidden lg:block">
             <img
@@ -28,7 +28,7 @@ export default function OfferSection() {
           </div>
 
           {/* Mobile image */}
-          <div className="relative w-full h-[250px] lg:hidden">
+          <div className="relative w-full h-[120px] md:h-[250px] lg:hidden">
             <img
               src="/assets/landing/daily offer/offer image.jpg"
               alt="Daily Offer"
@@ -41,22 +41,22 @@ export default function OfferSection() {
           <div className="hidden lg:block lg:w-[50%] shrink-0"></div>
 
           {/* Right Side Content */}
-          <div className="relative flex flex-col justify-center gap-[16px] w-full lg:flex-1 z-10 text-white p-6 lg:py-[60px] lg:pr-[60px] lg:pl-[0px]">
-            <div className="flex flex-col gap-[12px]">
-              <span className="font-poppins font-medium text-[14px] sm:text-[16px] leading-[100%] tracking-[0.02em] uppercase text-[#FFFFFF]">
+          <div className="relative flex flex-col justify-center gap-[8px] md:gap-[16px] w-full lg:flex-1 z-10 text-white p-4 md:p-6 lg:py-[60px] lg:pr-[60px] lg:pl-[0px]">
+            <div className="flex flex-col gap-[4px] md:gap-[12px]">
+              <span className="font-poppins font-medium text-[12px] md:text-[14px] lg:text-[16px] leading-[100%] tracking-[0.02em] uppercase text-[#FFFFFF]">
                 Daily SALE OFFER
               </span>
-              <div className="font-poppins font-semibold text-[40px] sm:text-[56px] leading-[120%] text-[#FFFFFF] flex items-center gap-2 sm:gap-4">
+              <div className="font-poppins font-semibold text-[24px] sm:text-[40px] md:text-[56px] leading-[120%] text-[#FFFFFF] flex items-center gap-1 sm:gap-2 md:gap-4">
                 <span className="text-[#FF8A00]">10%</span> OFF
               </div>
             </div>
 
-            <p className="font-poppins font-normal text-[14px] sm:text-[16px] leading-[150%] text-[#FFFFFF] max-w-full lg:max-w-[380px]">
+            <p className="font-poppins font-normal text-[12px] md:text-[14px] lg:text-[16px] leading-[150%] text-[#FFFFFF] max-w-full lg:max-w-[380px]">
               Receive a 10% discount daily on groceries, along with
               complimentary delivery and quick service.
             </p>
 
-            <button className="mt-2 sm:mt-4 bg-[#34C759] hover:bg-[#20B526] text-white font-poppins font-medium text-[14px] sm:text-[16px] rounded-full px-6 py-3 flex items-center w-fit gap-2 transition-colors">
+            <button className="mt-1 md:mt-2 lg:mt-4 bg-[#34C759] hover:bg-[#20B526] text-white font-poppins font-medium text-[12px] md:text-[14px] lg:text-[16px] rounded-full px-4 py-2 md:px-6 md:py-3 flex items-center w-fit gap-2 transition-colors">
               Shop Now <ArrowRight size={20} />
             </button>
           </div>

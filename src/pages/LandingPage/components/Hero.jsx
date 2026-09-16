@@ -89,14 +89,6 @@ export default function Hero() {
           </button>
         </div>
 
-        {/* Carousel Navigation Buttons - Positioned relatively to container now */}
-        <button className="hidden lg:flex absolute z-40 bg-white rounded-full items-center justify-center hover:bg-gray-50 transition-colors shadow-lg w-[48px] h-[48px] top-1/2 -translate-y-1/2 left-[12px]">
-          <ChevronLeft className="w-6 h-6 text-[#1A1A2E]" />
-        </button>
-        
-        <button className="hidden lg:flex absolute z-40 bg-white rounded-full items-center justify-center hover:bg-gray-50 transition-colors shadow-lg w-[48px] h-[48px] top-1/2 -translate-y-1/2 right-[12px]">
-          <ChevronRight className="w-6 h-6 text-[#1A1A2E]" />
-        </button>
 
       </div>
 
