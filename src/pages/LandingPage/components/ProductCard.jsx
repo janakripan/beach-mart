@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShoppingCart, Heart, Eye, Check } from 'lucide-react';
+import { ShoppingCart, Heart, Check } from 'lucide-react';
 import DirhamIcon from '../../../components/CustomIcons/DirhamIcon';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useShop } from '../../../context/ShopContext';
@@ -40,12 +40,6 @@ export default function ProductCard({ product }) {
           `}
         >
           <Heart size={16} strokeWidth={1.5} fill={inWishlist ? "currentColor" : "none"} />
-        </button>
-        <button 
-          onClick={(e) => { e.stopPropagation(); }}
-          className="w-8 h-8 rounded-full bg-bg-light hover:bg-primary hover:text-white flex items-center justify-center text-text-muted transition-colors"
-        >
-          <Eye size={16} strokeWidth={1.5} />
         </button>
       </div>
 
@@ -117,12 +111,10 @@ export default function ProductCard({ product }) {
                 e.stopPropagation(); 
                 addToCart(product); 
               }}
-              className={`w-[32px] md:w-[38px] h-[32px] md:h-[38px] shrink-0 rounded-full flex items-center justify-center transition-colors duration-300
-                ${isHovered ? "bg-primary" : "bg-bg-light"}
-              `}
+              className="w-[32px] md:w-[38px] h-[32px] md:h-[38px] shrink-0 rounded-full flex items-center justify-center transition-colors duration-300 bg-bg-light hover:bg-primary group"
             >
               <ShoppingCart
-                className={`w-[16px] h-[16px] md:w-[18px] md:h-[18px] ${isHovered ? "text-white" : "text-text-main"}`}
+                className="w-[16px] h-[16px] md:w-[18px] md:h-[18px] text-text-main group-hover:text-white transition-colors duration-300"
                 strokeWidth={1.25}
               />
             </motion.button>
