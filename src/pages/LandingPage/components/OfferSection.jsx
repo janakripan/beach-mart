@@ -7,7 +7,7 @@ import { offerProducts } from "../../../constants/data";
 export default function OfferSection() {
   return (
     <section className="w-full flex justify-center bg-white py-6 lg:py-12">
-      <div className="w-full max-w-[1440px] flex flex-col gap-[24px] px-4 md:px-8 lg:px-[72px]">
+      <div className="w-full max-w-[1440px] flex flex-col gap-[24px] px-1 md:px-8 lg:px-[72px]">
         {/* Offer Banner */}
         <div className="relative w-full max-w-[1296px] min-h-[160px] md:min-h-[358px] rounded-[10px] overflow-hidden bg-[#00380E] flex flex-col lg:flex-row mx-auto">
           {/* Background image container that stays absolute on lg+ to prevent pushing content */}
@@ -63,7 +63,7 @@ export default function OfferSection() {
         </div>
 
         {/* Item Cards Section */}
-        <div className="w-full max-w-[1296px] bg-[#E4FFEB] rounded-[32px] lg:rounded-[56px] border-b border-[#F1F5F9] py-4 px-2 md:py-8 md:px-4 lg:pt-[32px] lg:pr-[72px] lg:pb-[32px] lg:pl-[72px] mx-auto">
+        <div className="w-full max-w-6xl bg-[#E4FFEB] rounded-[32px] lg:rounded-[56px] border-b border-[#F1F5F9] py-4 px-2 md:py-8 md:px-4 lg:pt-[32px] lg:pr-[72px] lg:pb-[32px] lg:pl-[72px] mx-auto">
           <div className="flex flex-col gap-[16px] w-full max-w-[1152px] mx-auto">
             {/* Top Header Container */}
             <SectionHeader title="Daily Offers 10%" titleColor="#34C759">

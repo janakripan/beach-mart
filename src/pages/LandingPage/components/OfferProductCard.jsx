@@ -37,7 +37,7 @@ export default function OfferProductCard({ product }) {
       </div>
 
       {/* Product Details & Cart */}
-      <div className="flex flex-col justify-end w-full px-3 md:px-4 py-3 md:py-4 gap-0 flex-1">
+      <div className="flex flex-col justify-end w-full  md:px-4 py-3 md:py-4 gap-0 flex-1">
         {/* Name Container */}
         <div className="w-full">
           <span
@@ -66,7 +66,7 @@ export default function OfferProductCard({ product }) {
               exit={{ opacity: 0, scale: 0.8 }}
               transition={{ duration: 0.15, ease: "easeOut" }}
               onClick={(e) => e.stopPropagation()}
-              className="flex items-center justify-between bg-primary rounded-full px-2 py-1 w-[90px] md:w-[86px] h-[32px] md:h-[40px] shrink-0"
+              className="flex items-center justify-between bg-primary rounded-full px-2 py-1 w-[110px] md:w-[86px] h-[32px] md:h-[40px] shrink-0"
             >
               <button
                 onClick={() => cartItem.quantity > 1 ? updateQuantity(product.id, -1) : removeFromCart(product.id)}
