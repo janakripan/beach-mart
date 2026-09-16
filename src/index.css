@@ -10,6 +10,8 @@
   --font-marcellus: "Marcellus", sans-serif;
   --font-poppins: "Poppins", sans-serif;
   
+  --breakpoint-xs: 321px;
+  
   --color-primary: #34C759;
   --color-secondary: #00B207;
   --color-accent: #FF8A00;

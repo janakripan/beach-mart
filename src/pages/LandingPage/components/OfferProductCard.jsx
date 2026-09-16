@@ -37,7 +37,7 @@ export default function OfferProductCard({ product }) {
       </div>
 
       {/* Product Details & Cart */}
-      <div className="flex flex-col justify-end w-full md:px-0 lg:px-4 py-3 md:py-4 lg:py-4 gap-0 flex-1">
+      <div className="flex flex-col justify-end w-full px-0.5 xs:px-0 md:px-2 lg:px-4 py-1.5 xs:py-3 md:py-2 lg:py-4 gap-0 flex-1">
         {/* Name Container */}
         <div className="w-full">
           <span
@@ -50,9 +50,9 @@ export default function OfferProductCard({ product }) {
 
         {/* Price & Cart Container */}
         <div className="flex flex-row justify-between items-end w-full gap-1 sm:gap-2 min-h-fit">
-         <div className="flex items-center gap-1 font-poppins font-semibold text-[13px] md:text-[16px] leading-[100%] text-text-main shrink-0 pb-1 md:pb-1.5">
+         <div className="flex items-center gap-1 font-poppins font-semibold text-[11px] xs:text-[13px] md:text-[16px] leading-[100%] text-text-main shrink-0 pb-1 md:pb-1.5">
             <span className="flex items-center justify-center pt-0.5">
-              <DirhamIcon className="w-2.5 h-2.5 md:w-3.5 md:h-3.5" />
+              <DirhamIcon className="w-2 h-2 xs:w-2.5 xs:h-2.5 md:w-3.5 md:h-3.5" />
             </span> 
             {product.price}
           </div>
@@ -66,20 +66,20 @@ export default function OfferProductCard({ product }) {
               exit={{ opacity: 0, scale: 0.8 }}
               transition={{ duration: 0.15, ease: "easeOut" }}
               onClick={(e) => e.stopPropagation()}
-              className="flex items-center justify-between bg-primary rounded-full px-2 py-1 w-[110px] md:w-[86px] h-[32px] md:h-[40px] shrink-0"
+              className="flex items-center justify-between bg-primary rounded-full px-1 xs:px-2 py-1 w-[80px] xs:w-[110px] h-[26px] xs:h-[32px] md:w-[86px] md:h-[40px] shrink-0"
             >
               <button
                 onClick={() => cartItem.quantity > 1 ? updateQuantity(product.id, -1) : removeFromCart(product.id)}
-                className="w-[24px] h-[24px] md:w-[28px] md:h-[28px] text-white hover:bg-white/20 rounded-full flex items-center justify-center text-[16px] font-medium transition-colors"
+                className="w-[20px] h-[20px] xs:w-[24px] xs:h-[24px] md:w-[28px] md:h-[28px] text-white hover:bg-white/20 rounded-full flex items-center justify-center text-[14px] xs:text-[16px] font-medium transition-colors"
               >
                 -
               </button>
-              <div className="w-[24px] h-[24px] md:w-[28px] md:h-[28px] bg-white text-primary rounded-[4px] flex items-center justify-center font-poppins text-[12px] md:text-[14px] font-semibold shadow-sm">
+              <div className="w-[20px] h-[20px] xs:w-[24px] xs:h-[24px] md:w-[28px] md:h-[28px] bg-white text-primary rounded-[4px] flex items-center justify-center font-poppins text-[11px] xs:text-[12px] md:text-[14px] font-semibold shadow-sm">
                 {cartItem.quantity}
               </div>
               <button
                 onClick={() => updateQuantity(product.id, 1)}
-                className="w-[24px] h-[24px] md:w-[28px] md:h-[28px] text-white hover:bg-white/20 rounded-full flex items-center justify-center text-[16px] font-medium transition-colors"
+                className="w-[20px] h-[20px] xs:w-[24px] xs:h-[24px] md:w-[28px] md:h-[28px] text-white hover:bg-white/20 rounded-full flex items-center justify-center text-[14px] xs:text-[16px] font-medium transition-colors"
               >
                 +
               </button>
@@ -95,10 +95,10 @@ export default function OfferProductCard({ product }) {
                 e.stopPropagation(); 
                 addToCart(product); 
               }}
-              className="w-[32px] md:w-[40px] h-[32px] md:h-[40px] shrink-0 rounded-full flex items-center justify-center transition-colors duration-300 bg-bg-light hover:bg-primary group"
+              className="w-[28px] xs:w-[32px] md:w-[40px] h-[28px] xs:h-[32px] md:h-[40px] shrink-0 rounded-full flex items-center justify-center transition-colors duration-300 bg-bg-light hover:bg-primary group"
             >
               <ShoppingCart
-                className="w-[16px] h-[16px] md:w-[18px] md:h-[18px] text-text-main group-hover:text-white transition-colors duration-300"
+                className="w-[14px] h-[14px] xs:w-[16px] xs:h-[16px] md:w-4 md:h-4 text-text-main group-hover:text-white transition-colors duration-300"
                 strokeWidth={1.25}
               />
             </motion.button>
