@@ -53,7 +53,7 @@ export default function ProductCard({ product }) {
       </div>
 
       {/* Product Details & Cart */}
-      <div className="flex flex-col justify-end w-full p-[12px] md:p-[16px] gap-0 flex-1">
+      <div className="flex flex-col justify-end w-full py-[12px] px-1.5 md:p-2 lg:p-[16px] gap-0 flex-1">
         {/* Name Container */}
         <div className="w-full">
           <span
@@ -65,9 +65,9 @@ export default function ProductCard({ product }) {
 
         {/* Price & Cart Container */}
         <div className="flex flex-row justify-between items-end w-full gap-1 sm:gap-2 min-h-fit">
-          <div className="flex items-center gap-1 font-poppins font-semibold text-[14px] md:text-[22px] leading-[100%] text-text-main shrink-0 pb-1 md:pb-1.5">
+          <div className="flex items-center gap-1 font-poppins font-semibold text-[14px] md:text-[16px] leading-[100%] text-text-main shrink-0 pb-1 md:pb-1.5">
             <span className="flex items-center justify-center pt-0.5">
-              <DirhamIcon className="w-3 h-3 md:w-4.5 md:h-4.5" />
+              <DirhamIcon className="w-3 h-3 md:w-3.5 md:h-3.5" />
             </span> 
             {product.price}
           </div>

@@ -19,7 +19,7 @@ export default function OfferProductCard({ product }) {
     <div
       onMouseEnter={handleMouseEnter}
       onMouseLeave={() => setIsHovered(false)}
-      className={`w-full max-w-[260px] h-full p-[8px] transition-all duration-300 flex flex-col items-center justify-between cursor-pointer shrink-0 bg-white border rounded-[24px] md:rounded-[56px]
+      className={`w-full max-w-[260px] h-full p-[8px] transition-all duration-300 flex flex-col items-center justify-between cursor-pointer shrink-0 bg-white border rounded-[24px] md:rounded-[24px] lg:rounded-[56px]
         ${
           isHovered
             ? "border-gray-200 md:border-transparent lg:border-primary lg:shadow-[0px_0px_12px_0px_rgba(32,181,38,0.32)]"
@@ -28,7 +28,7 @@ export default function OfferProductCard({ product }) {
       `}
     >
       {/* Product Image Box */}
-      <div className="w-full aspect-square rounded-[16px] md:rounded-[48px] bg-gray-50 flex items-center justify-center overflow-hidden isolate">
+      <div className="w-full aspect-square rounded-[16px] md:rounded-[20px] lg:rounded-[48px] bg-gray-50 flex items-center justify-center overflow-hidden isolate">
         <img
           src={product.image}
           alt={product.name}
@@ -37,7 +37,7 @@ export default function OfferProductCard({ product }) {
       </div>
 
       {/* Product Details & Cart */}
-      <div className="flex flex-col justify-end w-full  md:px-4 py-3 md:py-4 gap-0 flex-1">
+      <div className="flex flex-col justify-end w-full md:px-0 lg:px-4 py-3 md:py-4 lg:py-4 gap-0 flex-1">
         {/* Name Container */}
         <div className="w-full">
           <span
@@ -50,9 +50,9 @@ export default function OfferProductCard({ product }) {
 
         {/* Price & Cart Container */}
         <div className="flex flex-row justify-between items-end w-full gap-1 sm:gap-2 min-h-fit">
-         <div className="flex items-center gap-1 font-poppins font-semibold text-[13px] md:text-[22px] leading-[100%] text-text-main shrink-0 pb-1 md:pb-1.5">
+         <div className="flex items-center gap-1 font-poppins font-semibold text-[13px] md:text-[16px] leading-[100%] text-text-main shrink-0 pb-1 md:pb-1.5">
             <span className="flex items-center justify-center pt-0.5">
-              <DirhamIcon className="w-2.5 h-2.5 md:w-4.5 md:h-4.5" />
+              <DirhamIcon className="w-2.5 h-2.5 md:w-3.5 md:h-3.5" />
             </span> 
             {product.price}
           </div>

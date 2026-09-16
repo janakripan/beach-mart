@@ -6,7 +6,7 @@ import { vegetableProducts } from '../../../constants/data';
 export default function VegetablesSection() {
   return (
     <section className="w-full flex justify-center bg-white  lg:py-8">
-      <div className="w-full max-w-6xl flex flex-col px-2 md:px-8 lg:px-[32px]">
+      <div className="w-full max-w-6xl flex flex-col px-2 pb-3.5 md:px-8 lg:px-[32px]">
         
         {/* Header Container */}
         <div className="flex flex-row justify-between items-center w-full gap-2 md:gap-0 relative px-2 md:px-0 mb-4 lg:mb-6">
@@ -35,7 +35,7 @@ export default function VegetablesSection() {
         </div>
 
         {/* Products Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-[16px]">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-[8px] md:gap-[16px]">
           {vegetableProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
