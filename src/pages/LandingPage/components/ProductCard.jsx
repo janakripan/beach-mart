@@ -114,7 +114,7 @@ export default function ProductCard({ product }) {
               className="w-[28px] xs:w-[32px] md:w-[38px] h-[28px] xs:h-[32px] md:h-[38px] shrink-0 rounded-full flex items-center justify-center transition-colors duration-300 bg-bg-light hover:bg-primary group"
             >
               <ShoppingCart
-                className="w-[14px] h-[14px] xs:w-[16px] xs:h-[16px] md:w-[18px] md:h-[18px] text-text-main group-hover:text-white transition-colors duration-300"
+                className="w-[14px] h-[14px] xs:w-[16px] xs:h-[16px] md:w-4 md:h-4 text-text-main group-hover:text-white transition-colors duration-300"
                 strokeWidth={1.25}
               />
             </motion.button>

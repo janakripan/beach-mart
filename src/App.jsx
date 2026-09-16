@@ -11,7 +11,7 @@ function Layout() {
   return (
     <>
       <Header />
-      <div className="flex-grow">
+      <div className="grow">
         <Outlet />
       </div>
       <Footer />

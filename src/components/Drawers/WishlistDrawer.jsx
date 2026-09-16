@@ -33,7 +33,7 @@ export default function WishlistDrawer() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setIsWishlistOpen(false)}
-            className="fixed inset-0 bg-black/40 z-[60] backdrop-blur-sm"
+            className="fixed inset-0 bg-black/40 z-60 backdrop-blur-sm"
           />
           
           {/* Drawer */}
@@ -42,7 +42,7 @@ export default function WishlistDrawer() {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed top-0 right-0 h-full w-[90%] max-w-[400px] bg-white z-[60] shadow-2xl flex flex-col"
+            className="fixed top-0 right-0 h-full w-[90%] max-w-[400px] bg-white z-60 shadow-2xl flex flex-col"
           >
             {/* Header */}
             <div className="p-4 flex items-center justify-between border-b border-border-light">
@@ -91,7 +91,7 @@ export default function WishlistDrawer() {
                       {/* Actions */}
                       <button 
                         onClick={() => moveToCart(product)}
-                        className="flex items-center justify-center gap-2 w-full bg-bg-light hover:bg-primary text-text-main hover:text-white transition-colors h-[36px] rounded-[18px] font-poppins text-[13px] font-medium"
+                        className="flex items-center justify-center gap-2 w-full bg-bg-light hover:bg-primary text-text-main hover:text-white transition-colors h-8 rounded-2xl font-poppins text-[13px] font-medium"
                       >
                         <ShoppingCart size={14} /> Move to Cart
                       </button>

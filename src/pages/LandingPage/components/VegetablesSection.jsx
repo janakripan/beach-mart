@@ -12,7 +12,7 @@ export default function VegetablesSection() {
         <div className="flex flex-row justify-between items-center w-full gap-2 md:gap-0 relative px-2 md:px-0 mb-4 lg:mb-6">
           <div className="flex items-center gap-[8px] md:gap-[24px] flex-wrap justify-start">
             <h2 
-              className="font-marcellus font-normal text-[22px] sm:text-[24px] md:text-[32px] leading-[120%] m-0 whitespace-nowrap text-[#1A1A1A]"
+              className="font-marcellus font-normal text-[22px] sm:text-[24px] md:text-[32px] leading-[120%] m-0 whitespace-nowrap text-text-main"
             >
               VEGETABLES
             </h2>

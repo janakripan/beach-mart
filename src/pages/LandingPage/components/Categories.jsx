@@ -4,10 +4,10 @@ import { categories } from '../../../constants/data';
 
 export default function Categories() {
   return (
-    <section className="relative w-full bg-white border-b border-[#F1F5F9] py-[40px] md:py-[60px] xl:py-[80px] overflow-hidden">
+    <section className="relative w-full bg-white border-b border-border-light py-[40px] md:py-[60px] xl:py-[80px] overflow-hidden">
       
       {/* Decorative Background Leaves */}
-      <div className="absolute inset-0 w-full max-w-[1440px] mx-auto pointer-events-none z-0">
+      <div className="absolute inset-0 w-full max-w-7xl mx-auto pointer-events-none z-0">
         {/* Left Leaf (Blurred) */}
         <img 
           src="/assets/common/leaf.png" 
@@ -54,15 +54,15 @@ export default function Categories() {
       </div>
 
       {/* Main Content */}
-      <div className="relative w-full max-w-[1440px] mx-auto px-4 md:px-8 lg:px-[72px] xl:px-[160px] z-10">
+      <div className="relative w-full max-w-7xl mx-auto px-4 md:px-8 lg:px-16 xl:px-[160px] z-10">
         
         {/* Header Title with Dashes */}
         <div className="flex items-center justify-center gap-[12px] md:gap-[24px] mb-[40px]">
-          <div className="flex-1 max-w-[247.5px] h-[1px] border-t border-dashed border-[#34C759]" style={{ borderDasharray: '4,4' }} />
-          <h2 className="font-marcellus text-[#1A1A1A] text-[24px] md:text-[32px] font-normal leading-[120%] m-0 whitespace-nowrap uppercase">
+          <div className="flex-1 max-w-55 h-px border-t border-dashed border-primary" style={{ borderDasharray: '4,4' }} />
+          <h2 className="font-marcellus text-text-main text-[24px] md:text-[32px] font-normal leading-[120%] m-0 whitespace-nowrap uppercase">
             Popular Categories
           </h2>
-          <div className="flex-1 max-w-[247.5px] h-[1px] border-t border-dashed border-[#34C759]" style={{ borderDasharray: '4,4' }} />
+          <div className="flex-1 max-w-55 h-px border-t border-dashed border-primary" style={{ borderDasharray: '4,4' }} />
         </div>
 
         {/* Grid Container */}
@@ -78,7 +78,7 @@ export default function Categories() {
 
         {/* View All Button */}
         <div className="flex justify-end w-full max-w-[1120px] mx-auto mt-8">
-          <button className="flex items-center gap-1 text-[#34C759] hover:text-[#28a745] font-arial font-bold text-[16px] transition-colors group">
+          <button className="flex items-center gap-1 text-primary hover:text-secondary font-arial font-bold text-[16px] transition-colors group">
             View All 
             <ArrowUpRight className="w-5 h-5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" strokeWidth={2.5} />
           </button>

@@ -48,7 +48,7 @@ export default function Header() {
         className={`w-full h-[118px] bg-cover bg-center flex items-center justify-center z-50 sticky top-0 border-b border-[#E3F0E2]/50 shadow-sm transition-transform duration-300 ease-in-out ${isHidden ? '-translate-y-full' : 'translate-y-0'}`}
         style={{ backgroundImage: "url('/assets/header/header-bg.png')" }}
       >
-        <div className="w-full max-w-[1440px] mx-auto px-4 lg:px-[72px] py-[16px] flex items-center gap-[16px]">
+        <div className="w-full max-w-7xl mx-auto px-4 lg:px-16 py-[16px] flex items-center gap-[16px]">
           
           {/* Logo */}
           <Link to="/" className="shrink-0 mr-4">
@@ -129,7 +129,7 @@ export default function Header() {
                 <img src="/Logo.png" alt="Beach Mart Logo" className="h-[40px] w-auto object-contain" />
                 <button 
                   onClick={() => setIsDrawerOpen(false)}
-                  className="w-10 h-10 rounded-[12px] bg-[#F8FCF8] flex items-center justify-center shadow-sm border border-[#E3F0E2] text-[#1A1A2E] hover:border-[#34C759] transition-colors"
+                  className="w-10 h-10 rounded-[12px] bg-[#F8FCF8] flex items-center justify-center shadow-sm border border-[#E3F0E2] text-[#1A1A2E] hover:border-primary transition-colors"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -152,7 +152,7 @@ export default function Header() {
                         to={link.path}
                         onClick={() => setIsDrawerOpen(false)}
                         className={`text-[18px] font-bold uppercase tracking-[0.7px] transition-colors font-arial py-3 border-b border-[#E3F0E2]/50 ${
-                          isActive ? 'text-[#34C759]' : 'text-[#1A1A2E] hover:text-[#34C759]'
+                          isActive ? 'text-primary' : 'text-[#1A1A2E] hover:text-primary'
                         }`}
                       >
                         {link.name}

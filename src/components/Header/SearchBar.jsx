@@ -62,7 +62,7 @@ export default function SearchBar() {
 
       {/* Search Dropdown Results */}
       {isOpen && query.trim() !== '' && (
-        <div className="absolute top-[52px] left-0 w-full bg-white rounded-[12px] shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-border-light max-h-[300px] overflow-y-auto z-[100]">
+        <div className="absolute top-[52px] left-0 w-full bg-white rounded-[12px] shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-border-light max-h-[300px] overflow-y-auto z-100">
           {results.length > 0 ? (
             <div className="flex flex-col p-2">
               {results.map((product) => (
@@ -70,7 +70,7 @@ export default function SearchBar() {
                   key={product.id} 
                   className="flex items-center gap-3 p-2 hover:bg-bg-light rounded-[8px] cursor-pointer transition-colors"
                 >
-                  <div className="w-[40px] h-[40px] bg-bg-light rounded-[6px] p-1 flex-shrink-0">
+                  <div className="w-[40px] h-[40px] bg-bg-light rounded-[6px] p-1 shrink-0">
                     <img src={product.image} alt={product.name} className="w-full h-full object-cover mix-blend-multiply" />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -89,7 +89,7 @@ export default function SearchBar() {
                       setIsOpen(false);
                       setQuery('');
                     }}
-                    className="w-8 h-8 rounded-full bg-primary/10 hover:bg-primary flex items-center justify-center text-primary hover:text-white transition-colors flex-shrink-0"
+                    className="w-8 h-8 rounded-full bg-primary/10 hover:bg-primary flex items-center justify-center text-primary hover:text-white transition-colors shrink-0"
                   >
                     <ShoppingCart size={14} />
                   </button>

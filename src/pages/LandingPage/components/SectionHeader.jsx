@@ -1,7 +1,7 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 
-export default function SectionHeader({ title, children, titleColor = '#1A1A1A' }) {
+export default function SectionHeader({ title, children, titleColor = 'var(--color-text-main)' }) {
   return (
     <div className="flex flex-row justify-between items-center w-full gap-2 md:gap-0 relative px-2 md:px-0">
       <div className="flex items-center gap-[8px] md:gap-[24px] flex-wrap justify-start">
