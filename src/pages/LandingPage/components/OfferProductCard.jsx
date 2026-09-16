@@ -50,9 +50,9 @@ export default function OfferProductCard({ product }) {
 
         {/* Price & Cart Container */}
         <div className="flex flex-row justify-between items-end w-full gap-1 sm:gap-2 min-h-fit">
-         <div className="flex items-center gap-1 font-poppins font-semibold text-[18px] md:text-[22px] leading-[100%] text-text-main shrink-0 pb-1 md:pb-1.5">
-            <span className="flex items-center justify-center">
-              <DirhamIcon className="w-4 h-4 md:w-4.5 md:h-4.5" />
+         <div className="flex items-center gap-1 font-poppins font-semibold text-[13px] md:text-[22px] leading-[100%] text-text-main shrink-0 pb-1 md:pb-1.5">
+            <span className="flex items-center justify-center pt-0.5">
+              <DirhamIcon className="w-2.5 h-2.5 md:w-4.5 md:h-4.5" />
             </span> 
             {product.price}
           </div>
@@ -66,20 +66,20 @@ export default function OfferProductCard({ product }) {
               exit={{ opacity: 0, scale: 0.8 }}
               transition={{ duration: 0.15, ease: "easeOut" }}
               onClick={(e) => e.stopPropagation()}
-              className="flex items-center justify-between bg-primary rounded-full px-1.5 md:px-2 py-1 w-[72px] md:w-[86px] h-[28px] md:h-[40px] shrink-0"
+              className="flex items-center justify-between bg-primary rounded-full px-2 py-1 w-[90px] md:w-[86px] h-[32px] md:h-[40px] shrink-0"
             >
               <button
                 onClick={() => cartItem.quantity > 1 ? updateQuantity(product.id, -1) : removeFromCart(product.id)}
-                className="w-[20px] h-[20px] md:w-[28px] md:h-[28px] text-white hover:bg-white/20 rounded-full flex items-center justify-center text-[14px] md:text-[16px] font-medium transition-colors"
+                className="w-[24px] h-[24px] md:w-[28px] md:h-[28px] text-white hover:bg-white/20 rounded-full flex items-center justify-center text-[16px] font-medium transition-colors"
               >
                 -
               </button>
-              <div className="w-[20px] h-[20px] md:w-[28px] md:h-[28px] bg-white text-primary rounded-[4px] flex items-center justify-center font-poppins text-[11px] md:text-[14px] font-semibold shadow-sm">
+              <div className="w-[24px] h-[24px] md:w-[28px] md:h-[28px] bg-white text-primary rounded-[4px] flex items-center justify-center font-poppins text-[12px] md:text-[14px] font-semibold shadow-sm">
                 {cartItem.quantity}
               </div>
               <button
                 onClick={() => updateQuantity(product.id, 1)}
-                className="w-[20px] h-[20px] md:w-[28px] md:h-[28px] text-white hover:bg-white/20 rounded-full flex items-center justify-center text-[14px] md:text-[16px] font-medium transition-colors"
+                className="w-[24px] h-[24px] md:w-[28px] md:h-[28px] text-white hover:bg-white/20 rounded-full flex items-center justify-center text-[16px] font-medium transition-colors"
               >
                 +
               </button>
