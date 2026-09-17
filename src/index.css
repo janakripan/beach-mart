@@ -2,7 +2,11 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Marcellus&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Actor&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -19,4 +23,82 @@
   --color-text-muted: #808080;
   --color-bg-light: #F2F2F2;
   --color-border-light: #F1F5F9;
+
+  --font-manrope: "Manrope", sans-serif;
+  --font-playfair: "Playfair Display", serif;
+  --font-actor: "Actor", sans-serif;
+  --font-public-sans: "Public Sans", sans-serif;
+  --font-archivo: "Archivo", sans-serif;
+}
+
+/* Hide scrollbar but keep scrolling */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE & Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;             /* Chrome, Safari */
+}
+
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    #e5e7eb 25%,
+    #f3f4f6 37%,
+    #e5e7eb 63%
+  );
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+}
+
+
+.dot-wave {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dot-wave span {
+  width: 10px;
+  height: 10px;
+  background-color: #111827;
+  border-radius: 50%;
+  animation: wave 1.2s ease-in-out infinite;
+}
+
+.dot-wave span:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.dot-wave span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.dot-wave span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes wave {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-10px);
+    opacity: 1;
+  }
 }
