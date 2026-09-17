@@ -1,7 +1,7 @@
 import React from 'react'
 
 import SignupForm from './SignupForm'
-const Logo = "/Logo.png";
+const Logo = "/logo-big.svg";
 import { useAuthStore } from '../store/AuthStore'
 import { Navigate } from 'react-router-dom'
 

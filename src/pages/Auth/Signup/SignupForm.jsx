@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Formik, Field, ErrorMessage, Form } from 'formik';
 import * as Yup from 'yup';
 import { Eye, EyeOff } from 'lucide-react';
-const Logo = "/Logo.png";
+const Logo = "/logo-big.svg";
 import { useSignUp } from '../../../api/user/hooks/useAuth';
 import { Link, useNavigate } from 'react-router-dom';
 import { useMessage } from '../../../components/admin/MessageBox/useMessage';

@@ -7,6 +7,10 @@ const CustomDropdown = ({
   placeholder = "Select an option",
   onChange,
   getOptionLabel = (opt) => opt.label,
+  position = "bottom", // 'top' or 'bottom'
+  buttonClassName = "",
+  textClassName = "",
+  iconClassName = "",
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -32,24 +36,25 @@ const CustomDropdown = ({
       <button
         type="button"
         onClick={() => setIsOpen((o) => !o)}
-        className="w-full px-4 py-2 flex items-center justify-center gap-2 bg-white 
+        className={buttonClassName || `w-full px-4 py-2 flex items-center justify-center gap-2 bg-white 
                    border border-gray-300 rounded-lg shadow-sm 
-                   hover:border-gray-400 focus:outline-none"
+                   hover:border-gray-400 focus:outline-none`}
       >
-        <span className={value ? "text-gray-900" : "text-gray-500"}>
+        <span className={textClassName || (value ? "text-gray-900" : "text-gray-500")}>
           {value ? getOptionLabel(value) : placeholder}
         </span>
 
         <ChevronDown
-          className={`w-5 h-5 text-gray-400 transition-transform ${
+          className={`${iconClassName || "w-5 h-5 text-gray-400"} transition-transform ${
             isOpen ? "rotate-180" : ""
           }`}
         />
       </button>
 
       {isOpen && (
-        <div className="absolute z-10 w-full mt-1 bg-white border 
-                        border-gray-200 rounded-lg shadow-lg">
+        <div className={`absolute z-50 min-w-[200px] right-0 bg-white border border-gray-200 rounded-lg shadow-lg ${
+          position === 'top' ? 'bottom-full mb-1' : 'top-full mt-1'
+        }`}>
           {options.map((option, idx) => {
             const isSelected =
               value &&

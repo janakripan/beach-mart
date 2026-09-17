@@ -2,10 +2,10 @@ export const searchParamsToFilters = (searchParams) => ({
   pageNumber: Number(searchParams.get("page")) || 1,
   pageSize: 12,
   brandIDs: searchParams.get("brand")
-    ? searchParams.get("brand").split(",").map(Number)
+    ? searchParams.get("brand").split(",")
     : [],
   categoryIDs: searchParams.get("category")
-    ? searchParams.get("category").split(",").map(Number)
+    ? searchParams.get("category").split(",")
     : [],
    ratingFilter: searchParams.get("rating")
     ? Number(searchParams.get("rating"))

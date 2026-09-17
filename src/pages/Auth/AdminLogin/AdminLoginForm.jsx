@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { Eye, EyeOff } from "lucide-react";
-const Logo = "/Logo.png";
+const Logo = "/logo-big.svg";
 
 import { useGLogin, useLogin } from "../../../api/user/hooks/useAuth";
 import { useAuthStore } from "../store/AuthStore";
