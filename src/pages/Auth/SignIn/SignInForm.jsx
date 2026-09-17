@@ -82,9 +82,7 @@ const SignInForm = () => {
 
         {/* Logo */}
         <div className="lg:hidden mb-4 md:mb-8 flex justify-center">
-          <div className="w-14 h-14 bg-black rounded-lg p-2">
-            <img src={Logo} alt="logo" className="w-full h-full object-contain" />
-          </div>
+          <img src={Logo} alt="logo" className="h-28 md:h-32 w-auto object-contain" />
         </div>
 
         <div className="text-center mb-8">
@@ -109,7 +107,7 @@ const SignInForm = () => {
                   name="email"
                   type="email"
                   placeholder="Email"
-                  className="w-full px-4 py-3 border focus:outline-none text-sm rounded-full"
+                  className="w-full px-4 py-3 border border-gray-200 text-sm rounded-[12px] bg-white hover:bg-[#F8FCF8] hover:border-[#E3F0E2] focus:bg-[#F8FCF8] focus:border-primary focus:outline-none focus:shadow-sm transition-all duration-200"
                 />
                 <div className="mt-1">
                   <ErrorMessage name="email" component="div" className="text-red-500 text-xs" />
@@ -126,7 +124,7 @@ const SignInForm = () => {
                     name="password"
                     type={showPassword ? "text" : "password"}
                     placeholder="Password"
-                    className=" w-full px-4 py-3 border focus:outline-none text-sm rounded-full pr-10"
+                    className="w-full px-4 py-3 border border-gray-200 text-sm rounded-[12px] bg-white hover:bg-[#F8FCF8] hover:border-[#E3F0E2] focus:bg-[#F8FCF8] focus:border-primary focus:outline-none focus:shadow-sm transition-all duration-200"
                   />
                   <button
                     type="button"
@@ -145,7 +143,7 @@ const SignInForm = () => {
               <button
                 type="submit"
                 disabled={isSubmitting || isPending}
-                className="w-full bg-black text-white py-3 rounded-full  disabled:opacity-50"
+                className="w-full bg-primary text-white hover:bg-[#126442]/90 py-3 rounded-[12px]  disabled:opacity-50"
               >
                 {isSubmitting || isPending ? "Signing In..." : "Sign In"}
               </button>

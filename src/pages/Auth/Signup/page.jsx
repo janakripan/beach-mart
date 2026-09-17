@@ -1,5 +1,5 @@
 import React from 'react'
-import AuthBg from '../../../assets/AuthBg.jpg'
+
 import SignupForm from './SignupForm'
 const Logo = "/Logo.png";
 import { useAuthStore } from '../store/AuthStore'
@@ -13,11 +13,11 @@ const SignUp = () => {
     }
   
   return (
-    <div className='h-screen bg-center bg-no-repeat relative font-actor' style={{ backgroundImage:`url(${AuthBg})`}}>
-        <div className='absolute inset-0 bg-black/12'></div>
+    <div className='h-screen bg-[#F8FCF8] relative font-actor'>
+        
         <div className='grid grid-cols-1 md:grid-cols-2 h-screen relative  z-10 '>
-            <div className='hidden md:flex flex-col gap-5 justify-center  items-center text-white'>
-                <img src={Logo} alt="logo" className=' h-20 object-cover ' />
+            <div className='hidden md:flex flex-col gap-5 justify-center  items-center text-black'>
+                <img src={Logo} alt="logo" className="h-40 md:h-48 w-auto object-contain" />
                 <h1 className='font-medium text-5xl'>Welcome to Beach Mart</h1>
                 <p>Let's create your account and unlock the experience</p>
             </div>

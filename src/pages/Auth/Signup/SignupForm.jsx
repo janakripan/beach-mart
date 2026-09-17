@@ -62,7 +62,7 @@ const SignupForm = () => {
     <div className="w-full h-full flex items-center justify-center  bg-white px-8 py-12 overflow-y-auto">
       <div className="w-full max-w-md border border-[#0000001A] rounded-2xl p-10">
         {/* Mobile Logo */}
-        <div className="lg:hidden mb-8 flex justify-center bg-black rounded-lg ">
+        <div className="lg:hidden mb-8 flex justify-center">
           <div className="flex items-center justify-center w-14 h-14 rounded-lg">
             <img src={Logo} alt="dc-logo" className='h-full w-full object-contain' />
           </div>
@@ -100,8 +100,7 @@ const SignupForm = () => {
                   id="fullName"
                   name="fullName"
                   placeholder="Full Name"
-                  className={`w-full px-4 py-3 border rounded-full text-sm  focus:outline-none  transition-all ${errors.fullName && touched.fullName ? 'border-red-500' : 'border-gray-300'
-                    }`}
+                  className={`w-full px-4 py-3 border rounded-[12px] text-sm focus:outline-none transition-all bg-white hover:bg-[#F8FCF8] focus:bg-[#F8FCF8] focus:shadow-sm ${errors.fullName && touched.fullName ? 'border-red-500' : 'border-gray-200 hover:border-[#E3F0E2] focus:border-primary'}`}
                 />
                 <ErrorMessage
                   name="fullName"
@@ -120,8 +119,7 @@ const SignupForm = () => {
                   id="email"
                   name="email"
                   placeholder="Email"
-                  className={`w-full px-4 py-3 border rounded-full text-sm focus:outline-none  transition-all ${errors.email && touched.email ? 'border-red-500' : 'border-gray-300'
-                    }`}
+                  className={`w-full px-4 py-3 border rounded-[12px] text-sm focus:outline-none transition-all bg-white hover:bg-[#F8FCF8] focus:bg-[#F8FCF8] focus:shadow-sm ${errors.email && touched.email ? 'border-red-500' : 'border-gray-200 hover:border-[#E3F0E2] focus:border-primary'}`}
                 />
                 <ErrorMessage
                   name="email"
@@ -140,7 +138,7 @@ const SignupForm = () => {
                   id="phoneNumber"
                   name="phoneNumber"
                   placeholder="Phone Number"
-                  className={`w-full px-4 py-2 border rounded-full text-sm  focus:outline-none  transition-all ${errors.phoneNumber && touched.phoneNumber ? 'border-red-500' : 'border-gray-300'
+                  className={`w-full px-4 py-2 border rounded-[12px] text-sm  focus:outline-none  transition-all ${errors.phoneNumber && touched.phoneNumber ? 'border-red-500' : 'border-gray-300'
                     }`}
                 />
                 <ErrorMessage
@@ -161,7 +159,7 @@ const SignupForm = () => {
                     id="passwordHash"
                     name="passwordHash"
                     placeholder="Password"
-                    className={`w-full px-4 py-2 pr-10 border rounded-full text-sm  focus:outline-none  transition-all ${errors.passwordHash && touched.passwordHash ? 'border-red-500' : 'border-gray-300'
+                    className={`w-full px-4 py-2 pr-10 border rounded-[12px] text-sm  focus:outline-none  transition-all ${errors.passwordHash && touched.passwordHash ? 'border-red-500' : 'border-gray-300'
                       }`}
                   />
                   <button
@@ -194,7 +192,7 @@ const SignupForm = () => {
                     id="confirmPassword"
                     name="confirmPassword"
                     placeholder="Confirm Password"
-                    className={`w-full px-4 py-2 pr-10 border rounded-full text-sm  focus:outline-none  transition-all ${
+                    className={`w-full px-4 py-2 pr-10 border rounded-[12px] text-sm  focus:outline-none  transition-all ${
                       errors.confirmPassword && touched.confirmPassword ? 'border-red-500' : 'border-gray-300'
                     }`}
                   />
@@ -221,7 +219,7 @@ const SignupForm = () => {
               <button
                 type="submit"                    // ← Most important change
                 disabled={isSubmitting || isPending}
-                className="w-full bg-black text-white py-2 rounded-full font-roboto font-medium hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-primary text-white py-2 rounded-[12px] font-roboto font-medium hover:bg-[#126442]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting || isPending ? 'Creating Account...' : 'Create Account'}
               </button>
