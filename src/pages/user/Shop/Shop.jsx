@@ -45,7 +45,7 @@ const Shop = () => {
 
   return (
     <div className='bg-white font-arial pb-24 md:pb-0'>
-       <div className='hidden md:block'>
+       <div className='hidden md:block sticky top-0 z-40 bg-white pb-3 shadow-sm'>
         <TopSection
           filters={filters}
           filterData={filterData}
@@ -53,7 +53,7 @@ const Shop = () => {
         />
         </div> 
        <div className='grid grid-cols-1 md:grid-cols-3 xl:grid-cols-5 max-w-7xl mx-auto pb-20 md:pb-0'>
-            <div className='hidden md:flex xl:col-span-1'>
+            <div className='hidden md:flex xl:col-span-1 sticky top-[130px] h-[calc(100vh-130px)]'>
                 <FiltersSection filters={filters} setFilters={updateFilters} />
             </div>
             <div className='flex md:hidden w-full h-fit'>

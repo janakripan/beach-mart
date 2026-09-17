@@ -50,7 +50,7 @@ if (filters.ratingFilter !== null) {
 
   return (
     <div className="px-3 pt-3 max-w-7xl mx-auto font-actor">
-      <h2 className="text-black text-4xl font-medium">Fragrance</h2>
+      <h2 className="text-black text-4xl font-medium">Products</h2>
 
       <div className="flex justify-between items-center pt-1">
         <div className="flex gap-3 items-center">

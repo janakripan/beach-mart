@@ -78,7 +78,7 @@ const FiltersSection = ({ filters, setFilters }) => {
       </div>
 
       {/* Filters */}
-      <div className="flex-1 overflow-y-auto space-y-4 py-4 px-2">
+      <div className="flex-1 overflow-y-hidden hover:overflow-y-auto space-y-4 py-4 px-2 custom-scrollbar pr-1" data-lenis-prevent="true">
         <FilterGroup title="CATEGORY" defaultOpen={true}>
           {CATEGORY_FILTERS.map((cat) => (
             <CheckboxItem
