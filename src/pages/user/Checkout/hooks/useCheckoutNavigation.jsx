@@ -31,7 +31,6 @@ export const useCheckoutNavigation = () => {
 
   const currentStep = useCurrentStep();
   const completedSteps = useCompletedSteps();
-  const isAuthenticated = useAuthStore((s) => s.isAuthenticated());
   const mode = useCheckoutStore((s) => s.mode);
   const items = useCheckoutStore((s) => s.items);
 
@@ -39,12 +38,12 @@ export const useCheckoutNavigation = () => {
 
   useEffect(() => {
     // ❌ Checkout should not exist
-    if (!isAuthenticated || !mode || items.length === 0) {
+    if (!mode || items.length === 0) {
       resetCheckout();
       navigate("/", { replace: true }); // or /cart
       return;
     }
-  }, [isAuthenticated, mode, items.length, resetCheckout, navigate]);
+  }, [mode, items.length, resetCheckout, navigate]);
   useEffect(() => {
     if (!mode || items.length === 0) return;
     navigate(STEP_ROUTES[currentStep], { replace: true });
