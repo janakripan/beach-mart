@@ -7,7 +7,6 @@ import MenuButton from './MenuButton';
 import { Heart, ShoppingCart, X } from 'lucide-react';
 import { useShop } from '../../../context/ShopContext';
 import CartDrawer from '../Drawers/CartDrawer';
-import { UserMenu } from './UserMenu';
 
 export default function Header() {
   const { cartItems, wishlistItems, setIsCartOpen, setIsWishlistOpen } = useShop();
@@ -95,9 +94,6 @@ export default function Header() {
             
             {/* Action Buttons (Right) */}
             <div className="flex items-center gap-3 xl:gap-4 relative">
-              <div className="relative hidden lg:flex">
-                <UserMenu />
-              </div>
               <div className="relative hidden sm:flex">
                 <IconButton onClick={() => navigate('/wishlist')} icon={<Heart className="w-[20px] h-[20px] text-primary" strokeWidth={1.25} />} />
                 {wishlistItems.length > 0 && (
@@ -178,9 +174,6 @@ export default function Header() {
                 
                 {/* Drawer Additional Actions */}
                 <div className="flex flex-col gap-6 mt-auto">
-                   <div className="lg:hidden">
-                     <UserMenu drawerMode={true} />
-                   </div>
                    <div 
                      className="flex items-center gap-3 text-text-main font-bold font-arial uppercase tracking-[0.5px] lg:hidden cursor-pointer hover:text-primary transition-colors"
                      onClick={() => { setIsDrawerOpen(false); navigate('/wishlist'); }}

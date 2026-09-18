@@ -10,16 +10,6 @@ const CheckoutGuard = () => {
   //   return <Navigate to="/" replace />;
   // }
 
-  if (!isAuthenticated) {
-    return (
-      <Navigate
-        to="/signin"
-        state={{ from: "/checkout/address" }}
-        replace
-      />
-    );
-  }
-
   return <Outlet />;
 };
 

@@ -12,15 +12,9 @@ const StepIndicator = ({ children }) => {
 
   const user = useAuthStore((state) => state.user)
 
-
   const addressStep = useCheckoutStore((s) => s.stepData.address);
-
   const addressSnapshot = addressStep?.addressSnapshot;
-  console.log(addressSnapshot)
 
-  // const visibleSteps = CHECKOUT_STEPS.filter(step =>
-  //   completedSteps.includes(step.id)
-  // );
   const visibleSteps = CHECKOUT_STEPS;
 
   return (
@@ -72,24 +66,7 @@ const StepIndicator = ({ children }) => {
                     >
                       {step.label}
                     </span>
-                    {step.key === "auth" && (
-                      user?.isGuest ? (
-                        <span className="text-sm text-gray-600">
-                          Logged in as Guest
-                        </span>
-                      ) : (
-                        <span className="text-sm text-gray-600">
-                          Logged in as {user.FullName} ({user.Email})
-                        </span>
-                      )
-                    )}
-
-                    {step.key === "address" && addressSnapshot && (
-                      <span className="text-sm text-gray-600">
-                        {addressSnapshot.Address}-{addressSnapshot.City}-{addressSnapshot.PhoneNumber}
-                      </span>
-                    )}
-
+                    {/* No address summary shown as requested */}
                   </div>
                 </div>
 

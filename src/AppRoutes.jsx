@@ -11,15 +11,11 @@ import Shop from "./pages/user/Shop/Shop";
 import Contact from "./pages/user/Contact/Contact";
 
 // User protected pages
-const OrderHistory = lazy(() => import("./pages/user/OrderHistory/page"));
-const OrderDetails = lazy(() => import("./pages/user/OrderDetails/page"));
-const AddressManage = lazy(() => import("./pages/user/AddressManage/page"));
+
 const Wishlist = lazy(() => import("./pages/user/Wishlist/Wishlist"));
 
 // Auth
 const AdminLoginPage = lazy(() => import("./pages/Auth/AdminLogin/page"));
-const SignInPage = lazy(() => import("./pages/Auth/SignIn/page"));
-const SignUpPage = lazy(() => import("./pages/Auth/Signup/page"));
 
 // Checkout
 import CheckoutGuard from "./components/user/CheckoutGuard";
@@ -49,8 +45,6 @@ const AppRoutes = () => {
       }>
         <Routes>
           <Route path="/adminlogin" element={<AdminLoginPage />} />
-          <Route path="/signin" element={<SignInPage />} />
-          <Route path="/signup" element={<SignUpPage />} />
           
           {/* Public routes */}
           <Route element={<UserLayout />}>
@@ -58,9 +52,6 @@ const AppRoutes = () => {
             <Route path="/shop" element={<Shop />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/wishlist" element={<Wishlist />} />
-            <Route path="/order-history" element={<OrderHistory />} />
-            <Route path="/order-history/:orderId" element={<OrderDetails />} />
-            <Route path="/addresses" element={<AddressManage />} />
           </Route>
 
           {/* Checkout routes */}

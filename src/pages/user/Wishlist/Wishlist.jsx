@@ -9,7 +9,6 @@ import { useShop } from "../../../context/ShopContext";
 
 const Wishlist = () => {
   const navigate = useNavigate();
-  const isAuthenticated = useAuthStore((s) => s.isAuthenticated());
   const { wishlistItems: contextWishlist } = useShop();
 
   const getGuestWishlist = () => {
@@ -85,7 +84,7 @@ const Wishlist = () => {
 
   const displayWishlist = Array.from(combinedWishlistMap.values());
 
-  if (isAuthenticated && isLoading) {
+  if (isLoading) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center bg-white">
         <DotWaveLoader /> 
@@ -101,14 +100,6 @@ const Wishlist = () => {
           Your wishlist is empty
         </p>
 
-        {!isAuthenticated && (
-          <Link
-            to="/signin"
-            className="px-6 py-2 bg-black text-white rounded-xl font-poppins"
-          >
-            Sign in to save your wishlist
-          </Link>
-        )}
       </div>
     );
   }

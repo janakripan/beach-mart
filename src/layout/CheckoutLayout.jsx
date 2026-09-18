@@ -9,11 +9,7 @@ import { useAuthStore } from "../pages/Auth/store/AuthStore";
 const CheckoutLayout = () => {
   useCheckoutNavigation();
   const location = useLocation();
-  const isAuthenticated = useAuthStore(s => s.isAuthenticated());
-
-  if (!isAuthenticated) {
-    return <Navigate to="/signin" state={{ from: location.pathname }} />;
-  }
+  // Authentication removed for pure guest checkout flow
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 py-6 font-poppins">

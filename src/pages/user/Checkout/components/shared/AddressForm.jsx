@@ -1,7 +1,6 @@
 import React, { useRef, useState, useCallback, useEffect } from "react";
 import { Formik, Field, ErrorMessage, Form, useFormikContext } from "formik";
 import * as Yup from "yup";
-import { useAddAddress } from "../../../../../api/user/hooks/useAddress";
 import { useAuthStore } from "../../../../Auth/store/AuthStore";
 import { useMessage } from "../../../../../components/admin/MessageBox/useMessage";
 import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
@@ -125,9 +124,8 @@ const PlacesAutocomplete = ({ setFieldValue, onLocationSelect, onSelectComplete 
 
 /* ===================== COMPONENT ===================== */
 const AddressForm = ({ closeForm }) => {
-  const { mutateAsync: addAddress, isPending } = useAddAddress();
   const user = useAuthStore((s) => s.user);
-  const isGuest = user?.isGuest === true;
+  const isGuest = true; // Force all users to be guest as per requirement
   const message = useMessage();
 
   const [mapCenter, setMapCenter] = useState(defaultCenter);
@@ -218,26 +216,15 @@ const AddressForm = ({ closeForm }) => {
       };
 
       /* ---------- GUEST FLOW ---------- */
-      if (isGuest) {
-        closeForm({
-          addressId: -1,
-          addressData,
-        });
-        message.success("Address confirmed!");
-        return;
-      }
-
-      /* ---------- AUTH USER FLOW ---------- */
-      const res = await addAddress(values);
-      message.success("Address added successfully!");
-
       closeForm({
-        addressId: res?.data?.addressId,
-        addressData: null,
+        addressId: -1,
+        addressData,
       });
+      message.success("Address confirmed!");
+
     } catch (err) {
       console.error("Address save failed", err);
-      message.error(err?.response?.data?.message || "Failed to add address. Please try again.");
+      message.error("Failed to add address. Please try again.");
     } finally {
       setSubmitting(false);
     }
@@ -415,10 +402,10 @@ const AddressForm = ({ closeForm }) => {
                   <button
                     type="submit"
                     onClick={() => {}} // Formik handles it
-                    disabled={isPending || isSubmitting}
+                    disabled={isSubmitting}
                     className="w-full py-3 bg-primary text-white font-medium rounded-xl hover:bg-secondary transition disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {isSubmitting || isPending ? 'Confirming...' : 'Confirm With this Address'}
+                    {isSubmitting ? 'Confirming...' : 'Confirm With this Address'}
                   </button>
                 </div>
               </Form>

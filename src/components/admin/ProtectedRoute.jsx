@@ -5,14 +5,14 @@ const ProtectedRoute = ({ adminOnly = false }) => {
   const user = useAuthStore((s) => s.user);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated());
 
-  // Not logged in → go to signin
+  // Not logged in → go to adminlogin
   if (!isAuthenticated) {
-    return <Navigate to="/signin" replace />;
+    return <Navigate to="/adminlogin" replace />;
   }
 
   // Logged in but user missing → corrupted state → force logout
   if (!user) {
-    return <Navigate to="/signin" replace />;
+    return <Navigate to="/adminlogin" replace />;
   }
 
   // Admin-only route but user is not admin
