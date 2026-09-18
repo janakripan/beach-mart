@@ -6,6 +6,8 @@ import { useMessage } from "../../../../../components/admin/MessageBox/useMessag
 import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
 import usePlacesAutocomplete, { getGeocode, getLatLng } from "use-places-autocomplete";
 import { Search, MapPin, Target } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useCheckoutStore } from "../../store/CheckoutStore";
 
 const libraries = ["places"];
 const mapContainerStyle = { width: "100%", height: "200px" };
@@ -123,10 +125,13 @@ const PlacesAutocomplete = ({ setFieldValue, onLocationSelect, onSelectComplete 
 };
 
 /* ===================== COMPONENT ===================== */
-const AddressForm = ({ closeForm }) => {
+const AddressForm = () => {
   const user = useAuthStore((s) => s.user);
   const isGuest = true; // Force all users to be guest as per requirement
   const message = useMessage();
+
+  const navigate = useNavigate();
+  const markCompleted = useCheckoutStore((s) => s.markCompleted);
 
   const [mapCenter, setMapCenter] = useState(defaultCenter);
   const [markerPos, setMarkerPos] = useState(defaultCenter);
@@ -215,12 +220,18 @@ const AddressForm = ({ closeForm }) => {
         addressLabel: values.addressLabel || "",
       };
 
-      /* ---------- GUEST FLOW ---------- */
-      closeForm({
-        addressId: -1,
-        addressData,
+      /* ---------- GUEST FLOW (SIMULATE PAYMENT) ---------- */
+      await new Promise((r) => setTimeout(r, 1500));
+      
+      message.success("Order placed successfully!");
+      
+      markCompleted();
+      navigate("/purchase-success", {
+        replace: true,
+        state: {
+          orderId: "DUMMY-ORDER-" + Math.floor(Math.random() * 1000000),
+        },
       });
-      message.success("Address confirmed!");
 
     } catch (err) {
       console.error("Address save failed", err);
@@ -405,7 +416,7 @@ const AddressForm = ({ closeForm }) => {
                     disabled={isSubmitting}
                     className="w-full py-3 bg-primary text-white font-medium rounded-xl hover:bg-secondary transition disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {isSubmitting ? 'Confirming...' : 'Confirm With this Address'}
+                    {isSubmitting ? 'Processing...' : 'Order Now'}
                   </button>
                 </div>
               </Form>

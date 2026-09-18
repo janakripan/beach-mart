@@ -20,9 +20,6 @@ const AdminLoginPage = lazy(() => import("./pages/Auth/AdminLogin/page"));
 // Checkout
 import CheckoutGuard from "./components/user/CheckoutGuard";
 const CheckoutLayout = lazy(() => import("./layout/CheckoutLayout"));
-const AddressStep = lazy(() => import("./pages/user/Checkout/components/steps/AddressStep"));
-const ReviewStep = lazy(() => import("./pages/user/Checkout/components/steps/ReviewStep"));
-const StripePaymentRoute = lazy(() => import("./pages/user/Checkout/components/StripePaymentRoute"));
 
 // Admin pages
 const Dashboard = lazy(() => import("./pages/admin/DashboardHome"));
@@ -56,11 +53,7 @@ const AppRoutes = () => {
 
           {/* Checkout routes */}
           <Route element={<CheckoutGuard />}>
-            <Route path="/checkout" element={<CheckoutLayout />}>
-              <Route path="address" element={<AddressStep />} />
-              <Route path="review" element={<ReviewStep />} />
-              <Route path="payment" element={<StripePaymentRoute />} />
-            </Route>
+            <Route path="/checkout" element={<CheckoutLayout />} />
           </Route>
 
           {/* Admin routes */}

@@ -1,15 +1,11 @@
-import { Outlet, useLocation } from "react-router-dom";
-import StepIndicator from "../pages/user/Checkout/components/shared/StepIndicator";
-import SessionExpiryModal from "../pages/user/Checkout/components/shared/SessionExpiryModal";
+import { useLocation } from "react-router-dom";
 import OrderSummary from "../pages/user/Checkout/components/shared/OrderSummary";
-import { useCheckoutNavigation } from "../pages/user/Checkout/hooks/useCheckoutNavigation";
-import RemainingSteps from "../pages/user/Checkout/components/shared/RemainingSteps";
+import AddressForm from "../pages/user/Checkout/components/shared/AddressForm";
+import SessionExpiryModal from "../pages/user/Checkout/components/shared/SessionExpiryModal";
 import { useAuthStore } from "../pages/Auth/store/AuthStore";
 
 const CheckoutLayout = () => {
-  useCheckoutNavigation();
   const location = useLocation();
-  // Authentication removed for pure guest checkout flow
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 py-6 font-poppins">
@@ -17,12 +13,9 @@ const CheckoutLayout = () => {
       {/* 🔹 Main checkout body */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-        {/* LEFT: Step content */}
+        {/* LEFT: Address Form */}
         <main className="flex flex-col gap-5 ">
-          <StepIndicator>
-            <Outlet />
-          </StepIndicator>
-          <RemainingSteps />
+          <AddressForm />
         </main>
 
         {/* RIGHT: Order summary */}
