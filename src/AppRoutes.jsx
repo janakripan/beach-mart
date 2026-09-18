@@ -4,6 +4,7 @@ import UserLayout from "./layout/user/UserLayout";
 import AdminLayout from "./layout/admin/AdminLayout";
 import ProtectedRoute from "./components/admin/ProtectedRoute";
 import DotWaveLoader from "./components/admin/DotWaveLoader";
+import ScrollToTop from "./components/admin/ScrollToTop";
 
 // Public pages for beach-mart
 import LandingPage from "./pages/user/LandingPage/LandingPage";
@@ -13,6 +14,7 @@ import Contact from "./pages/user/Contact/Contact";
 // User protected pages
 
 const Wishlist = lazy(() => import("./pages/user/Wishlist/Wishlist"));
+const PurchaseSuccess = lazy(() => import("./pages/user/PurchaseSuccess/PurchaseSuccess"));
 
 // Auth
 const AdminLoginPage = lazy(() => import("./pages/Auth/AdminLogin/page"));
@@ -35,6 +37,7 @@ const Returns = lazy(() => import("./pages/admin/Returns"));
 const AppRoutes = () => {
   return (
     <Router>
+      <ScrollToTop />
       <Suspense fallback={
         <div className="flex items-center justify-center min-h-screen bg-white">
           <DotWaveLoader />
@@ -49,6 +52,7 @@ const AppRoutes = () => {
             <Route path="/shop" element={<Shop />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/wishlist" element={<Wishlist />} />
+            <Route path="/purchase-success" element={<PurchaseSuccess />} />
           </Route>
 
           {/* Checkout routes */}
