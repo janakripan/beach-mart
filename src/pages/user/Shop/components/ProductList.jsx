@@ -8,7 +8,7 @@ import React, { useRef, useEffect } from "react";
 // import ProductCardShimmer from "./ProductCardShimmer";
 
 import { offerProducts, vegetableProducts } from "../../../../constants/data";
-import OfferProductCard from "../../LandingPage/components/OfferProductCard";
+import ProductCard from "../../LandingPage/components/ProductCard";
 import NoProduct from "../../../../assets/NoProducts.gif";
 
 /* --- COMMENTED OUT DILKA CENTRE DYNAMIC FETCHING LOGIC ---
@@ -196,7 +196,7 @@ const ProductList = ({ filters }) => {
       ) : (
         <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 p-4">
           {sortedAndFilteredProducts.map((product) => (
-            <OfferProductCard key={product.id} product={product} />
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
       )}

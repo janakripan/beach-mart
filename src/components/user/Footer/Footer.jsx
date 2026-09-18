@@ -97,12 +97,12 @@ export default function Footer() {
                 <ChevronRight size={16} className="text-primary group-hover:translate-x-1 transition-transform" /> Contacts
               </Link>
               {/* Mobile Only: Cart & Wishlist */}
-              <button 
-                onClick={() => setIsWishlistOpen(true)}
+              <Link 
+                to="/wishlist"
                 className="md:hidden flex items-center text-left gap-2 font-poppins text-[15px] text-gray-200 hover:text-white transition-colors group"
               >
                 <Heart size={16} className="text-primary group-hover:translate-x-1 transition-transform" /> Wishlist
-              </button>
+              </Link>
               <button 
                 onClick={() => setIsCartOpen(true)}
                 className="md:hidden flex items-center text-left gap-2 font-poppins text-[15px] text-gray-200 hover:text-white transition-colors group"

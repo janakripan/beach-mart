@@ -75,7 +75,7 @@ const MobileFilter = ({ filters, setFilters }) => {
   return (
     <>
       {/* Bottom Bar for Mobile */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-2 flex justify-between items-center z-40 md:hidden shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] px-4 pb-safe">
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-2 flex justify-between items-center z-40 lg:hidden shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] px-4 pb-safe">
         <button
           onClick={() => setIsOpen(true)}
           className="h-[42px] px-[14px] py-[8px] gap-[8px] bg-[#F8FCF8] rounded-[12px] border border-[#E3F0E2] flex items-center justify-center hover:border-primary transition-colors shadow-sm flex-none mr-2"
@@ -106,7 +106,7 @@ const MobileFilter = ({ filters, setFilters }) => {
 
       {/* Slide-over Panel */}
       <div
-        className={`fixed inset-y-0 left-0 top-0 bottom-0 z-50 w-full sm:w-[400px] bg-white transform transition-transform duration-300 ease-in-out font-arial flex flex-col overflow-y-auto ${
+        className={`fixed inset-y-0 left-0 top-0 bottom-0 z-50 w-[85vw] max-w-[350px] bg-white transform transition-transform duration-300 ease-in-out font-arial flex flex-col overflow-y-auto ${
             isOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
       >

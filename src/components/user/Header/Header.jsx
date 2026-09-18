@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import SearchBar from './SearchBar';
 import IconButton from './IconButton';
@@ -7,12 +7,12 @@ import MenuButton from './MenuButton';
 import { Heart, ShoppingCart, X } from 'lucide-react';
 import { useShop } from '../../../context/ShopContext';
 import CartDrawer from '../Drawers/CartDrawer';
-import WishlistDrawer from '../Drawers/WishlistDrawer';
 import { UserMenu } from './UserMenu';
 
 export default function Header() {
   const { cartItems, wishlistItems, setIsCartOpen, setIsWishlistOpen } = useShop();
   const location = useLocation();
+  const navigate = useNavigate();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
   const lastScrollY = useRef(0);
@@ -22,11 +22,11 @@ export default function Header() {
       const currentScrollY = window.scrollY;
       
       // Hide header if scrolling down past its height
-      if (currentScrollY > lastScrollY.current && currentScrollY > 118) {
+      if (currentScrollY > lastScrollY.current && currentScrollY > 118 && location.pathname !== '/shop') {
         setIsHidden(true);
       } 
       // Show header if scrolling up
-      else if (currentScrollY < lastScrollY.current) {
+      else if (currentScrollY < lastScrollY.current || location.pathname === '/shop') {
         setIsHidden(false);
       }
       
@@ -35,7 +35,7 @@ export default function Header() {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [location.pathname]);
 
   useEffect(() => {
     if (isDrawerOpen) {
@@ -99,7 +99,7 @@ export default function Header() {
                 <UserMenu />
               </div>
               <div className="relative hidden sm:flex">
-                <IconButton onClick={() => setIsWishlistOpen(true)} icon={<Heart className="w-[20px] h-[20px] text-primary" strokeWidth={1.25} />} />
+                <IconButton onClick={() => navigate('/wishlist')} icon={<Heart className="w-[20px] h-[20px] text-primary" strokeWidth={1.25} />} />
                 {wishlistItems.length > 0 && (
                   <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full border-[1.5px] border-white"></span>
                 )}
@@ -183,7 +183,7 @@ export default function Header() {
                    </div>
                    <div 
                      className="flex items-center gap-3 text-text-main font-bold font-arial uppercase tracking-[0.5px] lg:hidden cursor-pointer hover:text-primary transition-colors"
-                     onClick={() => { setIsDrawerOpen(false); setIsWishlistOpen(true); }}
+                     onClick={() => { setIsDrawerOpen(false); navigate('/wishlist'); }}
                    >
                       <IconButton icon={<Heart className="w-[20px] h-[20px] text-primary" strokeWidth={1.25} />} />
                       <span>Wishlist</span>
@@ -205,7 +205,6 @@ export default function Header() {
       
       {/* Global Drawers */}
       <CartDrawer />
-      <WishlistDrawer />
     </>
   );
 }

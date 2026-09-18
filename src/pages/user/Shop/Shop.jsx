@@ -44,22 +44,22 @@ const Shop = () => {
 };
 
   return (
-    <div className='bg-white font-arial pb-24 md:pb-0'>
-       <div className='hidden md:block sticky top-0 z-40 bg-white pb-3 shadow-sm'>
+    <div className='bg-white font-arial pb-24 lg:pb-0'>
+       <div className='hidden lg:block sticky top-[118px] z-40 bg-white pb-3 shadow-sm'>
         <TopSection
           filters={filters}
           filterData={filterData}
           setFilters={updateFilters}
         />
         </div> 
-       <div className='grid grid-cols-1 md:grid-cols-3 xl:grid-cols-5 max-w-7xl mx-auto pb-20 md:pb-0'>
-            <div className='hidden md:flex xl:col-span-1 sticky top-[130px] h-[calc(100vh-130px)]'>
+       <div className='grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 max-w-7xl mx-auto pb-20 lg:pb-0'>
+            <div className='hidden lg:flex lg:col-span-1 sticky top-[248px] h-[calc(100vh-248px)]'>
                 <FiltersSection filters={filters} setFilters={updateFilters} />
             </div>
-            <div className='flex md:hidden w-full h-fit'>
+            <div className='flex lg:hidden w-full h-fit'>
                 <MobileFilter filters={filters} setFilters={updateFilters} />
             </div>
-            <div className='col-span-2 xl:col-span-4'>
+            <div className='col-span-1 md:col-span-3 lg:col-span-3 xl:col-span-4'>
                 <ProductList filters={filters} />
             </div>
        </div>

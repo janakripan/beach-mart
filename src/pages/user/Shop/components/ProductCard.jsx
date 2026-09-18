@@ -1,10 +1,10 @@
 import { Heart, Star } from 'lucide-react'
-import dirham from '../../../assets/dirham.svg'
+import dirham from '../../../../assets/dirham.svg'
 import { useCartStore } from '../../Cart/store/CartStore';
 import { Link, useNavigate } from 'react-router-dom'
-import { useAddToWishlist, useDeleteWishlist, useGetWishlist } from '../../../api/hooks/useWishList'
-import { useAuthStore } from '../../Auth/store/AuthStore';
-import { useMessage } from '../../../components/MessageBox/useMessage';
+// import { useAddToWishlist, useDeleteWishlist, useGetWishlist } from '../../../../api/user/hooks/useWishList'
+import { useAuthStore } from '../../../Auth/store/AuthStore';
+import { useMessage } from '../../../../components/admin/MessageBox/useMessage';
 import { useEffect, useState } from 'react';
 
 const ProductCard = ({ variantID = -1, productID, img, name, price, discountPrice, avgRating, totalReviews }) => {
@@ -23,34 +23,36 @@ const ProductCard = ({ variantID = -1, productID, img, name, price, discountPric
 
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      setGuestWishlist(getGuestWishlist());
-    }
-  }, [isAuthenticated]);
+    // ALWAYS load guest wishlist for static data
+    setGuestWishlist(getGuestWishlist());
+  }, []);
 
-  const { data: wishlist = [] } = useGetWishlist({
-    enabled: isAuthenticated,
-  });
-  const { mutate: addToWishlist, isPending: adding } = useAddToWishlist({
-    onSuccess: () => {
-      message.success("Added to wishlist");
-    },
-    onError: (error) => {
-      message.error(error?.response?.data?.message || "Failed to add to wishlist");
-    }
-  });
-  const { mutate: deletefromwishlist, isPending: deleting } = useDeleteWishlist({
-    onSuccess: () => {
-      message.info("Removed from wishlist");
-    },
-    onError: (error) => {
-      message.error(error?.response?.data?.message || "Failed to remove from wishlist");
-    }
-  });
+  // --- COMMENTED OUT API HOOKS ---
+  // const { data: wishlist = [] } = useGetWishlist({
+  //   enabled: isAuthenticated,
+  // });
+  // const { mutate: addToWishlist, isPending: adding } = useAddToWishlist({
+  //   onSuccess: () => {
+  //     message.success("Added to wishlist");
+  //   },
+  //   onError: (error) => {
+  //     message.error(error?.response?.data?.message || "Failed to add to wishlist");
+  //   }
+  // });
+  // const { mutate: deletefromwishlist, isPending: deleting } = useDeleteWishlist({
+  //   onSuccess: () => {
+  //     message.info("Removed from wishlist");
+  //   },
+  //   onError: (error) => {
+  //     message.error(error?.response?.data?.message || "Failed to remove from wishlist");
+  //   }
+  // });
 
-  const isLiked = isAuthenticated
-    ? wishlist.some(item => item.ProductId === productID)
-    : guestWishlist.some(item => item.productID === productID);
+  const adding = false;
+  const deleting = false;
+
+  // ALWAYS use guest wishlist for static data
+  const isLiked = guestWishlist.some(item => item.productID === productID);
 
   const numericPrice = Number(price) || 0;
   const numericDiscount = Number(discountPrice) || 0;
@@ -67,39 +69,38 @@ const ProductCard = ({ variantID = -1, productID, img, name, price, discountPric
     e.preventDefault();
     e.stopPropagation();
 
-    if (!isAuthenticated) {
-      if (isLiked) {
-        const updated = guestWishlist.filter(
-          item => item.productID !== productID
-        );
-        localStorage.setItem("GUEST_WISHLIST", JSON.stringify(updated));
-        setGuestWishlist(updated);
-        message.info("Removed from wishlist");
-      } else {
-        const updated = [
-          ...guestWishlist,
-          {
-            productID,
-            variantId: variantID,
-            name,
-            image: img,
-            price,
-            discountPrice,
-          },
-        ];
-        localStorage.setItem("GUEST_WISHLIST", JSON.stringify(updated));
-        setGuestWishlist(updated);
-        message.success("Added to wishlist");
-      }
-      return;
-    }
-
-
+    // ALWAYS use guest logic for static data
     if (isLiked) {
-      deletefromwishlist({ ProductId: productID });
+      const updated = guestWishlist.filter(
+        item => item.productID !== productID
+      );
+      localStorage.setItem("GUEST_WISHLIST", JSON.stringify(updated));
+      setGuestWishlist(updated);
+      message.info("Removed from wishlist");
     } else {
-      addToWishlist({ ProductId: productID, VariantId: variantID });
+      const updated = [
+        ...guestWishlist,
+        {
+          productID,
+          variantId: variantID,
+          name,
+          image: img,
+          price,
+          discountPrice,
+        },
+      ];
+      localStorage.setItem("GUEST_WISHLIST", JSON.stringify(updated));
+      setGuestWishlist(updated);
+      message.success("Added to wishlist");
     }
+    return;
+
+    // --- API LOGIC COMMENTED OUT ---
+    // if (isLiked) {
+    //   deletefromwishlist({ ProductId: productID });
+    // } else {
+    //   addToWishlist({ ProductId: productID, VariantId: variantID });
+    // }
   };
 
 

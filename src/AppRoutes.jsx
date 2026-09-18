@@ -14,6 +14,7 @@ import Contact from "./pages/user/Contact/Contact";
 const OrderHistory = lazy(() => import("./pages/user/OrderHistory/page"));
 const OrderDetails = lazy(() => import("./pages/user/OrderDetails/page"));
 const AddressManage = lazy(() => import("./pages/user/AddressManage/page"));
+const Wishlist = lazy(() => import("./pages/user/Wishlist/Wishlist"));
 
 // Auth
 const AdminLoginPage = lazy(() => import("./pages/Auth/AdminLogin/page"));
@@ -49,6 +50,7 @@ const AppRoutes = () => {
             <Route path="/" element={<LandingPage />} />
             <Route path="/shop" element={<Shop />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/wishlist" element={<Wishlist />} />
             <Route path="/order-history" element={<OrderHistory />} />
             <Route path="/order-history/:orderId" element={<OrderDetails />} />
             <Route path="/addresses" element={<AddressManage />} />
