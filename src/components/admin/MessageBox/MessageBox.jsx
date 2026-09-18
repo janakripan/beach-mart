@@ -25,7 +25,7 @@ const Message = ({ id, type, message, duration, onClose }) => {
         const interval = setInterval(() => {
             const elapsed = Date.now() - startTime;
             const remaining = Math.max(0, 100 - (elapsed / duration) * 100);
-            setProgress(remaining);
+            // setProgress(remaining);
 
             if (remaining === 0) {
                 clearInterval(interval);

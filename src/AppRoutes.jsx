@@ -21,6 +21,13 @@ const AdminLoginPage = lazy(() => import("./pages/Auth/AdminLogin/page"));
 const SignInPage = lazy(() => import("./pages/Auth/SignIn/page"));
 const SignUpPage = lazy(() => import("./pages/Auth/Signup/page"));
 
+// Checkout
+import CheckoutGuard from "./components/user/CheckoutGuard";
+const CheckoutLayout = lazy(() => import("./layout/CheckoutLayout"));
+const AddressStep = lazy(() => import("./pages/user/Checkout/components/steps/AddressStep"));
+const ReviewStep = lazy(() => import("./pages/user/Checkout/components/steps/ReviewStep"));
+const StripePaymentRoute = lazy(() => import("./pages/user/Checkout/components/StripePaymentRoute"));
+
 // Admin pages
 const Dashboard = lazy(() => import("./pages/admin/DashboardHome"));
 const Orders = lazy(() => import("./pages/admin/Orders"));
@@ -54,6 +61,15 @@ const AppRoutes = () => {
             <Route path="/order-history" element={<OrderHistory />} />
             <Route path="/order-history/:orderId" element={<OrderDetails />} />
             <Route path="/addresses" element={<AddressManage />} />
+          </Route>
+
+          {/* Checkout routes */}
+          <Route element={<CheckoutGuard />}>
+            <Route path="/checkout" element={<CheckoutLayout />}>
+              <Route path="address" element={<AddressStep />} />
+              <Route path="review" element={<ReviewStep />} />
+              <Route path="payment" element={<StripePaymentRoute />} />
+            </Route>
           </Route>
 
           {/* Admin routes */}

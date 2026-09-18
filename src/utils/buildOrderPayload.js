@@ -1,4 +1,4 @@
-import { useCartStore } from "../pages/Cart/store/CartStore";
+import { useCartStore } from "../pages/user/Cart/store/CartStore";
 
 export const buildOrderPayload = ({
   userName,

@@ -2,7 +2,7 @@ import { useCallback, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useCurrentStep, useCompletedSteps } from "../store/Selectors";
 import { useCheckoutActions } from "../store/useCheckoutActions";
-import { useAuthStore } from "../../Auth/store/AuthStore";
+import { useAuthStore } from "../../../Auth/store/AuthStore";
 import { useCheckoutStore } from "../store/CheckoutStore";
 
 const STEP_ROUTES = {

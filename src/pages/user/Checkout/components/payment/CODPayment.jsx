@@ -9,7 +9,7 @@ const CODPayment = ({ onPay, isPaying }) => {
         onClick={onPay}
         disabled={isPaying}
         className={`w-full py-3 rounded-xl text-white flex items-center justify-center
-    ${isPaying ? "bg-gray-400 cursor-not-allowed" : "bg-black"}
+    ${isPaying ? "bg-gray-400 cursor-not-allowed" : "bg-primary hover:bg-secondary transition"}
   `}
       >
         {isPaying ? (

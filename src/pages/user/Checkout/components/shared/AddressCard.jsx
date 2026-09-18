@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import AddressForm from "./AddressForm";
 import { useCheckoutActions } from "../../store/useCheckoutActions";
-import { useAddresses } from "../../../../api/hooks/useAddress";
-import { normalizeAddress } from "../../../../utils/normalizeAddress";
+import { useAddresses } from "../../../../../api/user/hooks/useAddress";
+import { normalizeAddress } from "../../../../../utils/normalizeAddress";
 import { useCheckoutStore } from "../../store/CheckoutStore";
-import DotWaveLoader from "../../../../components/DotWaveLoader";
-import { useAuthStore } from "../../../Auth/store/AuthStore";
+import DotWaveLoader from "../../../../../components/admin/DotWaveLoader";
+import { useAuthStore } from "../../../../Auth/store/AuthStore";
 
 const AddressCard = () => {
   const [selectedAddress, setSelectedAddress] = useState(null);
@@ -161,12 +161,12 @@ const AddressCard = () => {
                 >
                   <div
                     className={`w-5 h-5 rounded-full border-2 ${selectedAddress === address.id
-                      ? "border-black"
+                      ? "border-primary"
                       : "border-gray-300"
                       } flex items-center justify-center`}
                   >
                     {selectedAddress === address.id && (
-                      <div className="w-3 h-3 rounded-full bg-black" />
+                      <div className="w-3 h-3 rounded-full bg-primary" />
                     )}
                   </div>
                 </button>
@@ -178,9 +178,9 @@ const AddressCard = () => {
               </div>
 
               {selectedAddress === address.id && (
-                <button
+                  <button
                   onClick={() => handleConfirm(address)}
-                  className="w-full mt-3 py-2 bg-black text-white rounded-xl"
+                  className="w-full mt-3 py-2 bg-primary hover:bg-secondary transition text-white rounded-xl"
                 >
                   Confirm With This Address
                 </button>
@@ -193,7 +193,7 @@ const AddressCard = () => {
             {!showAddForm && (
               <button
                 onClick={() => setShowAddForm(true)}
-                className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-600 hover:border-black hover:text-black transition-colors"
+                className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-600 hover:border-primary hover:text-primary transition-colors"
               >
                 + Add New Address
               </button>

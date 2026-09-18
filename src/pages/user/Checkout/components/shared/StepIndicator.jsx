@@ -1,8 +1,8 @@
 import React from "react";
-import { CHECKOUT_STEPS } from "../../../../constants";
+import { CHECKOUT_STEPS } from "../../store/constants";
 import { useCheckoutNavigation } from "../../hooks/useCheckoutNavigation";
 import { useCurrentStep, useCompletedSteps } from "../../store/Selectors";
-import { useAuthStore } from "../../../Auth/store/AuthStore";
+import { useAuthStore } from "../../../../Auth/store/AuthStore";
 import { useCheckoutStore } from "../../store/CheckoutStore";
 
 const StepIndicator = ({ children }) => {
@@ -51,7 +51,7 @@ const StepIndicator = ({ children }) => {
                   <div
                     className={`w-8 h-8 flex items-center px-4 justify-center rounded-full text-sm font-semibold
                       ${isStepCompleted || isStepActive
-                        ? "bg-black text-white"
+                        ? "bg-primary text-white"
                         : "bg-gray-200 text-gray-500"
                       }
                     `}
@@ -98,7 +98,7 @@ const StepIndicator = ({ children }) => {
                   <button
                     onClick={() => navigateToStep(step.id)}
                     disabled={!isClickable}
-                    className="text-sm text-black hover:underline disabled:text-gray-400"
+                    className="text-sm text-primary hover:underline disabled:text-gray-400"
                   >
                     Change
                   </button>

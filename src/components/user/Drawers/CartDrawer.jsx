@@ -4,10 +4,14 @@ import { X, Trash2, Plus, Minus } from 'lucide-react';
 import DirhamIcon from '../CustomIcons/DirhamIcon';
 import { useShop } from '../../../context/ShopContext';
 import { useLenis } from 'lenis/react';
+import { useNavigate } from 'react-router-dom';
+import { useCheckoutStore } from '../../../pages/user/Checkout/store/CheckoutStore';
 
 export default function CartDrawer() {
   const { isCartOpen, setIsCartOpen, cartItems, removeFromCart, updateQuantity, cartTotal, cartCount } = useShop();
   const lenis = useLenis();
+  const navigate = useNavigate();
+  const setFromCart = useCheckoutStore((s) => s.setFromCart);
 
   useEffect(() => {
     if (isCartOpen) {
@@ -120,7 +124,14 @@ export default function CartDrawer() {
                     {cartTotal.toFixed(2)}
                   </span>
                 </div>
-                <button className="w-full bg-primary hover:bg-secondary text-white font-poppins font-semibold text-[16px] rounded-[30px] h-12 transition-colors flex items-center justify-center">
+                <button 
+                  onClick={() => {
+                    setFromCart(cartItems);
+                    setIsCartOpen(false);
+                    navigate('/checkout');
+                  }}
+                  className="w-full bg-primary hover:bg-secondary text-white font-poppins font-semibold text-[16px] rounded-[30px] h-12 transition-colors flex items-center justify-center"
+                >
                   Checkout Now
                 </button>
               </div>

@@ -1,10 +1,10 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useGoogleLogin } from "@react-oauth/google";
-import { useLogin, useGLogin } from "../../../../api/hooks/useAuth";
+import { useLogin, useGLogin } from "../../../../../api/user/hooks/useAuth";
 import { useCheckoutActions } from "../../store/useCheckoutActions";
 import { useCheckoutStore } from "../../store/CheckoutStore";
-import { useAuthStore } from "../../../Auth/store/AuthStore";
+import { useAuthStore } from "../../../../Auth/store/AuthStore";
 
 const LoginSchema = Yup.object({
   email: Yup.string()
@@ -91,14 +91,13 @@ const googleLogin = useGoogleLogin({
                 type="email"
                 name="email"
                 placeholder="Enter Your Email address"
-                className={`w-full px-4 py-2 rounded-md border placeholder:text-sm
+                className={`w-full px-4 py-2 rounded-xl border placeholder:text-sm
                   ${
                     errors.email && touched.email
                       ? "border-red-500"
                       : "border-gray-300"
                   }
-                  focus:outline-none `}
-              note
+                  focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary`}
               />
 
               <ErrorMessage
@@ -114,13 +113,13 @@ const googleLogin = useGoogleLogin({
                 type="password"
                 name="password"
                 placeholder="Enter Your Password"
-                className={`w-full px-4 py-2 rounded-md border placeholder:text-sm
+                className={`w-full px-4 py-2 rounded-xl border placeholder:text-sm
                   ${
                     errors.password && touched.password
                       ? "border-red-500"
                       : "border-gray-300"
                   }
-                  focus:outline-none k`}
+                  focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary`}
               />
 
               <ErrorMessage
@@ -133,7 +132,7 @@ const googleLogin = useGoogleLogin({
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-black text-white py-3 rounded-md hover:bg-gray-900 transition disabled:opacity-50"
+              className="w-full bg-primary text-white py-3 rounded-xl hover:bg-secondary transition disabled:opacity-50"
             >
               {isSubmitting ? "Logging in..." : "Login"}
             </button>
@@ -150,7 +149,7 @@ const googleLogin = useGoogleLogin({
 
       <div className="mt-6 text-center text-sm">
         <span className="text-gray-600">New User?</span>{" "}
-        <button className="font-medium text-black hover:underline">
+        <button className="font-medium text-primary hover:underline">
           Click here to create your account!
         </button>
       </div>

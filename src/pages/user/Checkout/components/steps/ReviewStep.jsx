@@ -1,11 +1,8 @@
 import React from 'react'
-import product1 from '../../../../assets/products/productd1.png'
-
-import dirham from '../../../../assets/dirham.svg'
 import StepHeader from '../shared/StepHeader';
 import { useCheckoutActions } from '../../store/useCheckoutActions';
-import { useCartStore } from '../../../Cart/store/CartStore';
-import { useCheckoutStore } from '../../store/CheckoutStore';
+// import { useCheckoutStore } from '../../store/CheckoutStore';
+import DirhamIcon from '../../../../../components/user/CustomIcons/DirhamIcon';
 
 
 const StarRating = ({ rating, total = 5 }) => {
@@ -26,18 +23,40 @@ const StarRating = ({ rating, total = 5 }) => {
 
 
 const ReviewStep = () => {
-  const mode = useCheckoutStore((s) => s.mode);
-  const checkoutItems = useCheckoutStore((s) => s.items);
-  const cartItems = useCartStore((s) => s.items);
+  // COMMENTED OUT FOR NOW - Switching to purely static data per user request
+  // const mode = useCheckoutStore((s) => s.mode);
+  // const checkoutItems = useCheckoutStore((s) => s.items);
 
-  const items = (mode === "buy_now" ? checkoutItems : cartItems).map(
-    (item) => ({
-      ...item,
-      lineItemId:
-        item.cartItemId ??
-        `${item.productId}-${item.variantId ?? "default"}`,
-    })
-  );
+  // const items = checkoutItems.map(
+  //   (item) => ({
+  //     ...item,
+  //     lineItemId:
+  //       item.cartItemId ??
+  //       `${item.productId}-${item.variantId ?? "default"}`,
+  //   })
+  // );
+
+  // Static fallback data so the UI layout is visible when cart is empty
+  const items = [
+      { 
+        lineItemId: "static-1",
+        name: "Signature Aqua Perfume", 
+        sizeLabel: "50ml", 
+        qty: 1, 
+        price: 120.0, 
+        originalPrice: 150.0, 
+        image: "https://placehold.co/100?text=Aqua" 
+      },
+      { 
+        lineItemId: "static-2",
+        name: "Ocean Breeze Body Mist", 
+        sizeLabel: "100ml", 
+        qty: 2, 
+        price: 45.0, 
+        originalPrice: 50.0, 
+        image: "https://placehold.co/100?text=Breeze" 
+      }
+  ];
 
   const { completeStep } = useCheckoutActions();
 
@@ -53,38 +72,38 @@ const ReviewStep = () => {
             {/* Image */}
             <div className="w-32 h-32 shrink-0">
               <img
-                src={item.image}
-                alt={item.name}
+                src={item.product?.image || item.image}
+                alt={item.product?.name || item.name}
                 className="w-full h-full object-contain"
               />
             </div>
 
             {/* Details */}
             <div className="flex flex-col gap-1">
-              <h2 className="text-lg font-medium">{item.name}</h2>
-              <p className="text-sm text-gray-500">Brand: {item.brand}</p>
+              <h2 className="text-lg font-medium">{item.product?.name || item.name}</h2>
+              <p className="text-sm text-gray-500">Brand: {item.product?.brand || item.brand}</p>
 
               <div className="flex items-center gap-2">
-                <img src={dirham} className="w-4 h-4" />
+                <DirhamIcon className="w-4 h-4" />
                 <span className="font-semibold">
-                  {(item.price * item.qty).toFixed(2)}
+                  {((item.product?.price || item.price) * (item.quantity || item.qty)).toFixed(2)}
                 </span>
 
-                {item.originalPrice && (
+                {item.product?.originalPrice && (
                   <span className="line-through text-gray-400 text-sm">
-                    {(item.originalPrice * item.qty).toFixed(2)}
+                    {(item.product.originalPrice * (item.quantity || item.qty)).toFixed(2)}
                   </span>
                 )}
               </div>
 
-              <p className="text-sm text-gray-600">Qty: {item.qty}</p>
+              <p className="text-sm text-gray-600">Qty: {item.quantity || item.qty}</p>
             </div>
           </div>
         </div>
       ))}
 
-      <div onClick={handleSubmitReview} className='flex justify-center bg-black hover:bg-white border border-black  hover:text-black text-white transition-colors duration-150 ease-in-out cursor-pointer py-3 rounded-lg mt-3'>
-        <button>Continue to Pay</button>
+      <div onClick={handleSubmitReview} className='flex justify-center bg-primary hover:bg-secondary text-white transition-colors duration-150 ease-in-out cursor-pointer py-3 rounded-xl mt-3'>
+        <button className="font-medium">Continue to Pay</button>
       </div>
     </div>
   )

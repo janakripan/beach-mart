@@ -15,22 +15,26 @@ const SavedAddresses = () => {
   const [editingAddress, setEditingAddress] = useState(null);
   const formRef = useRef(null);
 
-const handleAddAddress = () => {
-  setEditingAddress(null); // important
-  setShowForm(true);
+  // Disable body scroll when overlay is open
+  React.useEffect(() => {
+    if (showForm) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [showForm]);
 
-  setTimeout(() => {
-    formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, 100);
+const handleAddAddress = () => {
+  setEditingAddress(null);
+  setShowForm(true);
 };
 
 const handleEditAddress = (address) => {
   setEditingAddress(address);
   setShowForm(true);
-
-  setTimeout(() => {
-    formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, 100);
 };
   const closeForm = () => {
     setShowForm(false);
@@ -98,10 +102,15 @@ const handleEditAddress = (address) => {
 </div>
 
 
-        {/* Address Form */}
+        {/* Address Form Overlay */}
         {showForm && (
-          <div ref={formRef} className="mb-12">
-            <AddressForm closeForm={closeForm} editingAddress={editingAddress}/>
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 md:p-8">
+            <div 
+              className="bg-transparent w-full max-w-4xl max-h-[90vh] overflow-y-auto scrollbar-hide rounded-lg"
+              ref={formRef}
+            >
+              <AddressForm closeForm={closeForm} editingAddress={editingAddress}/>
+            </div>
           </div>
         )}
 

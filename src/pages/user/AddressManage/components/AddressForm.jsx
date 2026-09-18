@@ -1,93 +1,238 @@
-import React from "react";
-import { Formik, Field, ErrorMessage, Form } from "formik";
+import React, { useRef, useState, useCallback, useEffect } from "react";
+import { Formik, Field, ErrorMessage, Form, useFormikContext } from "formik";
 import * as Yup from "yup";
 import { useAddAddress, useUpdateAddress } from "../../../../api/user/hooks/useAddress";
+import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
+import usePlacesAutocomplete, { getGeocode, getLatLng } from "use-places-autocomplete";
+import { Search, MapPin, Target } from "lucide-react";
 
+const libraries = ["places"];
+const mapContainerStyle = { width: "100%", height: "200px" };
+const defaultCenter = { lat: 25.2048, lng: 55.2708 }; // Dubai default
 
-const AddressForm = ({ closeForm, editingAddress  }) => {
-  const { mutateAsync: addAddress, isPending } = useAddAddress();
-    const { mutateAsync: updateAddress, isPending: isUpdating } = useUpdateAddress();
+/* ================= VALIDATION ================= */
+const validationSchema = Yup.object({
+  userName: Yup.string().required("Full name is required").min(2, "Full name must be at least 2 characters"),
+  phoneNumber: Yup.string().required("Phone number is required").matches(/^[0-9]+$/, "Invalid phone number"),
+  address: Yup.string().required("Address is required"),
+  district: Yup.string().required("Delivery Area is required"),
+  addressLabel: Yup.string().required("Selection is required"),
+  // pinCode, city, landMark are intentionally omitted from strictly required UI validation
+});
 
-  /* ================= VALIDATION ================= */
-  const validationSchema = Yup.object({
-    userName: Yup.string()
-      .required("Full name is required")
-      .min(2, "Full name must be at least 2 characters"),
+// A component to watch Pincode changes in background (if we somehow get it)
+const PincodeWatcher = () => {
+  const { values, setFieldValue } = useFormikContext();
+  const prevPin = useRef(values.pinCode);
 
-    phoneNumber: Yup.string()
-      .required("Phone number is required")
-      .matches(/^[0-9]+$/, "Invalid phone number"),
-
-    pinCode: Yup.string()
-      .required("Pincode is required")
-      .matches(/^[0-9]+$/, "Invalid pincode"),
-
-    address: Yup.string().required("Address is required"),
-
-    district: Yup.string().required("Street is required"),
-
-    city: Yup.string().required("City is required"),
-
-    addressLabel: Yup.string().required("Address label is required"),
-
-    landMark: Yup.string(),
-  });
-
-  /* ================= INITIAL VALUES ================= */
-const initialValues = editingAddress
-  ? {
-      userName: editingAddress.rawDetails.UserName,
-      phoneNumber: editingAddress.rawDetails.PhoneNumber,
-      pinCode: editingAddress.rawDetails.PinCode,
-      address: editingAddress.rawDetails.Address,
-      district: editingAddress.rawDetails.District,
-      city: editingAddress.rawDetails.City,
-      addressLabel: editingAddress.rawDetails.AddressLabel,
-      landMark: editingAddress.rawDetails.LandMark || "",
+  useEffect(() => {
+    if (values.pinCode !== prevPin.current && values.pinCode?.length >= 5) {
+      prevPin.current = values.pinCode;
+      getGeocode({ address: values.pinCode })
+        .then((results) => {
+          let city = "";
+          let district = "";
+          results[0].address_components.forEach((c) => {
+            if (c.types.includes("locality")) city = c.long_name;
+            if (c.types.includes("sublocality") || c.types.includes("route")) district = c.long_name;
+          });
+          if (city) setFieldValue("city", city);
+          if (district && !values.district) setFieldValue("district", district);
+        })
+        .catch(() => {}); // ignore geocode errors for pincode
     }
-  : {
-      userName: "",
-      phoneNumber: "",
-      pinCode: "",
-      address: "",
-      district: "",
-      city: "",
-      addressLabel: "Home",
-      landMark: "",
-    };
+  }, [values.pinCode, setFieldValue, values.district]);
 
-
-  /* ================= SUBMIT ================= */
-const handleSubmit = async (values, { setSubmitting }) => {
-  try {
-    if (editingAddress) {
-      await updateAddress({
-        addressId: editingAddress.id,
-        data: values,
-      });
-    } else {
-      await addAddress(values);
-    }
-
-    closeForm();
-  } catch (err) {
-    console.error("Address save failed", err);
-  } finally {
-    setSubmitting(false);
-  }
+  return null;
 };
 
+// Autocomplete Input Component
+const PlacesAutocomplete = ({ setFieldValue, onLocationSelect, onSelectComplete }) => {
+  const { values } = useFormikContext();
+  const {
+    ready,
+    value,
+    suggestions: { status, data },
+    setValue,
+    clearSuggestions,
+  } = usePlacesAutocomplete({
+    requestOptions: { componentRestrictions: { country: 'AE' } },
+    debounce: 300,
+  });
+
+  const handleSelect = async ({ description }) => {
+    setValue(description, false);
+    clearSuggestions();
+    try {
+      const results = await getGeocode({ address: description });
+      const { lat, lng } = await getLatLng(results[0]);
+      onLocationSelect({ lat, lng });
+
+      let pincode = "";
+      let city = "";
+      let district = "";
+      let street = "";
+      
+      results[0].address_components.forEach((c) => {
+        if (c.types.includes("postal_code")) pincode = c.long_name;
+        if (c.types.includes("locality") || c.types.includes("administrative_area_level_1")) city = c.long_name;
+        if (c.types.includes("sublocality") || c.types.includes("neighborhood")) district = c.long_name;
+        if (c.types.includes("route")) street = c.long_name;
+      });
+
+      const areaStr = [district, street].filter(Boolean).join(", ");
+
+      setFieldValue("pinCode", pincode || "00000"); // default fallback if maps doesn't have it
+      setFieldValue("city", city || "Dubai");
+      setFieldValue("district", areaStr);
+      setFieldValue("address", description);
+      setFieldValue("locationPlace", description);
+      
+      if (onSelectComplete) onSelectComplete();
+    } catch (error) {
+      console.error("Error: ", error);
+    }
+  };
 
   return (
-    <div className="bg-white p-6 md:p-8 rounded-2xl font-arial w-full max-w-6xl">
+    <div className="relative mb-2">
+      <input
+        value={value}
+        onChange={(e) => {
+          setValue(e.target.value);
+        }}
+        disabled={!ready}
+        placeholder="Search a place..."
+        autoFocus
+        className="w-full px-4 py-2 rounded border border-gray-300 bg-white focus:outline-none"
+      />
+      {status === "OK" && (
+        <ul className="absolute z-10 w-full bg-white border border-gray-300 mt-1 rounded shadow-lg max-h-60 overflow-y-auto">
+          {data.map((suggestion) => (
+            <li
+              key={suggestion.place_id}
+              onClick={() => handleSelect(suggestion)}
+              className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+            >
+              {suggestion.description}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+};
+
+const AddressForm = ({ closeForm, editingAddress }) => {
+  const { mutateAsync: addAddress, isPending } = useAddAddress();
+  const { mutateAsync: updateAddress, isPending: isUpdating } = useUpdateAddress();
+  
+  const [mapCenter, setMapCenter] = useState(defaultCenter);
+  const [markerPos, setMarkerPos] = useState(defaultCenter);
+  const [showSearch, setShowSearch] = useState(false);
+  const mapRef = useRef(null);
+
+  const { isLoaded } = useLoadScript({
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+    libraries,
+  });
+
+  const onMapLoad = useCallback((map) => {
+    mapRef.current = map;
+  }, []);
+
+  const performReverseGeocode = async (lat, lng, setFieldValue) => {
+    try {
+      const results = await getGeocode({ location: { lat, lng } });
+      if (results && results.length > 0) {
+        let pincode = "";
+        let city = "";
+        let district = "";
+        let street = "";
+        
+        results[0].address_components.forEach((c) => {
+          if (c.types.includes("postal_code")) pincode = c.long_name;
+          if (c.types.includes("locality") || c.types.includes("administrative_area_level_1")) city = c.long_name;
+          if (c.types.includes("sublocality") || c.types.includes("neighborhood")) district = c.long_name;
+          if (c.types.includes("route")) street = c.long_name;
+        });
+        
+        const areaStr = [district, street].filter(Boolean).join(", ");
+        
+        setFieldValue("pinCode", pincode || "00000");
+        setFieldValue("city", city || "Dubai");
+        setFieldValue("district", areaStr); // Delivery Area / Street
+        setFieldValue("address", results[0].formatted_address); // Flat/Building/Address
+        setFieldValue("locationPlace", results[0].formatted_address);
+      }
+    } catch (e) {
+      console.error("Reverse geocoding failed", e);
+    }
+  };
+
+  const handleUseMyLocation = (setFieldValue) => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+          setMapCenter({ lat, lng });
+          setMarkerPos({ lat, lng });
+          performReverseGeocode(lat, lng, setFieldValue);
+        },
+        () => alert("Location access denied or failed.")
+      );
+    }
+  };
+
+  /* ================= INITIAL VALUES ================= */
+  const initialValues = editingAddress
+    ? {
+        userName: editingAddress.rawDetails.UserName || editingAddress.rawDetails.userName || editingAddress.name || "",
+        phoneNumber: editingAddress.rawDetails.PhoneNumber || editingAddress.rawDetails.phoneNumber || editingAddress.phone || "",
+        pinCode: editingAddress.rawDetails.PinCode || editingAddress.rawDetails.pinCode || editingAddress.rawDetails.pincode || "00000",
+        address: editingAddress.rawDetails.Address || editingAddress.rawDetails.address || "",
+        district: editingAddress.rawDetails.District || editingAddress.rawDetails.district || "",
+        city: editingAddress.rawDetails.City || editingAddress.rawDetails.city || "Dubai",
+        addressLabel: editingAddress.rawDetails.AddressLabel || editingAddress.rawDetails.addressLabel || "CARD",
+        landMark: editingAddress.rawDetails.LandMark || editingAddress.rawDetails.landMark || editingAddress.rawDetails.landmark || "",
+        locationPlace: editingAddress.rawDetails.Address || editingAddress.rawDetails.address || "",
+      }
+    : {
+        userName: "",
+        phoneNumber: "",
+        pinCode: "00000",
+        address: "",
+        district: "",
+        city: "Dubai",
+        addressLabel: "CARD",
+        landMark: "",
+        locationPlace: "",
+      };
+
+  /* ================= SUBMIT ================= */
+  const handleSubmit = async (values, { setSubmitting }) => {
+    try {
+      if (editingAddress) {
+        await updateAddress({ addressId: editingAddress.id, data: values });
+      } else {
+        await addAddress(values);
+      }
+      closeForm();
+    } catch (err) {
+      console.error("Address save failed", err);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="bg-[#eaf7ed] p-6 md:p-8 rounded-lg font-arial w-full max-w-4xl mx-auto shadow-md">
       {/* Header */}
-      <div className="mb-6">
-        <h2 className="text-[clamp(1.25rem,2vw,2rem)] font-arial font-semibold text-gray-900">
-          Delivery details
+      <div className="mb-6 text-center">
+        <h2 className="text-xl font-arial font-semibold text-gray-900 uppercase tracking-wide">
+          PLEASE FILL FOLLOWING DETAILS
         </h2>
-        <p className="text-sm text-gray-500">
-          We will deliver your order to the address below
-        </p>
       </div>
 
       <Formik
@@ -96,163 +241,164 @@ const handleSubmit = async (values, { setSubmitting }) => {
         enableReinitialize
         onSubmit={handleSubmit}
       >
-        {({ isSubmitting }) => (
-          <Form className="space-y-4">
+        {({ isSubmitting, setFieldValue }) => (
+          <Form className="space-y-6 bg-white rounded-2xl shadow-lg p-8 border border-gray-300 focus-within:border-primary transition-colors">
+            <PincodeWatcher />
 
-            {/* Full Name */}
+            {/* Mobile */}
             <div>
-              <Field
-                name="userName"
-                placeholder="Full name*"
-                className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 
-                           text-gray-900 placeholder-gray-400 
-                           focus:outline-none "
-              />
-              <ErrorMessage
-                name="userName"
-                component="div"
-                className="text-red-500 text-xs mt-1 ml-1"
-              />
-            </div>
-
-            {/* Phone + Pincode */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <div>
+              <div className="text-gray-600 text-sm mb-1 font-medium">Mobile</div>
+              <div className="flex bg-white rounded border border-gray-300 overflow-hidden">
+                <div className="bg-white px-3 py-2 border-r border-gray-300 flex items-center gap-2">
+                  <span className="text-lg">🇦🇪</span>
+                  <span className="text-gray-700 text-sm">(+971)</span>
+                </div>
                 <Field
                   name="phoneNumber"
-                  placeholder="Phone number*"
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 
-                             focus:outline-none "
-                />
-                <ErrorMessage
-                  name="phoneNumber"
-                  component="div"
-                  className="text-red-500 text-xs mt-1 ml-1"
+                  placeholder="Enter WhatsApp number"
+                  className="w-full px-4 py-2 focus:outline-none"
                 />
               </div>
-
-              <div>
-                <Field
-                  name="pinCode"
-                  placeholder="Pincode*"
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 
-                             focus:outline-none "
-                />
-                <ErrorMessage
-                  name="pinCode"
-                  component="div"
-                  className="text-red-500 text-xs mt-1 ml-1"
-                />
-              </div>
+              <ErrorMessage name="phoneNumber" component="div" className="text-red-500 text-xs mt-1" />
             </div>
 
-            {/* Address */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div>
-              <Field
-                name="address"
-                placeholder="House / Street / Area*"
-                className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 
-                           focus:outline-none "
-              />
-              <ErrorMessage
-                name="address"
-                component="div"
-                className="text-red-500 text-xs mt-1 ml-1"
-              />
-            </div>
+            {/* First Name */}
             <div>
+              <div className="text-gray-600 text-sm mb-1 font-medium">First Name</div>
               <Field
-                as="select"
-                name="addressLabel"
-                className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 
-                           text-gray-900 cursor-pointer
-                           focus:outline-none "
-              >
-                <option value="Home">Home</option>
-                <option value="Office">Office</option>
-                <option value="Other">Other</option>
-              </Field>
-              <ErrorMessage
-                name="addressLabel"
-                component="div"
-                className="text-red-500 text-xs mt-1 ml-1"
+                name="userName"
+                placeholder="Enter First Name"
+                className="w-full px-4 py-2 rounded-xl border border-gray-300 bg-white focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
               />
-            </div>
-            </div>
-
-            {/* City + District */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <div>
-                <Field
-                  name="city"
-                  placeholder="City*"
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 
-                             focus:outline-none "
-                />
-                <ErrorMessage
-                  name="city"
-                  component="div"
-                  className="text-red-500 text-xs mt-1 ml-1"
-                />
-              </div>
-
-              <div>
-                <Field
-                  name="district"
-                  placeholder="Street*"
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 
-                             focus:outline-none "
-                />
-                <ErrorMessage
-                  name="district"
-                  component="div"
-                  className="text-red-500 text-xs mt-1 ml-1"
-                />
-              </div>
+              <ErrorMessage name="userName" component="div" className="text-red-500 text-xs mt-1" />
             </div>
 
-            {/* Address Label */}
-            
-
-            {/* Landmark */}
+            {/* Address Textarea */}
             <div>
+              <div className="text-gray-600 text-sm mb-1 font-medium">Flat/Building/Address</div>
               <Field
-                name="landMark"
-                placeholder="Landmark (optional)"
-                className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 
-                           focus:outline-none "
+                as="textarea"
+                name="address"
+                placeholder="Enter Address"
+                rows={3}
+                className="w-full px-4 py-2 rounded-xl border border-gray-300 bg-white focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary resize-none"
               />
+              <ErrorMessage name="address" component="div" className="text-red-500 text-xs mt-1" />
             </div>
+
+            {/* Map Section */}
+            <div className="pt-2">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2 text-gray-700 font-medium text-sm">
+                  <MapPin className="w-4 h-4" /> Select location on map
+                </div>
+                <div className="flex flex-col sm:flex-row gap-2 w-full">
+                  <button 
+                    type="button" 
+                    onClick={() => setShowSearch(!showSearch)}
+                    className="bg-[#cc2b2b] text-white w-full sm:w-auto justify-center text-xs px-3 py-2 rounded-lg flex items-center gap-1 hover:bg-red-700 transition">
+                    <Search className="w-4 h-4" /> Search location
+                  </button>
+                  <button 
+                    type="button" 
+                    onClick={() => handleUseMyLocation(setFieldValue)}
+                    className="bg-primary text-white w-full sm:w-auto justify-center text-xs px-3 py-2 rounded-lg flex items-center gap-1 hover:bg-secondary transition">
+                    <Target className="w-4 h-4" /> Use my location
+                  </button>
+                </div>
+              </div>
+
+              {/* Toggleable Search Autocomplete */}
+              {showSearch && isLoaded && (
+                <PlacesAutocomplete 
+                  setFieldValue={setFieldValue} 
+                  onSelectComplete={() => setShowSearch(false)}
+                  onLocationSelect={({ lat, lng }) => {
+                    setMapCenter({ lat, lng });
+                    setMarkerPos({ lat, lng });
+                  }}
+                />
+              )}
+
+              <div className="rounded-xl overflow-hidden border border-gray-300 shadow-sm relative z-0">
+                {isLoaded ? (
+                  <GoogleMap
+                    mapContainerStyle={mapContainerStyle}
+                    zoom={12}
+                    center={mapCenter}
+                    onLoad={onMapLoad}
+                    onClick={(e) => {
+                      const lat = e.latLng.lat();
+                      const lng = e.latLng.lng();
+                      setMarkerPos({ lat, lng });
+                      performReverseGeocode(lat, lng, setFieldValue);
+                    }}
+                  >
+                    <Marker position={markerPos} />
+                  </GoogleMap>
+                ) : (
+                  <div className="w-full h-[200px] bg-gray-200 flex items-center justify-center text-gray-500">
+                    Loading Map...
+                  </div>
+                )}
+              </div>
+              
+              {/* Place / Location Standard Input */}
+              <div className="mt-4">
+                <div className="text-gray-600 text-sm mb-1 font-medium">Place / Location</div>
+                <Field
+                  name="locationPlace"
+                  placeholder="Select on map or type place name"
+                  className="w-full px-4 py-2 rounded-xl border border-gray-300 bg-white focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
+                />
+              </div>
+            </div>
+
+            {/* District & Label (No Pincode, City, or Landmark in UI) */}
+            <div>
+              <div className="text-gray-600 text-sm mb-1 font-medium">Delivery Area</div>
+              <Field
+                name="district"
+                placeholder="Delivery Area"
+                className="w-full px-4 py-2 rounded-xl border border-gray-300 bg-white focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
+              />
+              <ErrorMessage name="district" component="div" className="text-red-500 text-xs mt-1" />
+            </div>
+
+            <div>
+              <div className="text-gray-600 text-sm mb-1 font-medium">Delivery/Pickup/Dine-in</div>
+              <Field
+                name="addressLabel"
+                placeholder="CARD"
+                className="w-full px-4 py-2 rounded-xl border border-gray-300 bg-white focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
+              />
+              <ErrorMessage name="addressLabel" component="div" className="text-red-500 text-xs mt-1" />
+            </div>
+
+            {/* Hidden Required Fields for Backend */}
+            <Field type="hidden" name="pinCode" />
+            <Field type="hidden" name="city" />
+            <Field type="hidden" name="landMark" />
 
             {/* Buttons */}
-            <div className="flex flex-col md:flex-row gap-3 pt-4">
+            <div className="flex gap-2 pt-6">
               <button
-                    type="submit"
-                    disabled={isSubmitting || isPending}
-                    className="w-full bg-primary text-white hover:bg-[#126442]/90 py-3 rounded-lg font-medium 
-                                hover:bg-gray-800 transition
-                                disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                    {isSubmitting || isPending
-                        ? editingAddress
-                        ? "Updating..."
-                        : "Saving..."
-                        : editingAddress
-                        ? "Update Address"
-                        : "Add Address"}
-                    </button>
+                type="submit"
+                onClick={() => {}}
+                disabled={isPending || isSubmitting}
+                className="w-full py-3 bg-primary text-white font-medium rounded-xl hover:bg-secondary transition disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSubmitting || isPending ? 'Saving...' : 'Save Address'}
+              </button>
 
               <button
                 type="button"
                 onClick={closeForm}
-                className="w-full border border-gray-300 py-3 rounded-lg font-medium 
-                           hover:bg-gray-100 transition"
+                className="w-1/2 bg-[#6b7280] text-white py-3 rounded font-medium hover:bg-gray-600 transition"
               >
-                Cancel
+                Close
               </button>
             </div>
-
           </Form>
         )}
       </Formik>

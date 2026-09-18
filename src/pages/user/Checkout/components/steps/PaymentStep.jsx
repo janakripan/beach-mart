@@ -1,18 +1,18 @@
 import React, { useState } from "react";
 import StepHeader from "../shared/StepHeader";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import { useBuyNowPayment, useCreateCheckoutSession } from "../../../../api/hooks/usePayment";
+import { useBuyNowPayment, useCreateCheckoutSession } from "../../../../../api/user/hooks/usePayment";
 import PaymentRightPanel from "../payment/PaymentRightPanel";
-import { usePostOrder } from "../../../../api/hooks/useOrders";
-import { buildOrderPayload } from "../../../../utils/buildOrderPayload";
-import { useCartStore } from "../../../Cart/store/CartStore";
-import { useAuthStore } from "../../../Auth/store/AuthStore";
+import { usePostOrder } from "../../../../../api/user/hooks/useOrders";
+import { buildOrderPayload } from "../../../../../utils/buildOrderPayload";
+import { useCartStore } from "../../../../user/Cart/store/CartStore";
+import { useAuthStore } from "../../../../Auth/store/AuthStore";
 import { useCheckoutStore } from "../../store/CheckoutStore";
 import { useNavigate } from "react-router-dom";
-import { useClearCart } from "../../../../api/hooks/useCart";
-import { buildOrderBuyNowPayload } from "../../../../utils/buildOrderBuyNowPayload";
-import { normalizeGuestAddress } from "../../../../utils/normalizeGuestAddress";
-import { useMessage } from "../../../../components/MessageBox/useMessage";
+import { useClearCart } from "../../../../../api/user/hooks/useCart";
+import { buildOrderBuyNowPayload } from "../../../../../utils/buildOrderBuyNowPayload";
+import { normalizeGuestAddress } from "../../../../../utils/normalizeGuestAddress";
+import { useMessage } from "../../../../../components/admin/MessageBox/useMessage";
 
 
 const PAYMENT_METHODS = [

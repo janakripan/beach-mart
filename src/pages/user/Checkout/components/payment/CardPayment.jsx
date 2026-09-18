@@ -29,7 +29,7 @@ const CardPayment = ({ onPay, isPaying }) => {
           ${
             !stripe || !isCardComplete || isPaying
               ? "bg-gray-400 cursor-not-allowed"
-              : "bg-black"
+              : "bg-primary hover:bg-secondary transition"
           }
         `}
       >
