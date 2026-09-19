@@ -2,7 +2,6 @@ import { X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import FilterGroup from "./filters/FilterGroup";
 import CheckboxItem from "./filters/CheckboxItem";
-import RatingItem from "./filters/RatingItem";
 // import { useGetFilters } from "../../../../api/user/hooks/useProduct";
 import { categories } from "../../../../constants/data";
 
@@ -17,14 +16,6 @@ const FiltersSection = ({ filters, setFilters }) => {
   const CATEGORY_FILTERS = categories.map(cat => ({ CategoryId: cat.title, CategoryName: cat.title, count: 0 }));
   const BRANDS_LIST = [];
 
-  const RATING_FILTERS = [
-    { rating: 5, count: 45 },
-    { rating: 4, count: 32 },
-    { rating: 3, count: 18 },
-    { rating: 2, count: 7 },
-    { rating: 1, count: 3 },
-  ];
-
   /* ---------- HELPERS ---------- */
 
   const toggleValue = (list, value) =>
@@ -35,8 +26,7 @@ const FiltersSection = ({ filters, setFilters }) => {
   const activeFiltersCount = useMemo(() => {
     return (
       filters.categoryIDs.length +
-      filters.brandIDs.length +
-      (filters.rating ? 1 : 0)
+      filters.brandIDs.length
     );
   }, [filters]);
 
@@ -45,7 +35,6 @@ const FiltersSection = ({ filters, setFilters }) => {
       ...f,
       categoryIDs: [],
       brandIDs: [],
-      ratingFilter: null,
       pageNumber: 1,
     }));
   };
@@ -90,23 +79,6 @@ const FiltersSection = ({ filters, setFilters }) => {
                 setFilters((f) => ({
                   ...f,
                   categoryIDs: toggleValue(f.categoryIDs, cat.CategoryId),
-                }))
-              }
-            />
-          ))}
-        </FilterGroup>
-
-        <FilterGroup title="RATING" defaultOpen={true}>
-          {RATING_FILTERS.map((r) => (
-            <RatingItem
-              key={r.rating}
-              rating={r.rating}
-              count={r.count}
-              checked={filters.ratingFilter === r.rating}
-              onChange={() =>
-                setFilters((f) => ({
-                  ...f,
-                  ratingFilter: f.ratingFilter === r.rating ? null : r.rating,
                 }))
               }
             />

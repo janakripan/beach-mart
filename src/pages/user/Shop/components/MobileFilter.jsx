@@ -3,7 +3,6 @@ import { useLenis } from "lenis/react";
 import { useMemo, useState, useEffect } from "react";
 import FilterGroup from "./filters/FilterGroup";
 import CheckboxItem from "./filters/CheckboxItem";
-import RatingItem from "./filters/RatingItem";
 // import { useGetFilters } from "../../../../api/user/hooks/useProduct";
 import { categories } from "../../../../constants/data";
 import SortComp from "./SortComp";
@@ -21,14 +20,6 @@ const MobileFilter = ({ filters, setFilters }) => {
   const CATEGORY_FILTERS = categories.map(cat => ({ CategoryId: cat.title, CategoryName: cat.title, count: 0 }));
   const BRANDS_LIST = [];
 
-  const RATING_FILTERS = [
-    { rating: 5, count: 45 },
-    { rating: 4, count: 32 },
-    { rating: 3, count: 18 },
-    { rating: 2, count: 7 },
-    { rating: 1, count: 3 },
-  ];
-
   /* ---------- HELPERS ---------- */
 
   const toggleValue = (list, value) =>
@@ -39,8 +30,7 @@ const MobileFilter = ({ filters, setFilters }) => {
   const activeFiltersCount = useMemo(() => {
     return (
       filters.categoryIDs.length +
-      filters.brandIDs.length +
-      (filters.rating ? 1 : 0)
+      filters.brandIDs.length
     );
   }, [filters]);
 
@@ -49,7 +39,6 @@ const MobileFilter = ({ filters, setFilters }) => {
       ...f,
       categoryIDs: [],
       brandIDs: [],
-      ratingFilter: null,
       pageNumber: 1,
     }));
   };
@@ -104,14 +93,14 @@ const MobileFilter = ({ filters, setFilters }) => {
         />
       )}
 
-      {/* Slide-over Panel */}
+      {/* Bottom Sheet Panel */}
       <div
-        className={`fixed inset-y-0 left-0 top-0 bottom-0 z-50 w-[85vw] max-w-[350px] bg-white transform transition-transform duration-300 ease-in-out font-arial flex flex-col overflow-y-auto ${
-            isOpen ? 'translate-x-0' : '-translate-x-full'
+        className={`fixed inset-x-0 bottom-0 z-50 w-full max-h-[85vh] rounded-t-2xl bg-white transform transition-transform duration-300 ease-in-out font-arial flex flex-col shadow-xl ${
+            isOpen ? 'translate-y-0' : 'translate-y-full'
           }`}
       >
           {/* Header */}
-          <div className="flex justify-between items-center p-4 border-b">
+          <div className="flex justify-between items-center p-4">
             <h2 className="text-lg font-semibold">Filters</h2>
             <button 
               onClick={() => setIsOpen(false)}
@@ -148,23 +137,6 @@ const MobileFilter = ({ filters, setFilters }) => {
                     setFilters((f) => ({
                       ...f,
                       categoryIDs: toggleValue(f.categoryIDs, cat.CategoryId),
-                    }))
-                  }
-                />
-              ))}
-            </FilterGroup>
-
-            <FilterGroup title="RATING" defaultOpen={true}>
-              {RATING_FILTERS.map((r) => (
-                <RatingItem
-                  key={r.rating}
-                  rating={r.rating}
-                  count={r.count}
-                  checked={filters.ratingFilter === r.rating}
-                  onChange={() =>
-                    setFilters((f) => ({
-                      ...f,
-                      ratingFilter: f.ratingFilter === r.rating ? null : r.rating,
                     }))
                   }
                 />
