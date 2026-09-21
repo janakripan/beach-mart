@@ -6,10 +6,10 @@ import ProtectedRoute from "./components/admin/ProtectedRoute";
 import DotWaveLoader from "./components/admin/DotWaveLoader";
 import ScrollToTop from "./components/admin/ScrollToTop";
 
-// Public pages for beach-mart
-import LandingPage from "./pages/user/LandingPage/LandingPage";
-import Shop from "./pages/user/Shop/Shop";
-import Contact from "./pages/user/Contact/Contact";
+// Public pages for beach-mart (lazy-loaded to reduce initial bundle)
+const LandingPage = lazy(() => import("./pages/user/LandingPage/LandingPage"));
+const Shop        = lazy(() => import("./pages/user/Shop/Shop"));
+const Contact     = lazy(() => import("./pages/user/Contact/Contact"));
 
 // User protected pages
 
