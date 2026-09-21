@@ -56,8 +56,10 @@ const AppRoutes = () => {
           </Route>
 
           {/* Checkout routes */}
-          <Route element={<CheckoutGuard />}>
-            <Route path="/checkout" element={<CheckoutLayout />} />
+          <Route element={<UserLayout />}>
+            <Route element={<CheckoutGuard />}>
+              <Route path="/checkout" element={<CheckoutLayout />} />
+            </Route>
           </Route>
 
           {/* Admin routes */}
