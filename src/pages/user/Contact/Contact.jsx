@@ -232,7 +232,7 @@ export default function Contact() {
           <div className="hidden lg:flex flex-col h-full">
             <div className="flex-1 rounded-2xl overflow-hidden border border-gray-100 shadow-sm min-h-[400px]">
               <iframe
-                title="Beach Mart Location"
+                title="Beach Circle Mini Mart Location"
                 src={MAP_EMBED_URL}
                 width="100%"
                 height="100%"

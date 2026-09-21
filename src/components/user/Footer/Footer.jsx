@@ -9,24 +9,11 @@ const FacebookIcon = () => (
   </svg>
 );
 
-const TwitterIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
-  </svg>
-);
-
 const InstagramIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
     <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
     <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-  </svg>
-);
-
-const YoutubeIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-    <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path>
-    <polygon fill="white" points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon>
   </svg>
 );
 
@@ -57,22 +44,16 @@ export default function Footer() {
           
           {/* Column 1: Brand & Socials */}
           <div className="flex flex-col gap-6 max-w-[320px]">
-            <img src="/Logo.png" alt="Beach Mart" className="w-[100px] md:w-[120px] object-contain" />
+            <img src="/Logo.png" alt="Beach Circle Mini Mart" className="w-[100px] md:w-[120px] object-contain" />
             <p className="font-poppins text-[15px] leading-[160%] text-gray-200 font-light">
               Fresh groceries, delivered right on time to keep you covered.
             </p>
             <div className="flex items-center gap-3 mt-2">
-              <a href="#" className="w-[36px] h-[36px] rounded-full bg-white flex items-center justify-center text-primary hover:bg-gray-100 transition-colors shadow-lg">
+              <a href="https://www.facebook.com/share/1Co51i8GP8/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" className="w-[36px] h-[36px] rounded-full bg-white flex items-center justify-center text-primary hover:bg-gray-100 transition-colors shadow-lg">
                 <FacebookIcon />
               </a>
-              <a href="#" className="w-[36px] h-[36px] rounded-full bg-white flex items-center justify-center text-primary hover:bg-gray-100 transition-colors shadow-lg">
-                <TwitterIcon />
-              </a>
-              <a href="#" className="w-[36px] h-[36px] rounded-full bg-white flex items-center justify-center text-primary hover:bg-gray-100 transition-colors shadow-lg">
+              <a href="https://www.instagram.com/beachmart.in?igsh=N25tNjNxYno3MmZ1&utm_source=qr" target="_blank" rel="noopener noreferrer" className="w-[36px] h-[36px] rounded-full bg-white flex items-center justify-center text-primary hover:bg-gray-100 transition-colors shadow-lg">
                 <InstagramIcon />
-              </a>
-              <a href="#" className="w-[36px] h-[36px] rounded-full bg-white flex items-center justify-center text-primary hover:bg-gray-100 transition-colors shadow-lg">
-                <YoutubeIcon />
               </a>
             </div>
           </div>

@@ -57,7 +57,7 @@ const GuestLoginPrompt = () => {
 
                 <div className="space-y-3">
                     <div>
-                        <h3 className="font-semibold text-lg text-gray-900">Welcome to Beach Mart</h3>
+                        <h3 className="font-semibold text-lg text-gray-900">Welcome to Beach Circle Mini Mart</h3>
                         <p className="text-gray-600 text-sm mt-1">
                             Sign in for the best experience, track orders, and exclusive offers.
                         </p>

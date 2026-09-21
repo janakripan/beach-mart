@@ -40,7 +40,7 @@ const SidebarMenu = ({ isOpen, onClose }) => {
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <img
             src={Logo}
-            alt="Beach Mart Logo"
+            alt="Beach Circle Mini Mart Logo"
             className="h-10 object-contain"
           />
           <button

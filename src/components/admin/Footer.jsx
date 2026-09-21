@@ -16,7 +16,7 @@ const Footer = () => {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <div className=" h-20  flex items-center justify-center">
-               <img src={Logo} alt="Beach Mart logo" />
+               <img src={Logo} alt="Beach Circle Mini Mart logo" />
               </div>
             </div>
             <p className=" text-sm leading-relaxed">
@@ -76,7 +76,7 @@ const Footer = () => {
       <div className="border-t border-gray-300 ">
         <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className=" text-sm">
-            © 2025 Beach Mart. All rights reserved.
+            © 2026 Beach Circle Mini Mart. All rights reserved.
           </p>
           
           {/* Payment Methods */}

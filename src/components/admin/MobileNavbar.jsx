@@ -33,7 +33,7 @@ const MobileNavbar = () => {
             ? "-translate-y-10 opacity-0 w-0 overflow-hidden"
             : "opacity-100 w-auto"}`}
         >
-          <img src={Logo} alt="Beach Mart Logo" className="h-8" />
+          <img src={Logo} alt="Beach Circle Mini Mart Logo" className="h-8" />
         </div>
 
         {/* SEARCH */}

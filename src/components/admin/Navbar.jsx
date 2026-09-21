@@ -67,7 +67,7 @@ const Navbar = () => {
             <div className="h-12 sm:h-14 md:h-16 lg:h-20 xl:h-24 shrink-0">
               <img
                 src={Logo}
-                alt="Beach Mart Logo"
+                alt="Beach Circle Mini Mart Logo"
                 className="h-full object-contain"
               />
             </div>

@@ -14,12 +14,34 @@ export default function Header() {
   const navigate = useNavigate();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
+  const [isAtTop, setIsAtTop] = useState(true);
   const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const updateStoreStatus = () => {
+      const now = new Date();
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+      const time = hours + minutes / 60;
+      
+      // Store is open from 7:30 AM to 1:30 AM next day.
+      // Therefore, it is CLOSED strictly between 1:30 AM (1.5) and 7:30 AM (7.5).
+      const isClosed = time >= 1.5 && time < 7.5;
+      setIsOpen(!isClosed);
+    };
+
+    updateStoreStatus();
+    const interval = setInterval(updateStoreStatus, 60000); // Check every minute
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       
+      setIsAtTop(currentScrollY <= 0);
+
       // Hide header if scrolling down past its height
       if (currentScrollY > lastScrollY.current && currentScrollY > 118 && location.pathname !== '/shop') {
         setIsHidden(true);
@@ -55,15 +77,24 @@ export default function Header() {
 
   return (
     <>
-      <header 
-        className={`w-full h-[118px] bg-cover bg-center flex items-center justify-center z-50 sticky top-0 border-b border-[#E3F0E2]/50 shadow-sm transition-transform duration-300 ease-in-out ${isHidden ? '-translate-y-full' : 'translate-y-0'}`}
-        style={{ backgroundImage: "url('/assets/header/header-bg.png')" }}
-      >
-        <div className="w-full max-w-7xl mx-auto px-4 lg:px-16 py-[16px] flex items-center gap-[16px]">
-          
-          {/* Logo */}
-          <Link to="/" className="shrink-0 mr-4">
-            <img src="/Logo.png" alt="Beach Mart Logo" className="h-[60px] md:h-[86px] w-auto object-contain transition-all" />
+      <div className={`sticky top-0 z-50 w-full transition-transform duration-300 ease-in-out ${isHidden ? '-translate-y-full' : 'translate-y-0'}`}>
+        {/* Top Working Hours Bar */}
+        <div className={`w-full bg-[#00380E] text-gray-100 flex justify-center items-center gap-3 font-poppins tracking-wider font-medium overflow-hidden transition-all duration-300 ease-in-out ${isAtTop ? 'h-[28px] opacity-100 py-1.5' : 'h-0 opacity-0 py-0'}`}>
+           <span className="text-[11px] md:text-[12px]">Working Hours: 7:30 AM to 1:30 AM</span>
+           <span className={`px-2 py-0.5 rounded text-[10px] md:text-[11px] font-bold uppercase tracking-wider ${isOpen ? 'bg-primary text-white' : 'bg-red-500 text-white'}`}>
+              {isOpen ? 'Open Now' : 'Closed'}
+           </span>
+        </div>
+        
+        <header 
+          className="w-full h-[118px] bg-cover bg-center flex items-center justify-center border-b border-[#E3F0E2]/50 shadow-sm"
+          style={{ backgroundImage: "url('/assets/header/header-bg.png')" }}
+        >
+          <div className="w-full max-w-7xl mx-auto px-4 lg:px-16 py-[16px] flex items-center gap-[16px]">
+            
+            {/* Logo */}
+            <Link to="/" className="shrink-0 mr-4">
+              <img src="/Logo.png" alt="Beach Circle Mini Mart Logo" className="h-[60px] md:h-[86px] w-auto object-contain transition-all" />
           </Link>
 
           {/* Right Section Container: Nav, Search, Buttons */}
@@ -113,6 +144,7 @@ export default function Header() {
           </div>
         </div>
       </header>
+      </div>
 
       {/* Side Drawer */}
       <AnimatePresence>
@@ -137,7 +169,7 @@ export default function Header() {
               style={{ backgroundImage: "url('/assets/header/header-bg.png')" }}
             >
               <div className="p-4 flex items-center justify-between border-b border-[#E3F0E2]/50 bg-white/70 backdrop-blur-md">
-                <img src="/Logo.png" alt="Beach Mart Logo" className="h-[40px] w-auto object-contain" />
+                <img src="/Logo.png" alt="Beach Circle Mini Mart Logo" className="h-[40px] w-auto object-contain" />
                 <button 
                   onClick={() => setIsDrawerOpen(false)}
                   className="w-10 h-10 rounded-[12px] bg-[#F8FCF8] flex items-center justify-center shadow-sm border border-[#E3F0E2] text-[#1A1A2E] hover:border-primary transition-colors"

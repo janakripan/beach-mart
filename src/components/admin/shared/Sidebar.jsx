@@ -29,7 +29,7 @@ function DashboardSidebar({ open, setOpen }) {
               open ? "w-auto" : "w-0 overflow-hidden"
             }`}
           >
-            Beach Mart
+            Beach Circle Mini Mart
           </h2>
         </div>
         <button

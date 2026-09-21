@@ -85,14 +85,14 @@ const SplashScreen = ({ onFinish }) => {
             {/* Mobile (< md): Logo.png */}
             <img
               src="/Logo.png"
-              alt="Beach Mart"
+              alt="Beach Circle Mini Mart"
               className="block md:hidden w-20 h-auto object-contain"
               draggable="false"
             />
             {/* Tablet & desktop (≥ md): logo-big.svg */}
             <img
               src="/logo-big.svg"
-              alt="Beach Mart"
+              alt="Beach Circle Mini Mart"
               className="hidden md:block w-[200px] h-auto object-contain"
               draggable="false"
             />

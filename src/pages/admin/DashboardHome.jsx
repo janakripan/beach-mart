@@ -35,7 +35,7 @@ export default function Dashboard() {
       {/* Header Section */}
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-2xl font-bold">Welcome Back Beach Mart !</h1>
+          <h1 className="text-2xl font-bold">Welcome Back Beach Circle Mini Mart !</h1>
           <p className="text-gray-500 text-sm">
             Here's what happening with your store today
           </p>
