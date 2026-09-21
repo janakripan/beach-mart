@@ -1,8 +1,11 @@
 import CategoryCard from './CategoryCard';
 import { ArrowUpRight } from 'lucide-react';
 import { categories } from "../../../../constants/data";
+import { useAppLoading } from '../../../../context/AppLoadingContext';
 
 export default function Categories() {
+  const { isLoading } = useAppLoading();
+
   return (
     <section className="relative w-full bg-white border-b border-border-light py-[40px] md:py-[60px] xl:py-[80px] overflow-hidden">
       
@@ -67,13 +70,19 @@ export default function Categories() {
 
         {/* Grid Container */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-2 md:gap-4 max-w-[1120px] mx-auto">
-          {categories.map((category, index) => (
-            <CategoryCard 
-              key={index} 
-              title={category.title} 
-              image={category.image} 
-            />
-          ))}
+          {isLoading ? (
+            Array.from({ length: 6 }).map((_, index) => (
+              <CategoryCard key={index} title="" image="" />
+            ))
+          ) : (
+            categories.map((category, index) => (
+              <CategoryCard 
+                key={index} 
+                title={category.title} 
+                image={category.image} 
+              />
+            ))
+          )}
         </div>
 
         {/* View All Button */}

@@ -6,10 +6,12 @@ import CheckboxItem from "./filters/CheckboxItem";
 // import { useGetFilters } from "../../../../api/user/hooks/useProduct";
 import { categories } from "../../../../constants/data";
 import SortComp from "./SortComp";
+import { useAppLoading } from "../../../../context/AppLoadingContext";
 
 const MobileFilter = ({ filters, setFilters }) => {
   const [isOpen, setIsOpen] = useState(false);
   const lenis = useLenis();
+  const { isLoading } = useAppLoading();
   
   // --- COMMENTED OUT DILKA DYNAMIC FETCHING ---
   // const { data: filterData = [], isLoading: filtersLoading } = useGetFilters();
@@ -65,24 +67,33 @@ const MobileFilter = ({ filters, setFilters }) => {
     <>
       {/* Bottom Bar for Mobile */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-2 flex justify-between items-center z-40 lg:hidden shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] px-4 pb-safe">
-        <button
-          onClick={() => setIsOpen(true)}
-          className="h-[42px] px-[14px] py-[8px] gap-[8px] bg-[#F8FCF8] rounded-[12px] border border-[#E3F0E2] flex items-center justify-center hover:border-primary transition-colors shadow-sm flex-none mr-2"
-        >
-          <SlidersHorizontal className="w-[24px] h-[24px] text-primary" strokeWidth={1.5} />
-          <span className="font-marcellus text-text-main text-[14px] font-normal leading-none text-center">
-            Filters
-          </span>
-          {activeFiltersCount > 0 && (
-            <span className="bg-primary text-white text-xs px-2 py-0.5 rounded-full">
-              {activeFiltersCount}
-            </span>
-          )}
-        </button>
+        {isLoading ? (
+          <>
+            <div className="h-[42px] w-24 rounded-[12px] shimmer flex-none mr-2" />
+            <div className="flex-none ml-auto h-[42px] w-28 rounded shimmer" />
+          </>
+        ) : (
+          <>
+            <button
+              onClick={() => setIsOpen(true)}
+              className="h-[42px] px-[14px] py-[8px] gap-[8px] bg-[#F8FCF8] rounded-[12px] border border-[#E3F0E2] flex items-center justify-center hover:border-primary transition-colors shadow-sm flex-none mr-2"
+            >
+              <SlidersHorizontal className="w-[24px] h-[24px] text-primary" strokeWidth={1.5} />
+              <span className="font-marcellus text-text-main text-[14px] font-normal leading-none text-center">
+                Filters
+              </span>
+              {activeFiltersCount > 0 && (
+                <span className="bg-primary text-white text-xs px-2 py-0.5 rounded-full">
+                  {activeFiltersCount}
+                </span>
+              )}
+            </button>
 
-        <div className="flex-none ml-auto">
-          <SortComp filters={filters} setFilters={setFilters} position="top" />
-        </div>
+            <div className="flex-none ml-auto">
+              <SortComp filters={filters} setFilters={setFilters} position="top" />
+            </div>
+          </>
+        )}
       </div>
 
       {/* Slide-over Overlay */}

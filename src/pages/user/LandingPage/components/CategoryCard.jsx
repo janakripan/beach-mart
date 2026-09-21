@@ -1,4 +1,21 @@
+import { useAppLoading } from '../../../../context/AppLoadingContext';
+
 export default function CategoryCard({ title, image }) {
+  const { isLoading } = useAppLoading();
+
+  if (isLoading) {
+    return (
+      <div className="group flex flex-col items-center justify-between w-full aspect-170/220 bg-white border border-gray-200 md:border-border-light rounded-[5px] pt-[16px] pb-[10px] cursor-pointer">
+        <div className="flex-1 flex items-center justify-center w-full px-2">
+          <div className="w-[80%] h-[80%] rounded-md shimmer" />
+        </div>
+        <div className="flex flex-col items-center justify-end h-[44px] mt-1 w-full px-4">
+          <div className="h-4 w-3/4 rounded shimmer mb-2" />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="group flex flex-col items-center justify-between w-full aspect-170/220 bg-white border border-gray-200 md:border-border-light rounded-[5px] pt-[16px] pb-[10px] cursor-pointer lg:hover:border-primary lg:hover:shadow-[0px_0px_12px_0px_#20B52652] transition-all duration-300">
       

@@ -3,10 +3,12 @@ import { ShoppingCart, Check } from "lucide-react";
 import DirhamIcon from "../../../../components/user/CustomIcons/DirhamIcon";
 import { motion, AnimatePresence } from 'framer-motion';
 import { useShop } from "../../../../context/ShopContext";
+import { useAppLoading } from "../../../../context/AppLoadingContext";
 
 export default function OfferProductCard({ product }) {
   const [isHovered, setIsHovered] = useState(false);
   const { addToCart, cartItems, updateQuantity, removeFromCart } = useShop();
+  const { isLoading } = useAppLoading();
   
   const cartItem = cartItems.find((item) => item.product.id === product.id);
   const inCart = !!cartItem;
@@ -14,6 +16,23 @@ export default function OfferProductCard({ product }) {
   const handleMouseEnter = () => {
     if (window.innerWidth >= 1024) setIsHovered(true);
   };
+
+  if (isLoading) {
+    return (
+      <div className={`w-full max-w-[260px] h-full p-[8px] flex flex-col items-center justify-between shrink-0 bg-white border border-gray-200 md:border-transparent lg:border-transparent rounded-[24px] md:rounded-[24px] lg:rounded-[56px]`}>
+        <div className="w-full aspect-square rounded-[16px] md:rounded-[20px] lg:rounded-[48px] overflow-hidden shrink-0 shimmer" />
+        <div className="flex flex-col justify-end w-full px-0.5 xs:px-0 md:px-2 lg:px-4 py-1.5 xs:py-3 md:py-2 lg:py-4 gap-0 flex-1 mt-2">
+          <div className="w-full">
+            <div className="h-4 w-3/4 rounded shimmer mb-2" />
+          </div>
+          <div className="flex flex-row justify-between items-end w-full gap-1 sm:gap-2 min-h-fit mt-1">
+            <div className="h-4 w-12 rounded shimmer mb-1 md:mb-1.5" />
+            <div className="w-[28px] xs:w-[32px] md:w-[40px] h-[28px] xs:h-[32px] md:h-[40px] shrink-0 rounded-full shimmer" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div

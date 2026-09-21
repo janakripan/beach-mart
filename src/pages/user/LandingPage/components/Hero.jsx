@@ -1,6 +1,7 @@
 import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination } from 'swiper/modules';
+import { useAppLoading } from '../../../../context/AppLoadingContext';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -19,6 +20,16 @@ const banners = [
 ];
 
 export default function Hero() {
+  const { isLoading } = useAppLoading();
+
+  if (isLoading) {
+    return (
+      <section className="relative w-full overflow-hidden bg-white">
+        <div className="w-full aspect-[4/3] md:aspect-[21/9] shimmer" />
+      </section>
+    );
+  }
+
   return (
     <section className="relative w-full overflow-hidden bg-white">
       <Swiper
@@ -76,3 +87,4 @@ export default function Hero() {
     </section>
   );
 }
+

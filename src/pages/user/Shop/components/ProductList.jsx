@@ -129,7 +129,11 @@ const ProductList = ({ filters }) => {
 */
 
 // --- NEW STATIC FRONTEND MAPPING LOGIC ---
+import { useAppLoading } from '../../../../context/AppLoadingContext';
+import ProductCardShimmer from './ProductCardShimmer';
+
 const ProductList = ({ filters }) => {
+  const { isLoading } = useAppLoading();
 
   const allStaticProducts = [
     ...offerProducts.map(p => ({ ...p, categoryId: 'Fresh Fruit', rating: 5, brandId: 'b-1' })),
@@ -188,7 +192,13 @@ const ProductList = ({ filters }) => {
 
   return (
     <div>
-      {sortedAndFilteredProducts.length === 0 ? (
+      {isLoading ? (
+        <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 p-4">
+          {Array.from({ length: 8 }).map((_, index) => (
+            <ProductCardShimmer key={index} />
+          ))}
+        </div>
+      ) : sortedAndFilteredProducts.length === 0 ? (
         <div className="min-h-screen flex flex-col items-center justify-center gap-4">
           <img src={NoProduct} className="h-28 w-28" />
           <p>No products found</p>

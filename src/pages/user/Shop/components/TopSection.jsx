@@ -1,7 +1,10 @@
 import { X } from "lucide-react";
 import SortComp from "./SortComp"; 
+import { useAppLoading } from "../../../../context/AppLoadingContext";
 
 const TopSection = ({ filters, filterData, setFilters }) => {
+  const { isLoading } = useAppLoading();
+
   const brandMap = Object.fromEntries(
     (filterData?._brand ?? []).map(b => [b.BrandId, b.BrandName])
   );
@@ -47,6 +50,20 @@ if (filters.ratingFilter !== null) {
       }
     });
   };
+
+  if (isLoading) {
+    return (
+      <div className="px-3 pt-3 max-w-7xl mx-auto font-actor">
+        <div className="h-10 w-40 rounded shimmer mb-1" />
+        <div className="flex justify-between items-center pt-1">
+          <div className="flex gap-3 items-center">
+            <div className="h-6 w-32 rounded shimmer" />
+          </div>
+          <div className="h-10 w-48 rounded shimmer" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="px-3 pt-3 max-w-7xl mx-auto font-actor">

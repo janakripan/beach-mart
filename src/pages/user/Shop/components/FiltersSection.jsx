@@ -4,8 +4,10 @@ import FilterGroup from "./filters/FilterGroup";
 import CheckboxItem from "./filters/CheckboxItem";
 // import { useGetFilters } from "../../../../api/user/hooks/useProduct";
 import { categories } from "../../../../constants/data";
+import { useAppLoading } from "../../../../context/AppLoadingContext";
 
 const FiltersSection = ({ filters, setFilters }) => {
+  const { isLoading } = useAppLoading();
 
   // --- COMMENTED OUT DILKA DYNAMIC FETCHING ---
   // const { data:filterData = [] , isLoading : filtersLoading } = useGetFilters()
@@ -40,6 +42,37 @@ const FiltersSection = ({ filters, setFilters }) => {
   };
 
   /* ---------- RENDER ---------- */
+
+  if (isLoading) {
+    return (
+      <div className="bg-white h-full w-full flex flex-col py-5 font-arial">
+        <div className="sticky top-0 bg-white px-2 z-10">
+          <div className="h-5 w-24 rounded shimmer" />
+        </div>
+        <div className="flex-1 overflow-y-hidden space-y-6 py-4 px-2">
+          {/* Mock Filter Group 1 */}
+          <div>
+            <div className="h-6 w-32 rounded shimmer mb-4" />
+            <div className="space-y-3">
+              <div className="h-4 w-full rounded shimmer" />
+              <div className="h-4 w-5/6 rounded shimmer" />
+              <div className="h-4 w-4/5 rounded shimmer" />
+              <div className="h-4 w-11/12 rounded shimmer" />
+            </div>
+          </div>
+          {/* Mock Filter Group 2 */}
+          <div>
+            <div className="h-6 w-24 rounded shimmer mb-4" />
+            <div className="space-y-3">
+              <div className="h-4 w-full rounded shimmer" />
+              <div className="h-4 w-3/4 rounded shimmer" />
+              <div className="h-4 w-5/6 rounded shimmer" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white h-full w-full flex flex-col py-5 font-arial">

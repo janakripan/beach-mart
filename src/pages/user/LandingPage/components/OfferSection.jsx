@@ -3,8 +3,11 @@ import { ArrowRight } from "lucide-react";
 import OfferProductCard from "./OfferProductCard";
 import SectionHeader from "./SectionHeader";
 import { offerProducts } from "../../../../constants/data";
+import { useAppLoading } from "../../../../context/AppLoadingContext";
 
 export default function OfferSection() {
+  const { isLoading } = useAppLoading();
+
   return (
     <section className="w-full flex justify-center bg-white py-6 lg:py-12">
       <div className="w-full max-w-7xl flex flex-col gap-[24px] px-0.5 xs:px-1 sm:px-1 md:px-4 lg:px-16">
@@ -76,9 +79,15 @@ export default function OfferSection() {
 
             {/* Products Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-[4px] xs:gap-[8px] md:gap-[12px] lg:gap-[16px] gap-y-[12px] xs:gap-y-[24px] mt-4 justify-items-center">
-              {offerProducts.map((product) => (
-                <OfferProductCard key={product.id} product={product} />
-              ))}
+              {isLoading ? (
+                Array.from({ length: 5 }).map((_, index) => (
+                  <OfferProductCard key={index} product={{}} />
+                ))
+              ) : (
+                offerProducts.map((product) => (
+                  <OfferProductCard key={product.id} product={product} />
+                ))
+              )}
             </div>
           </div>
         </div>

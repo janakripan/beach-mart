@@ -2,8 +2,12 @@ import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import ProductCard from './ProductCard';
 import { vegetableProducts } from "../../../../constants/data";
+import { useAppLoading } from '../../../../context/AppLoadingContext';
+import ProductCardShimmer from '../../Shop/components/ProductCardShimmer';
 
 export default function VegetablesSection() {
+  const { isLoading } = useAppLoading();
+
   return (
     <section className="w-full flex justify-center bg-white  lg:py-8">
       <div className="w-full max-w-6xl flex flex-col px-0 xs:px-2 pb-3.5 md:px-8 lg:px-[32px]">
@@ -36,9 +40,12 @@ export default function VegetablesSection() {
 
         {/* Products Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-[4px] xs:gap-[8px] md:gap-[16px]">
-          {vegetableProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+          {isLoading 
+            ? Array.from({ length: 5 }).map((_, i) => <ProductCardShimmer key={i} />)
+            : vegetableProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))
+          }
         </div>
 
       </div>
