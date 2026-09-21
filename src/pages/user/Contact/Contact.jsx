@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { MapPin, Mail, PhoneCall, Clock, Send, ExternalLink, ArrowRight } from 'lucide-react';
+import { AppLoadingContext } from '../../../context/AppLoadingContext';
 
 /* ─── Dummy Contact Data ─────────────────────────────────────────────── */
 const CONTACT_INFO = [
@@ -37,10 +38,65 @@ const MAP_EMBED_URL =
 const FIELD =
   'w-full h-11 px-4 rounded-xl border border-gray-200 bg-gray-50 font-poppins text-[14px] text-text-main placeholder:text-gray-400 outline-none focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/15 transition-all duration-200';
 
+/* ─── Contact Page Shimmer ──────────────────────────────────────────── */
+const ContactShimmer = () => (
+  <div className="min-h-[calc(100vh-118px)] bg-[#F8FCF8]">
+    {/* Hero Banner Shimmer */}
+    <div className="w-full h-[180px] md:h-[240px] shimmer" />
+
+    <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-16 xl:px-[80px] py-10 md:py-14 flex flex-col gap-8 lg:gap-12">
+      {/* ── TOP SECTION: Form & Map ───────────────────────────────── */}
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-8 lg:gap-12 items-stretch">
+        {/* Form Shimmer */}
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 md:p-8 flex flex-col h-full min-h-[480px]">
+          <div className="w-48 h-7 rounded-md shimmer mb-8" />
+          <div className="flex flex-col gap-4 flex-1">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="h-11 rounded-xl shimmer" />
+              <div className="h-11 rounded-xl shimmer" />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="h-11 rounded-xl shimmer" />
+              <div className="h-11 rounded-xl shimmer" />
+            </div>
+            <div className="h-full min-h-[120px] rounded-xl shimmer flex-1 mt-1.5" />
+            <div className="h-12 w-full sm:w-40 rounded-full shimmer mt-2" />
+          </div>
+        </div>
+
+        {/* Map Shimmer (desktop only) */}
+        <div className="hidden lg:flex flex-col h-full">
+          <div className="flex-1 rounded-2xl shimmer min-h-[400px]" />
+          <div className="mt-3 self-end w-32 h-4 rounded-md shimmer" />
+        </div>
+      </div>
+
+      {/* ── BOTTOM SECTION: Info cards ─────────────────────────────── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="flex items-start gap-3 p-4 bg-white rounded-2xl border border-gray-100 shadow-sm h-full">
+            <div className="w-9 h-9 rounded-xl shimmer shrink-0" />
+            <div className="flex flex-col gap-2 w-full mt-1">
+              <div className="w-16 h-2.5 rounded-sm shimmer" />
+              <div className="w-3/4 h-3.5 rounded-sm shimmer" />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Mobile / Tablet: Open in Maps button ────────────────── */}
+      <div className="lg:hidden h-12 rounded-full shimmer mt-4" />
+    </div>
+  </div>
+);
+
 export default function Contact() {
+  const { isLoading } = useContext(AppLoadingContext);
   const [form, setForm] = useState({ name: '', email: '', phone: '', subject: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading]   = useState(false);
+
+  if (isLoading) return <ContactShimmer />;
 
   const handleChange  = (e) => setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
   const handleSubmit  = (e) => {
