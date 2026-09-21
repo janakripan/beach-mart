@@ -7,13 +7,7 @@ import MessageBox from './components/admin/MessageBox/MessageBox';
 import { AppLoadingContext } from './context/AppLoadingContext';
 
 function App() {
-  const [isAppLoading, setIsAppLoading] = useState(true);
-
-  useEffect(() => {
-    // 5s loading timer
-    const timer = setTimeout(() => setIsAppLoading(false), 5000);
-    return () => clearTimeout(timer);
-  }, []);
+  const [isAppLoading, setIsAppLoading] = useState(false);
 
   return (
     <AppLoadingContext.Provider value={{ isLoading: isAppLoading }}>

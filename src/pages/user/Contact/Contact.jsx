@@ -75,156 +75,112 @@ export default function Contact() {
       </div>
 
       {/* ── Main Content ────────────────────────────────────────────── */}
-      <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-16 xl:px-[80px] py-10 md:py-14">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-8 lg:gap-12 items-start">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-16 xl:px-[80px] py-10 md:py-14 flex flex-col gap-8 lg:gap-12">
+        
+        {/* ── TOP SECTION: Form & Map ───────────────────────────────── */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-8 lg:gap-12 items-stretch">
 
-          {/* ── LEFT COLUMN ─────────────────────────────────────────── */}
-          <div className="flex flex-col gap-8">
+          {/* ── LEFT COLUMN: Form ───────────────────────────────────── */}
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 md:p-8 flex flex-col h-full">
+            <h2 className="font-marcellus text-text-main text-[22px] md:text-[26px] mb-1">
+              Send us a Message
+            </h2>
+            <div className="w-8 h-0.5 bg-primary rounded-full mb-6" />
 
-            {/* ── Form card ──────────────────────────────────────────── */}
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 md:p-8">
-              <h2 className="font-marcellus text-text-main text-[22px] md:text-[26px] mb-1">
-                Send us a Message
-              </h2>
-              <div className="w-8 h-0.5 bg-primary rounded-full mb-6" />
-
-              {submitted ? (
-                /* ── Success state ─────────────────────────────────── */
-                <div className="flex flex-col items-center justify-center gap-4 py-14 text-center">
-                  <div className="relative">
-                    <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-                      <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center shadow-lg shadow-primary/30">
-                        <Send size={20} className="text-white" />
-                      </div>
+            {submitted ? (
+              /* ── Success state ─────────────────────────────────── */
+              <div className="flex-1 flex flex-col items-center justify-center gap-4 py-14 text-center">
+                <div className="relative">
+                  <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center shadow-lg shadow-primary/30">
+                      <Send size={20} className="text-white" />
                     </div>
-                    {/* animated ring */}
-                    <div className="absolute inset-0 rounded-full border-2 border-primary/30 animate-ping" />
                   </div>
-                  <p className="font-marcellus text-text-main text-[22px] mt-2">Message Sent!</p>
-                  <p className="font-poppins text-text-muted text-[14px] max-w-[280px] leading-relaxed">
-                    Thanks for reaching out. We'll get back to you within 24 hours.
-                  </p>
-                  <button
-                    onClick={handleReset}
-                    className="mt-1 flex items-center gap-1 font-poppins text-[14px] text-primary hover:text-secondary transition-colors"
-                  >
-                    Send another <ArrowRight size={14} />
-                  </button>
+                  {/* animated ring */}
+                  <div className="absolute inset-0 rounded-full border-2 border-primary/30 animate-ping" />
                 </div>
-              ) : (
-                /* ── Form ─────────────────────────────────────────── */
-                <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="flex flex-col gap-1.5">
-                      <label htmlFor="c-name" className="font-poppins text-[12px] font-semibold text-gray-500 uppercase tracking-wide">
-                        Full Name <span className="text-primary normal-case tracking-normal">*</span>
-                      </label>
-                      <input id="c-name" name="name" type="text" required placeholder="John Doe"
-                        value={form.name} onChange={handleChange} className={FIELD} />
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      <label htmlFor="c-email" className="font-poppins text-[12px] font-semibold text-gray-500 uppercase tracking-wide">
-                        Email <span className="text-primary normal-case tracking-normal">*</span>
-                      </label>
-                      <input id="c-email" name="email" type="email" required placeholder="you@example.com"
-                        value={form.email} onChange={handleChange} className={FIELD} />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="flex flex-col gap-1.5">
-                      <label htmlFor="c-phone" className="font-poppins text-[12px] font-semibold text-gray-500 uppercase tracking-wide">
-                        Phone
-                      </label>
-                      <input id="c-phone" name="phone" type="tel" placeholder="+971 55 000 0000"
-                        value={form.phone} onChange={handleChange} className={FIELD} />
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      <label htmlFor="c-subject" className="font-poppins text-[12px] font-semibold text-gray-500 uppercase tracking-wide">
-                        Subject
-                      </label>
-                      <input id="c-subject" name="subject" type="text" placeholder="Order inquiry…"
-                        value={form.subject} onChange={handleChange} className={FIELD} />
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col gap-1.5">
-                    <label htmlFor="c-message" className="font-poppins text-[12px] font-semibold text-gray-500 uppercase tracking-wide">
-                      Message <span className="text-primary normal-case tracking-normal">*</span>
-                    </label>
-                    <textarea id="c-message" name="message" required rows={5}
-                      placeholder="How can we help you today?"
-                      value={form.message} onChange={handleChange}
-                      className={`${FIELD} h-auto py-3 resize-none`} />
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="flex items-center justify-center gap-2 w-full sm:w-auto sm:self-start sm:px-10 h-12 bg-primary hover:bg-secondary text-white font-poppins font-medium text-[15px] rounded-full transition-all duration-300 shadow-md hover:shadow-primary/30 hover:shadow-lg disabled:opacity-60 disabled:cursor-not-allowed mt-1"
-                  >
-                    {loading ? (
-                      <><span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> Sending…</>
-                    ) : (
-                      <><Send size={15} /> Send Message</>
-                    )}
-                  </button>
-                </form>
-              )}
-            </div>
-
-            {/* ── Info cards ─────────────────────────────────────────── */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {CONTACT_INFO.map(({ icon: Icon, label, value, href }) => (
-                <div key={label}
-                  className="group flex items-start gap-3 p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:border-primary/40 hover:shadow-[0_4px_20px_rgba(52,199,89,0.12)] transition-all duration-300"
+                <p className="font-marcellus text-text-main text-[22px] mt-2">Message Sent!</p>
+                <p className="font-poppins text-text-muted text-[14px] max-w-[280px] leading-relaxed">
+                  Thanks for reaching out. We'll get back to you within 24 hours.
+                </p>
+                <button
+                  onClick={handleReset}
+                  className="mt-1 flex items-center gap-1 font-poppins text-[14px] text-primary hover:text-secondary transition-colors"
                 >
-                  <div className="w-9 h-9 rounded-xl bg-primary/8 group-hover:bg-primary/12 flex items-center justify-center shrink-0 transition-colors">
-                    <Icon size={16} className="text-primary" strokeWidth={1.75} />
+                  Send another <ArrowRight size={14} />
+                </button>
+              </div>
+            ) : (
+              /* ── Form ─────────────────────────────────────────── */
+              <form onSubmit={handleSubmit} className="flex flex-col gap-4 flex-1">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="flex flex-col gap-1.5">
+                    <label htmlFor="c-name" className="font-poppins text-[12px] font-semibold text-gray-500 uppercase tracking-wide">
+                      Full Name <span className="text-primary normal-case tracking-normal">*</span>
+                    </label>
+                    <input id="c-name" name="name" type="text" required placeholder="John Doe"
+                      value={form.name} onChange={handleChange} className={FIELD} />
                   </div>
-                  <div className="min-w-0">
-                    <p className="font-poppins text-[10px] text-gray-400 uppercase tracking-wider mb-0.5">
-                      {label}
-                    </p>
-                    {href ? (
-                      <a href={href}
-                        target={href.startsWith('http') ? '_blank' : undefined}
-                        rel="noopener noreferrer"
-                        className="font-poppins text-[12px] md:text-[13px] text-text-main hover:text-primary transition-colors leading-snug break-all"
-                      >
-                        {value}
-                      </a>
-                    ) : (
-                      <p className="font-poppins text-[12px] md:text-[13px] text-text-main leading-snug">{value}</p>
-                    )}
+                  <div className="flex flex-col gap-1.5">
+                    <label htmlFor="c-email" className="font-poppins text-[12px] font-semibold text-gray-500 uppercase tracking-wide">
+                      Email <span className="text-primary normal-case tracking-normal">*</span>
+                    </label>
+                    <input id="c-email" name="email" type="email" required placeholder="you@example.com"
+                      value={form.email} onChange={handleChange} className={FIELD} />
                   </div>
                 </div>
-              ))}
-            </div>
 
-            {/* ── Mobile / Tablet: Open in Maps button ────────────────── */}
-            <a
-              href={CONTACT_INFO[0].href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="lg:hidden flex items-center justify-center gap-2 h-12 bg-[#00380E] hover:bg-primary text-white font-poppins font-medium text-[15px] rounded-full transition-all duration-300 shadow-sm"
-            >
-              <MapPin size={17} />
-              Open in Google Maps
-              <ExternalLink size={13} />
-            </a>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="flex flex-col gap-1.5">
+                    <label htmlFor="c-phone" className="font-poppins text-[12px] font-semibold text-gray-500 uppercase tracking-wide">
+                      Phone
+                    </label>
+                    <input id="c-phone" name="phone" type="tel" placeholder="+971 55 000 0000"
+                      value={form.phone} onChange={handleChange} className={FIELD} />
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <label htmlFor="c-subject" className="font-poppins text-[12px] font-semibold text-gray-500 uppercase tracking-wide">
+                      Subject
+                    </label>
+                    <input id="c-subject" name="subject" type="text" placeholder="Order inquiry…"
+                      value={form.subject} onChange={handleChange} className={FIELD} />
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-1.5 flex-1">
+                  <label htmlFor="c-message" className="font-poppins text-[12px] font-semibold text-gray-500 uppercase tracking-wide">
+                    Message <span className="text-primary normal-case tracking-normal">*</span>
+                  </label>
+                  <textarea id="c-message" name="message" required rows={5}
+                    placeholder="How can we help you today?"
+                    value={form.message} onChange={handleChange}
+                    className={`${FIELD} h-full min-h-[120px] py-3 resize-none`} />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="flex items-center justify-center gap-2 w-full sm:w-auto sm:self-start sm:px-10 h-12 bg-primary hover:bg-secondary text-white font-poppins font-medium text-[15px] rounded-full transition-all duration-300 shadow-md hover:shadow-primary/30 hover:shadow-lg disabled:opacity-60 disabled:cursor-not-allowed mt-1"
+                >
+                  {loading ? (
+                    <><span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> Sending…</>
+                  ) : (
+                    <><Send size={15} /> Send Message</>
+                  )}
+                </button>
+              </form>
+            )}
           </div>
 
           {/* ── RIGHT COLUMN: Map (desktop only) ────────────────────── */}
           <div className="hidden lg:flex flex-col h-full">
-            {/* Map fills the full height of the left column */}
-            <div className="flex-1 rounded-2xl overflow-hidden border border-gray-100 shadow-sm min-h-[640px]">
+            <div className="flex-1 rounded-2xl overflow-hidden border border-gray-100 shadow-sm min-h-[400px]">
               <iframe
                 title="Beach Mart Location"
                 src={MAP_EMBED_URL}
                 width="100%"
                 height="100%"
-                style={{ border: 0, minHeight: '640px', display: 'block' }}
+                style={{ border: 0, minHeight: '100%', display: 'block' }}
                 allowFullScreen
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
@@ -241,8 +197,48 @@ export default function Contact() {
               Open in Google Maps
             </a>
           </div>
-
         </div>
+
+        {/* ── BOTTOM SECTION: Info cards ─────────────────────────────── */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
+          {CONTACT_INFO.map(({ icon: Icon, label, value, href }) => (
+            <div key={label}
+              className="group flex items-start gap-3 p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:border-primary/40 hover:shadow-[0_4px_20px_rgba(52,199,89,0.12)] transition-all duration-300 h-full"
+            >
+              <div className="w-9 h-9 rounded-xl bg-primary/8 group-hover:bg-primary/12 flex items-center justify-center shrink-0 transition-colors">
+                <Icon size={16} className="text-primary" strokeWidth={1.75} />
+              </div>
+              <div className="min-w-0">
+                <p className="font-poppins text-[10px] text-gray-400 uppercase tracking-wider mb-0.5">
+                  {label}
+                </p>
+                {href ? (
+                  <a href={href}
+                    target={href.startsWith('http') ? '_blank' : undefined}
+                    rel="noopener noreferrer"
+                    className="font-poppins text-[12px] md:text-[13px] text-text-main hover:text-primary transition-colors leading-snug break-all"
+                  >
+                    {value}
+                  </a>
+                ) : (
+                  <p className="font-poppins text-[12px] md:text-[13px] text-text-main leading-snug">{value}</p>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* ── Mobile / Tablet: Open in Maps button ────────────────── */}
+        <a
+          href={CONTACT_INFO[0].href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="lg:hidden flex items-center justify-center gap-2 h-12 bg-[#00380E] hover:bg-primary text-white font-poppins font-medium text-[15px] rounded-full transition-all duration-300 shadow-sm mt-4"
+        >
+          <MapPin size={17} />
+          Open in Google Maps
+          <ExternalLink size={13} />
+        </a>
       </div>
     </div>
   );
