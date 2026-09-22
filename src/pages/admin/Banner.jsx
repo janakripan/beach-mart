@@ -3,36 +3,18 @@ import DeviceContent from "../../components/admin/shared/banner/DeviceContent";
 import DeviceInfo from "../../components/admin/shared/banner/DeviceInfo";
 import { DevicePreview } from "../../components/admin/shared/banner/DevicePreview";
 import TabNavigation from '../../components/admin/shared/banner/TabNavigation'
-import { BANNER_DEV_CONFIG } from "../../components/admin/shared/constant";
-import {
-  useAddBanner,
-  useEditBanner,
-  useGetBanner,
-} from "../../api/admin/hooks";
+import { BANNER_DEV_CONFIG, BANNER_INITIAL_VALUE } from "../../components/admin/shared/constant";
 
 const BannerManagement = () => {
   const [activeTab, setActiveTab] = useState("desktop");
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState({ type: "", text: "" });
   const [showPreview, setShowPreview] = useState(false);
-  const [localBannerData, setLocalBannerData] = useState(null);
-  const [updateTrigger, setUpdateTrigger] = useState(0); // Add a state to force re-render
+  const [localBannerData, setLocalBannerData] = useState(JSON.parse(JSON.stringify(BANNER_INITIAL_VALUE)));
+  const [updateTrigger, setUpdateTrigger] = useState(0); 
 
-  const { data: banners, refetch, isLoading } = useGetBanner();
-
-  // mutations
-  const addBanner = useAddBanner();
-  const editBanner = useEditBanner();
-
-  // Update local banner data when API data changes
-  useEffect(() => {
-    if (banners) {
-      setLocalBannerData(JSON.parse(JSON.stringify(banners))); // Deep copy
-    }
-  }, [banners]);
-
-  // Use local banner data if available, otherwise use API data
-  const currentBannerData = localBannerData || banners;
+  const isLoading = false;
+  const currentBannerData = localBannerData;
 
   // Function to handle image upload for specific device type
   const handleImageUpload = async (device, imageIndex, data) => {
@@ -47,18 +29,15 @@ const BannerManagement = () => {
       setLocalBannerData(newData);
       setUpdateTrigger((prev) => prev + 1); // Force re-render
 
-      // Save to backend
+      // Simulate backend save delay
       setIsSaving(true);
-      await addBanner.mutateAsync(newData);
+      await new Promise(resolve => setTimeout(resolve, 500));
 
       // Show success message
       setSaveMessage({
         type: "success",
         text: `Image ${imageIndex} for ${device} uploaded and saved successfully`,
       });
-
-      // Refresh data from server
-      refetch();
     } catch (error) {
       console.error("Failed to save uploaded image:", error);
       setSaveMessage({
@@ -84,18 +63,15 @@ const BannerManagement = () => {
       setLocalBannerData(newData);
       setUpdateTrigger((prev) => prev + 1); // Force re-render
 
-      // Save to backend
+      // Simulate backend save delay
       setIsSaving(true);
-      await addBanner.mutateAsync(newData);
+      await new Promise(resolve => setTimeout(resolve, 500));
 
       // Show success message
       setSaveMessage({
         type: "success",
         text: `Image ${imageIndex} for ${device} removed and saved successfully`,
       });
-
-      // Refresh data from server
-      refetch();
     } catch (error) {
       console.error("Failed to save image removal:", error);
       setSaveMessage({
@@ -123,17 +99,14 @@ const BannerManagement = () => {
       setLocalBannerData(newData);
       setUpdateTrigger((prev) => prev + 1); // Force re-render
 
-      // Save to backend
-      await addBanner.mutateAsync(newData);
+      // Simulate backend save delay
+      await new Promise(resolve => setTimeout(resolve, 500));
 
       // Show success message
       setSaveMessage({
         type: "success",
         text: `Banner order for ${deviceType} saved successfully`,
       });
-
-      // Refresh data from server
-      refetch();
 
       return true; // Indicate success
     } catch (error) {
