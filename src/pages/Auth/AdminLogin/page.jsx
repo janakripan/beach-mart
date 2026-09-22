@@ -9,6 +9,10 @@ const LoginForm = () => {
       const isAuthenticated = useAuthStore((s) => s.isAuthenticated());
   
     if (isAuthenticated) {
+      const user = useAuthStore.getState().user;
+      if (user?.Role === "Admin") {
+        return <Navigate to="/admin" replace />;
+      }
       return <Navigate to="/" replace />;
     }
   

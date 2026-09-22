@@ -35,11 +35,11 @@ const TabNavigation = ({
           <button
             key={device}
             className={`px-4 py-2 font-medium text-sm rounded-t-lg
-                cursor-pointer hover:-translate-y-1 transition-all 
-                 focus:outline-none duration-300 relative ${
+                 cursor-pointer hover:-translate-y-1 transition-all 
+                 focus:outline-none duration-300 relative border border-b-0 ${
                    activeTab === device
-                     ? "text-white bg-black"
-                     : "text-gray-600 bg-gray-100 hover:bg-gray-200"
+                     ? "text-white bg-[#34C759] border-[#34C759]"
+                     : "text-[#1A1A2E] bg-[#F8FCF8] border-[#E3F0E2] hover:bg-[#E3F0E2]"
                  }`}
             onClick={() => setActiveTab(device)}
           >
@@ -60,8 +60,8 @@ const TabNavigation = ({
       {/* Preview button */}
       <button
         onClick={() => setShowPreview(true)}
-        className="flex items-center gap-2 text-sm text-black
-      cursor-pointer hover:bg-[#00897B] hover:text-white px-3 py-1 rounded border border-black/40"
+        className="flex items-center gap-2 text-sm text-[#1A1A2E]
+      cursor-pointer hover:bg-[#34C759] hover:text-white hover:border-[#34C759] px-4 py-2 rounded-lg border border-[#E3F0E2] transition-colors"
       >
         <Eye size={16} />
         <span>Preview {activeTab} banners</span>

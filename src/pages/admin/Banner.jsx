@@ -153,8 +153,8 @@ const BannerManagement = () => {
   }
 
   return (
-    <div className="w-full h-full overflow-hidden flex flex-col px-5 py-3">
-      <div className="bg-white rounded-xl overflow-y-auto flex flex-col h-full shadow-md p-4">
+    <div className="w-full h-full overflow-hidden flex flex-col px-5 py-3 bg-[#F8FCF8]">
+      <div className="bg-white rounded-[12px] border border-[#E3F0E2] overflow-y-auto flex flex-col h-full shadow-sm p-4">
         {/* Status message */}
         {saveMessage.text && (
           <div

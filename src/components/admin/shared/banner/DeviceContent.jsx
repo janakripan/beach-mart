@@ -13,8 +13,8 @@ const DeviceContent = ({
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {/* Generate 6 image uploaders for the active device type */}
         {Object.keys(bannerData).map((image, index) => (
-          <div key={index} className="bg-gray-50 rounded-lg p-3 shadow-sm">
-            <h3 className="text-sm font-medium text-gray-700 mb-2">
+          <div key={index} className="bg-[#F8FCF8] border border-[#E3F0E2] rounded-[12px] p-4 shadow-sm">
+            <h3 className="text-sm font-medium text-[#1A1A2E] mb-2">
               {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Banner{" "}
               {index + 1}
             </h3>

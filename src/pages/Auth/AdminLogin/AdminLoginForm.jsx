@@ -4,45 +4,30 @@ import * as Yup from "yup";
 import { Eye, EyeOff } from "lucide-react";
 const Logo = "/logo-big.svg";
 
-import { useGLogin, useLogin } from "../../../api/user/hooks/useAuth";
 import { useAuthStore } from "../store/AuthStore";
-import { useCheckoutStore } from "../../user/Checkout/store/CheckoutStore";
-import { useCheckoutActions } from "../../user/Checkout/store/useCheckoutActions";
 import { useNavigate } from "react-router-dom";
-
 
 /* ✅ Validation */
 const loginSchema = Yup.object({
-  email: Yup.string().email("Invalid email").required("Email is required"),
+  email: Yup.string().required("Username is required"),
   password: Yup.string().min(4, "Min 4 characters").required("Password required"),
 });
 
 const AdminLoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
   const navigate = useNavigate();
-
-  const { mutateAsync: login, isPending, isError, error } = useLogin();
-
- 
-  const resetCheckout = useCheckoutStore((s) => s.resetCheckout);
-  const { completeStep } = useCheckoutActions();
-    const { mutateAsync: googleLoginMutation } = useGLogin();
-
-
-
+  const loginSuccess = useAuthStore((s) => s.loginSuccess);
 
   const handleSubmit = async (values, { setSubmitting }) => {
+    setErrorMsg("");
     try {
-      /* 🔐 Authenticate (updates AuthStore internally) */
-      await login(values);
-        const user = useAuthStore.getState().user;
-      /* 🔄 Reset checkout for safety */
-      if (user.Role !== "Admin") {
-      useAuthStore.getState().logout();
-      throw new Error("Not an admin");
-    }
-      /* 🚀 Redirect */
-      navigate("/admin");
+      if (values.email === "admin" && values.password === "admin") {
+        loginSuccess("dummy-token", "dummy-refresh", null, { Role: "Admin", name: "Admin" });
+        navigate("/admin");
+      } else {
+        setErrorMsg("Invalid credentials. Please use admin/admin");
+      }
     } catch (err) {
       console.error("Login failed", err);
     } finally {
@@ -65,10 +50,10 @@ const AdminLoginForm = () => {
         </div>
 
         {/* API Error */}
-        {isError && (
+        {errorMsg && (
           <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded">
             <p className="text-red-600 text-sm">
-              {error?.response?.data?.message || "Login failed"}
+              {errorMsg}
             </p>
           </div>
         )}
@@ -84,12 +69,12 @@ const AdminLoginForm = () => {
               {/* Email */}
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                  Email <span className="text-red-500">*</span>
+                  Username <span className="text-red-500">*</span>
                 </label>
                 <Field
                   name="email"
-                  type="email"
-                  placeholder="Email"
+                  type="text"
+                  placeholder="Username (admin)"
                   className="w-full px-4 py-3 border border-gray-200 text-sm rounded-[12px] bg-white hover:bg-[#F8FCF8] hover:border-[#E3F0E2] focus:bg-[#F8FCF8] focus:border-primary focus:outline-none focus:shadow-sm transition-all duration-200"
                 />
                <div className="mt-1">
@@ -125,10 +110,10 @@ const AdminLoginForm = () => {
               {/* Submit */}
               <button
                 type="submit"
-                disabled={isSubmitting || isPending}
+                disabled={isSubmitting}
                 className="w-full bg-primary text-white py-3 rounded-[12px] hover:bg-[#126442]/90 disabled:opacity-50"
               >
-                {isSubmitting || isPending ? "Signing In..." : "Sign In"}
+                {isSubmitting ? "Signing In..." : "Sign In"}
               </button>
             </Form>
           )}
