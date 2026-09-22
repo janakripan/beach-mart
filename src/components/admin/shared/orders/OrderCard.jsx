@@ -1,8 +1,9 @@
 import ProductRow from "./ProductRow";
 import { useState } from "react";
+import { Edit2, Trash2 } from "lucide-react";
 
 // Order Card Component
-const OrderCard  = ({ order, isExpanded, toggleExpand, onStatusChange }) => {
+const OrderCard  = ({ order, isExpanded, toggleExpand, onStatusChange, onEdit, onDelete }) => {
   const productCount = order.products?.length || 0;
   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
 
@@ -127,6 +128,24 @@ const OrderCard  = ({ order, isExpanded, toggleExpand, onStatusChange }) => {
                 : "Pending payment"}
             </div>
           </div>
+          
+          <div className="flex items-center space-x-2 border-l border-gray-200 pl-4 ml-2">
+            <button 
+              onClick={(e) => { e.stopPropagation(); onEdit?.(order); }}
+              className="p-1.5 text-gray-400 hover:text-blue-600 rounded-full hover:bg-blue-50 transition-colors"
+              title="Edit Order"
+            >
+              <Edit2 size={16} />
+            </button>
+            <button 
+              onClick={(e) => { e.stopPropagation(); onDelete?.(order); }}
+              className="p-1.5 text-gray-400 hover:text-red-600 rounded-full hover:bg-red-50 transition-colors"
+              title="Delete Order"
+            >
+              <Trash2 size={16} />
+            </button>
+          </div>
+
           <svg
             className={`w-5 h-5 text-[#1A1A2E] transition-transform ${
               isExpanded ? "transform rotate-180" : ""

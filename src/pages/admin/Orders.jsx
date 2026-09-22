@@ -34,6 +34,16 @@ const Orders = () => {
     );
   };
 
+  const handleEditOrder = (order) => {
+    alert(`Edit functionality for order #${order.orderNo} is coming soon!`);
+  };
+
+  const handleDeleteOrder = (order) => {
+    if (window.confirm(`Are you sure you want to delete order #${order.orderNo}?`)) {
+      setOrders((prev) => prev.filter((o) => o.orderNo !== order.orderNo));
+    }
+  };
+
   const clearFilters = () => {
     setSearchQuery("");
     setStatusFilter("");
@@ -112,6 +122,8 @@ const Orders = () => {
               isExpanded={!!expandedOrders[order.orderNo]}
               toggleExpand={() => toggleOrderExpand(order.orderNo)}
               onStatusChange={handleOrderStatus}
+              onEdit={handleEditOrder}
+              onDelete={handleDeleteOrder}
             />
           ))
         )}
