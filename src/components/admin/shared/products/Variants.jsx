@@ -1,379 +1,137 @@
-import React, {
-  useEffect,
-  useRef,
-  useState,
-  forwardRef,
-  useImperativeHandle,
-} from "react";
-import { Plus, AlertTriangle } from "lucide-react";
-import CurrentVariants from "./CurrentVariants";
-import AddNewVariant from "./AddNewVariant";
+import React, { useState, forwardRef, useImperativeHandle } from "react";
+import { Plus, Trash2, AlertTriangle } from "lucide-react";
 
-const Variants = forwardRef(
-  ({ isOpen, setFormData, formData, sizes, colors }, ref) => {
-    // Create a ref for the variants list section
-    const [editingVariantIndex, setEditingVariantIndex] = useState(null);
-    const [addVarinatIndex, setAddVariantIndex] = useState(null);
-    const [showAddForm, setShowAddForm] = useState(false);
-    const [showWarning, setShowWarning] = useState(false);
-    const variantsListRef = useRef(null);
-    const addNewVariantFormRef = useRef(null);
-    const warningRef = useRef(null);
-    const [currentVariant, setCurrentVariant] = useState({
-      
-      brandId: formData.brandID || 0,
-      colorId: 0,
-      sizeId: 0,
-      sku: "",
-      price: {
-        price: 0,
-        discountPercentage: 0,
-        discountPrice: 0,
-        currency: "AED",
-      },
-      stock: {
-        onhand: 0,
-      },
-      images: [],
-    });
+// Mock variants list
+const VARIANT_OPTIONS = ["Small", "Medium", "Large", "500g", "1KG", "2KG", "1L"];
 
-    // Expose methods to parent component
-    useImperativeHandle(ref, () => ({
-      checkForUnsavedVariant: () => {
-        // Check if the add form is visible and has data
-        if (showAddForm && hasVariantData()) {
-          setShowWarning(true);
-          // Scroll to the warning message
-          setTimeout(() => {
-            if (warningRef.current) {
-              warningRef.current.scrollIntoView({
-                behavior: "smooth",
-                block: "center",
-              });
-            }
-          }, 100);
-          return true;
-        }
-        return false;
-      },
+const Variants = forwardRef(({ isOpen, setFormData, formData }, ref) => {
+  const [showWarning, setShowWarning] = useState(false);
+  
+  // Temporary state for the variant currently being added
+  const [currentVariant, setCurrentVariant] = useState({
+    name: "",
+    price: "",
+    inStock: true
+  });
+
+  useImperativeHandle(ref, () => ({
+    checkForUnsavedVariant: () => {
+      if (currentVariant.name !== "" || currentVariant.price !== "") {
+        setShowWarning(true);
+        return true;
+      }
+      return false;
+    }
+  }));
+
+  if (!isOpen) return null;
+
+  const handleAddVariant = () => {
+    if (!currentVariant.name || !currentVariant.price) {
+      alert("Please select a variant and enter a price.");
+      return;
+    }
+
+    setFormData(prev => ({
+      ...prev,
+      variants: [...(prev.variants || []), { ...currentVariant, id: Date.now() }]
     }));
 
-    // Check if current variant has any meaningful data
-    const hasVariantData = () => {
-      return (
-        currentVariant.colorId !== 0 ||
-        currentVariant.sizeId !== 0 ||
-        currentVariant.sku !== "" ||
-        currentVariant.price?.price !== 0 ||
-        currentVariant.stock.onhand !== 0 ||
-        currentVariant.price.discountPercentage !== 0 ||
-        currentVariant.price?.discountPrice !== 0 ||
-        (currentVariant.images && currentVariant.images.length > 0)
-      );
-    };
+    setCurrentVariant({ name: "", price: "", inStock: true });
+    setShowWarning(false);
+  };
 
-    // Reset form visibility when variants section is closed
-    useEffect(() => {
-      if (!isOpen) {
-        setShowAddForm(false);
-        setEditingVariantIndex(null);
-        setAddVariantIndex(null);
-        setShowWarning(false);
-      }
-    }, [isOpen]);
+  const handleRemoveVariant = (id) => {
+    setFormData(prev => ({
+      ...prev,
+      variants: (prev.variants || []).filter(v => v.id !== id)
+    }));
+  };
 
-    // Hide warning when form is hidden
-    useEffect(() => {
-      if (!showAddForm) {
-        setShowWarning(false);
-      }
-    }, [showAddForm]);
+  return (
+    <div className="pt-6 border-t border-[#E3F0E2]">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="font-bold text-[#1A1A2E]">Product Variants</h3>
+      </div>
 
-    // Used store the change directly to the formData instead of click the update varaint button
-    useEffect(() => {
-      const updatedVariants = [currentVariant];
-      updatedVariants[editingVariantIndex] = currentVariant;
-
-      setFormData((prev) => ({
-        ...prev,
-        variants: prev.variants.map((item, index) =>
-          index === editingVariantIndex ? updatedVariants[0] : item
-        ),
-      }));
-    }, [currentVariant]);
-
-    // Handle variant input change
-    const handleVariantChange = (e) => {
-      const { name, value } = e.target;
-
-      if (name.includes(".")) {
-        // Handle nested properties like price.price
-        const [parent, child] = name.split(".");
-        setCurrentVariant((prev) => ({
-          ...prev,
-          [parent]: {
-            ...prev[parent],
-            [child]: name.includes("price") ? parseFloat(value) || 0 : value,
-          },
-        }));
-      } else {
-        // Handle regular properties
-        setCurrentVariant((prev) => ({
-          ...prev,
-          [name]:
-            name === "brandId" || name === "colorId" || name === "sizeId"
-              ? parseInt(value) || 0
-              : value,
-        }));
-      }
-    };
-    // Remove a variant from the list
-    const removeVariant = (index) => {
-      setEditingVariantIndex(index);
-      setFormData((prev) => ({
-        ...prev,
-        variants: prev.variants.filter((_, i) => i !== index),
-      }));
-    };
-
-    const handleStockEmpty = () => {
-      setEditingVariantIndex(index);
-      setFormData((prev) => ({
-        ...prev,
-        variants: prev.variants.map((variant, i) =>
-          i === index
-            ? {
-                ...variant,
-                stock: { onhand: 0, stockId: variant.stock.stockId },
-              }
-            : variant
-        ),
-      }));
-    };
-    // Add a variant to the list
-    const addVariant = () => {
-      // Hide warning message when adding variant
-      setShowWarning(false);
-
-      // check is it editing or not
-      if (editingVariantIndex !== null) {
-        // update variants
-        const updatedVariants = [currentVariant];
-        updatedVariants[editingVariantIndex] = currentVariant;
-
-        setFormData((prev) => ({
-          ...prev,
-          variants: prev.variants.map((item, index) =>
-            index === editingVariantIndex ? updatedVariants[0] : item
-          ),
-        }));
-        setCurrentVariant(updatedVariants);
-        setEditingVariantIndex(null);
-        setAddVariantIndex(null);
-        setShowAddForm(false);
-        // Reset current variant form
-        setCurrentVariant({
-          brandId: formData.brandID || 0,
-          colorId: 0,
-          sizeId: 0,
-          sku: "",
-          price: {
-            price: 0,
-            discountPercentage: 0,
-            discountPrice: 0,
-            currency: "USD",
-          },
-          stock: {
-            onhand: 0,
-          },
-          images: [],
-        });
-      } else {
-        setFormData((prev) => ({
-          ...prev,
-          variants: [
-            ...(prev.variants || []),
-            {
-              ...currentVariant,
-              variantId: currentVariant.variantId ?? 0,
-              productId: currentVariant.productId ?? 0,
-            },
-          ],
-        }));
-
-        setShowAddForm(false);
-        // Reset current variant form
-        setCurrentVariant({
-          
-          brandId: formData.brandID || 0,
-          colorId: 0,
-          sizeId: 0,
-          sku: "",
-          price: {
-            price: 0,
-            discountPercentage: 0,
-            discountPrice: 0,
-            currency: "USD",
-          },
-          stock: {
-            onhand: 0,
-          },
-          images: [],
-        });
-      }
-    };
-    const editVariant = (index) => {
-      setEditingVariantIndex(index);
-      setAddVariantIndex(index);
-      setCurrentVariant(formData.variants[index]);
-      setShowAddForm(true);
-      // scroll to the form
-      if (addNewVariantFormRef && addNewVariantFormRef.current) {
-        addNewVariantFormRef.current.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
-      }
-    };
-    // Handle variant image upload
-    const handleVariantImageUploaded = (data) => {
-      if (data && data.FileDetails) {
-        const newImage = {
-          imageUrl: data.FileDetails[0].FileUrl,
-          isPrimary: currentVariant.images.length === 0, // Make first image primary
-        };
-        setCurrentVariant((prev) => ({
-          ...prev,
-          images: [...prev.images, newImage],
-        }));
-      }
-    };
-
-    // Handle showing the add variant form
-    const handleShowAddForm = () => {
-      setShowAddForm(true);
-      setEditingVariantIndex(null);
-      setAddVariantIndex(null);
-      // Reset current variant form
-      setCurrentVariant({
-        brandId: formData.brandID || 0,
-        colorId: 0,
-        sizeId: 0,
-        sku: "",
-        price: {
-          price: 0,
-          discountPercentage: 0,
-          discountPrice: 0,
-          currency: "AED",
-        },
-        stock: {
-          onhand: 0,
-        },
-        images: [],
-      });
-      // Scroll to the form after a short delay
-      setTimeout(() => {
-        if (addNewVariantFormRef && addNewVariantFormRef.current) {
-          addNewVariantFormRef.current.scrollIntoView({
-            behavior: "smooth",
-            block: "start",
-          });
-        }
-      }, 100);
-    };
-
-    // Handle canceling the add variant form
-    const handleCancelAddForm = () => {
-      setShowAddForm(false);
-      setShowWarning(false);
-      setEditingVariantIndex(null);
-      setAddVariantIndex(null);
-      // Reset current variant form
-      setCurrentVariant({
-        brandId: formData.brandID || 0,
-        colorId: 0,
-        sizeId: 0,
-        sku: "",
-        price: {
-          price: 0,
-          discountPercentage: 0,
-          discountPrice: 0,
-          currency: "AED",
-        },
-        stock: {
-          onhand: 0,
-        },
-        images: [],
-      });
-    };
-
-    if (!isOpen) return null;
-
-    return (
-      <section className="mt-6 border-t border-gray-200 pt-4">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="font-medium text-gray-800">Variants</h3>
-          {!showAddForm && (
-            <button
-              type="button"
-              onClick={handleShowAddForm}
-              className="flex items-center gap-2 bg-black text-white px-3 py-2 rounded-md text-sm hover:bg-opacity-90 transition-colors"
+      <div className="bg-[#F8FCF8] border border-[#E3F0E2] rounded-md p-4 mb-4">
+        <div className="flex items-end space-x-4">
+          <div className="flex-1">
+            <label className="block text-sm font-medium text-[#1A1A2E] mb-2">Variant Option</label>
+            <select
+              value={currentVariant.name}
+              onChange={(e) => setCurrentVariant(prev => ({ ...prev, name: e.target.value }))}
+              className="w-full border-2 border-[#E3F0E2] rounded-md p-2.5 text-sm focus:border-primary focus:outline-none"
             >
-              <Plus size={16} />
-              Add Variant
-            </button>
-          )}
-        </div>
-
-        {/* Current Variants List */}
-        <CurrentVariants
-          variantsListRef={variantsListRef}
-          variants={formData.variants}
-          removeVariant={removeVariant}
-          handleStockEmpty={handleStockEmpty}
-          editVariant={editVariant}
-        />
-
-        {/* Add New Variant Form - Only show when showAddForm is true */}
-        {showAddForm && (
-          <>
-            <AddNewVariant
-              addVarinatIndex={addVarinatIndex}
-              variantsListRef={variantsListRef}
-              addNewVariantFormRef={addNewVariantFormRef}
-              sizes={sizes}
-              colors={colors}
-              editingVariantIndex={editingVariantIndex}
-              addVariant={addVariant}
-              currentVariant={currentVariant}
-              handleVariantChange={handleVariantChange}
-              setCurrentVariant={setCurrentVariant}
-              onCancel={handleCancelAddForm}
+              <option value="">Select Option</option>
+              {VARIANT_OPTIONS.map(opt => (
+                <option key={opt} value={opt}>{opt}</option>
+              ))}
+            </select>
+          </div>
+          <div className="w-32">
+            <label className="block text-sm font-medium text-[#1A1A2E] mb-2">Price (AED)</label>
+            <input
+              type="number"
+              value={currentVariant.price}
+              onChange={(e) => setCurrentVariant(prev => ({ ...prev, price: e.target.value }))}
+              className="w-full border-2 border-[#E3F0E2] rounded-md p-2.5 text-sm focus:border-primary focus:outline-none"
+              placeholder="0.00"
             />
-
-            {/* Warning Message - Only show when showWarning is true */}
-            {showWarning && (
-              <div
-                ref={warningRef}
-                className="mt-4 p-4 bg-yellow-50 border border-yellow-300 text-yellow-800 rounded-md"
-              >
-                <div className="flex items-center">
-                  <AlertTriangle size={20} className="text-yellow-500 mr-2" />
-                  <span className="font-medium">
-                    Please add this variant before saving the product!
-                  </span>
-                </div>
-                <p className="mt-1 text-sm text-yellow-700">
-                  You have filled out variant information but haven't added it
-                  to the list yet. Click "Add Variant" to save this variant.
-                </p>
+          </div>
+          <div className="flex items-center h-[42px]">
+            <label className="flex items-center space-x-2 cursor-pointer">
+              <span className="text-sm text-[#1A1A2E]">In Stock</span>
+              <div className="relative" onClick={() => setCurrentVariant(prev => ({ ...prev, inStock: !prev.inStock }))}>
+                <input type="checkbox" className="sr-only" checked={currentVariant.inStock} readOnly />
+                <div className={`block w-10 h-5 rounded-full transition-colors ${currentVariant.inStock ? "bg-primary" : "bg-gray-300"}`} />
+                <div className={`absolute left-1 top-1 bg-white w-3 h-3 rounded-full transition-transform ${currentVariant.inStock ? "transform translate-x-5" : ""}`} />
               </div>
-            )}
-          </>
+            </label>
+          </div>
+          <button
+            type="button"
+            onClick={handleAddVariant}
+            className="h-[42px] px-4 bg-primary text-white rounded-md text-sm font-semibold hover:opacity-90 transition-opacity"
+          >
+            Add
+          </button>
+        </div>
+        
+        {showWarning && (
+          <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 text-yellow-800 text-sm rounded flex items-center">
+            <AlertTriangle size={16} className="mr-2" />
+            You have unsaved variant data. Click Add to save it.
+          </div>
         )}
-      </section>
-    );
-  }
-);
+      </div>
+
+      {/* Saved Variants List */}
+      {formData.variants && formData.variants.length > 0 && (
+        <div className="space-y-2">
+          <h4 className="text-sm font-semibold text-[#1A1A2E] mb-2">Saved Variants</h4>
+          {formData.variants.map((variant) => (
+            <div key={variant.id} className="flex items-center justify-between p-3 border border-[#E3F0E2] rounded-md bg-white">
+              <div className="flex items-center space-x-6">
+                <span className="font-medium text-[#1A1A2E] min-w-[100px]">{variant.name}</span>
+                <span className="text-gray-500">AED {variant.price}</span>
+                <span className={`text-xs px-2 py-1 rounded-full ${variant.inStock ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                  {variant.inStock ? 'In Stock' : 'Out of Stock'}
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => handleRemoveVariant(variant.id)}
+                className="text-gray-400 hover:text-red-500 transition-colors p-1"
+              >
+                <Trash2 size={16} />
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+});
 
 export default Variants;

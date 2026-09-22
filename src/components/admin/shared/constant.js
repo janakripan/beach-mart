@@ -15,22 +15,29 @@ export const SIDE_MENU = {
       path: "categories",
       icon: "tabler:circle-square",
     },
-    {
-      title: "brand",
-      path: "brands",
-      icon: "material-symbols:star-outline",
-    },
-    {
-      title: "Customize Sizes",
-      path: "size",
-      icon: "lucide:cuboid",
-    },
   ],
   Products: [
     {
       title: "product list",
-      path: "productList",
+      path: "productlist",
       icon: "lucide:box",
+    },
+    {
+      title: "variant list",
+      path: "variants",
+      icon: "lucide:layers",
+    },
+  ],
+  Delivery: [
+    {
+      title: "delivery location",
+      path: "delivery-location",
+      icon: "lucide:map-pin",
+    },
+    {
+      title: "delivery mode",
+      path: "delivery-mode",
+      icon: "lucide:truck",
     },
   ],
   Admin: [
@@ -59,10 +66,13 @@ export const HEADER_TITLE = [
     title: "Colors details",
   },
   {
-    title: "brands",
+    title: "variants",
   },
   {
-    title: "Size Customization",
+    title: "delivery location",
+  },
+  {
+    title: "delivery mode",
   },
   {
     title: "add product",

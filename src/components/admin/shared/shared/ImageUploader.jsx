@@ -303,19 +303,20 @@ const ImageUploader = ({
           rounded-lg
           overflow-hidden
           border-2
+          border-dashed
           relative
           transition-all
           ${
             isDragging
-              ? "border-black bg-black/50"
+              ? "border-primary bg-primary/10"
               : error
               ? "border-red-500 bg-white"
-              : "border-gray-200 bg-white"
+              : "border-[#E3F0E2] bg-[#F8FCF8]"
           }
           ${
             previewImage && !showLoading
               ? ""
-              : "cursor-pointer hover:bg-gray-100"
+              : "cursor-pointer hover:bg-[#E3F0E2]/50"
           }
         `}
         onDragEnter={handleDragEnter}
@@ -352,9 +353,9 @@ const ImageUploader = ({
 
         {!previewImage || showLoading ? (
           <div className="flex flex-col items-center justify-center h-full p-6 text-center">
-            <Upload className="w-12 h-12 text-gray-400 mb-4" />
-            <p className="text-xs text-gray-500 mb-2">{placeholderText}</p>
-            <p className="text-xs text-blue-600 font-medium">
+            <Upload className="w-12 h-12 text-primary mb-4" />
+            <p className="text-xs text-[#1A1A2E] font-medium mb-2">{placeholderText}</p>
+            <p className="text-xs text-primary font-medium">
               Recommended size: {recommendedWidth}px × {recommendedHeight}px
             </p>
             <p className="text-xs text-gray-500">
@@ -390,7 +391,7 @@ const ImageUploader = ({
                     e.stopPropagation();
                     handleEditImage();
                   }}
-                  className="p-2 rounded-full bg-black text-white hover:bg-blue-600
+                  className="p-2 rounded-full bg-[#1A1A2E] text-white hover:bg-primary
                   cursor-pointer transition-all duration-300 hover:scale-105"
                 >
                   <Edit3 size={20} />
@@ -400,7 +401,7 @@ const ImageUploader = ({
                     e.stopPropagation();
                     handleRemoveImage();
                   }}
-                  className="p-2 rounded-full bg-black text-white
+                  className="p-2 rounded-full bg-[#1A1A2E] text-white
                   cursor-pointer hover:scale-105 transition-all duration-300 hover:bg-red-600 
                   "
                 >

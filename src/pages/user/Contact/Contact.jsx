@@ -7,8 +7,8 @@ const CONTACT_INFO = [
   {
     icon: MapPin,
     label: 'Our Location',
-    value: 'Ajman Market, Al Jurf, Ajman, UAE',
-    href: 'https://maps.google.com/?q=Ajman+Market,+Al+Jurf,+Ajman,+UAE',
+    value: 'Beach Circle Mini Mart LLC, Dubai, UAE',
+    href: 'https://www.google.com/maps/place/BEACH+CIRCLE+MINI+MART+LLC/@25.1447029,55.1988754,788m/data=!3m1!1e3!4m6!3m5!1s0x3e5f6bf6fd84746d:0x5d6c138c7301fe01!8m2!3d25.1447541!4d55.1988443',
   },
   {
     icon: PhoneCall,
@@ -32,7 +32,7 @@ const CONTACT_INFO = [
 
 /* ─── Google Maps embed ──────────────────────────────────────────────── */
 const MAP_EMBED_URL =
-  'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d57854.25748085097!2d55.4252!3d25.4052!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f5a1e7e7e7e7%3A0x0!2sAjman%2C+UAE!5e0!3m2!1sen!2sae!4v1698765432100!5m2!1sen!2sae';
+  'https://maps.google.com/maps?q=25.1447541,55.1988443&hl=en&z=15&output=embed';
 
 /* ─── Shared input / textarea classes ───────────────────────────────── */
 const FIELD =

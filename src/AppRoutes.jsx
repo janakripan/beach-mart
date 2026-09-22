@@ -26,10 +26,11 @@ const CheckoutLayout = lazy(() => import("./layout/CheckoutLayout"));
 // Admin pages
 const Orders = lazy(() => import("./pages/admin/Orders"));
 const Categories = lazy(() => import("./pages/admin/Categories"));
-const Brands = lazy(() => import("./pages/admin/Brands"));
 const ProductList = lazy(() => import('./pages/admin/ProductList'));
-const Sizes = lazy(() => import("./pages/admin/Sizes"));
+const Variants = lazy(() => import("./pages/admin/Variants"));
 const BannerManagement = lazy(() => import("./pages/admin/Banner"));
+const DeliveryLocation = lazy(() => import("./pages/admin/DeliveryLocation"));
+const DeliveryMode = lazy(() => import("./pages/admin/DeliveryMode"));
 
 const AppRoutes = () => {
   return (
@@ -65,10 +66,11 @@ const AppRoutes = () => {
               <Route index element={<Orders />} />
               <Route path="orders" element={<Orders />} />
               <Route path="categories" element={<Categories />} />
-              <Route path="brands" element={<Brands />} />
               <Route path="banner" element={<BannerManagement />} />
-              <Route path="size" element={<Sizes />} />
+              <Route path="variants" element={<Variants />} />
               <Route path="productlist" element={<ProductList />} />
+              <Route path="delivery-location" element={<DeliveryLocation />} />
+              <Route path="delivery-mode" element={<DeliveryMode />} />
             </Route>
           </Route>
         </Routes>

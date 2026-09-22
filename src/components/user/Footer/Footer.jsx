@@ -105,7 +105,7 @@ export default function Footer() {
             <div className="flex flex-col gap-5">
               <div className="flex items-start gap-3">
                 <MapPin size={20} className="text-primary shrink-0 mt-0.5" />
-                <span className="font-poppins text-[15px] text-gray-200 leading-snug">UAE Ajman</span>
+                <span className="font-poppins text-[15px] text-gray-200 leading-snug">Beach Circle Mini Mart LLC, Dubai, UAE</span>
               </div>
               <div className="flex items-start gap-3">
                 <Mail size={20} className="text-primary shrink-0 mt-0.5" />

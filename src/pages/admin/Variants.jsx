@@ -1,11 +1,19 @@
 import React, { useState } from "react";
 import DynamicTable from "../../components/admin/shared/shared/DynamicTable";
 import PageHeader from "../../components/admin/shared/shared/PageHeader";
-import { Edit2, PlusCircle } from "lucide-react";
-import { useAddSize, useEditSize, useGetSizes } from "../../api/admin/hooks";
+import { Edit2, PlusCircle, Trash2 } from "lucide-react";
 import SizeModal from "../../components/admin/shared/size/sizeModal";
 
-const Sizes = () => {
+const initialVariants = [
+  { SizeId: 1, SizeLabel: "Small", isActive: true },
+  { SizeId: 2, SizeLabel: "Medium", isActive: true },
+  { SizeId: 3, SizeLabel: "Large", isActive: true },
+  { SizeId: 4, SizeLabel: "500g", isActive: true },
+  { SizeId: 5, SizeLabel: "1KG", isActive: true },
+];
+
+const Variants = () => {
+  const [variants, setVariants] = useState(initialVariants);
   const [isEditing, setIsEditing] = useState(false);
   const [currentSize, setCurrentSize] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -14,15 +22,11 @@ const Sizes = () => {
     sizeLable: "",
     isActive: true,
   });
-  const { data: sizes, refetch, isLoading, isError } = useGetSizes();
-  // Mutations
-  const editSize = useEditSize();
-  const addSize = useAddSize();
-  // Close modal
+
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
-  // Open modal for adding new color
+
   const handleAddSize = () => {
     setIsEditing(false);
     setCurrentSize(null);
@@ -37,40 +41,46 @@ const Sizes = () => {
       [name]: value,
     }));
   };
-  // Submit form (create or update)
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      if (isEditing && currentSize) {
-        await editSize.mutateAsync({
-          updatedSize: formData,
-          sizeId: currentSize.SizeId,
-        });
-      } else {
-        await addSize.mutateAsync(formData);
-      }
 
-      // Close modal and refresh data
-      setIsModalOpen(false);
-      refetch();
-    } catch (error) {
-      console.error("Error saving category:", error);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (isEditing && currentSize) {
+      setVariants((prev) =>
+        prev.map((v) =>
+          v.SizeId === currentSize.SizeId
+            ? { ...v, SizeLabel: formData.sizeLable, isActive: formData.isActive }
+            : v
+        )
+      );
+    } else {
+      setVariants((prev) => [
+        ...prev,
+        {
+          SizeId: Date.now(),
+          SizeLabel: formData.sizeLable,
+          isActive: formData.isActive,
+        },
+      ]);
+    }
+    setIsModalOpen(false);
+  };
+
+  const handleDelete = (id) => {
+    if (window.confirm("Are you sure you want to delete this variant?")) {
+      setVariants((prev) => prev.filter((v) => v.SizeId !== id));
     }
   };
 
-  const filteredColor = sizes
-    ? sizes.filter((size) =>
-        size.SizeLabel.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : [];
+  const filteredVariants = variants.filter((size) =>
+    size.SizeLabel.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
-  // Open modal for editing category
   const handleEditColor = (size) => {
     setIsEditing(true);
     setCurrentSize(size);
     setFormData({
       sizeLable: size.SizeLabel,
-      isActive: size.IsActive,
+      isActive: size.isActive,
     });
     setIsModalOpen(true);
   };
@@ -79,56 +89,62 @@ const Sizes = () => {
     {
       key: "SizeId",
       header: "ID",
-      className: "w-4",
+      className: "w-16",
     },
     {
       key: "SizeLabel",
       header: "Name",
       className: "w-full",
       render: (size) => (
-        <span className="bg-gray-100 text-gray-500 px-5 text-xs font-medium  py-1 rounded-full">
+        <span className="bg-[#E3F0E2] text-[#00380E] px-5 text-xs font-medium py-1 rounded-full border border-primary/20">
           {size.SizeLabel}
         </span>
       ),
     },
-
     {
       key: "actions",
       header: "Actions",
       render: (size) => (
-        <div className="flex space-x-2 pl-4">
+        <div className="flex space-x-3 pl-4 items-center">
           <button
             onClick={() => handleEditColor(size)}
-            className="text-black cursor-pointer hover:text-gray-400"
+            className="text-gray-400 cursor-pointer hover:text-primary transition-colors"
           >
-            <Edit2 size={18} />
+            <Edit2 size={16} />
+          </button>
+          <button
+            onClick={() => handleDelete(size.SizeId)}
+            className="text-gray-400 cursor-pointer hover:text-red-500 transition-colors"
+          >
+            <Trash2 size={16} />
           </button>
         </div>
       ),
     },
   ];
+
   return (
     <div className="w-full h-full overflow-hidden gap-y-4 flex flex-col p-5">
       <PageHeader
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
-        searchPlaceholder="Search here by size lable"
+        searchPlaceholder="Search variants"
         viewToggle={null}
         actionButton={{
-          label: "Add Size",
+          label: "Add Variant",
           onClick: handleAddSize,
           icon: <PlusCircle size={16} />,
         }}
       />
       <DynamicTable
-        isLoading={isLoading}
-        isError={isError}
+        isLoading={false}
+        isError={false}
         columns={SIZE_TABLE_COLUMNS}
         idField="SizeId"
-        data={filteredColor}
-        emptyMessage="No size found"
+        data={filteredVariants}
+        emptyMessage="No variants found"
       />
-      {/* Size Modal - appears at the right */}
+      
       <SizeModal
         formData={formData}
         handleCloseModal={handleCloseModal}
@@ -136,10 +152,10 @@ const Sizes = () => {
         handleSubmit={handleSubmit}
         isEditing={isEditing}
         isModalOpen={isModalOpen}
-        isLoading={addSize.isLoading || editSize.isLoading}
+        isLoading={false}
       />
     </div>
   );
 };
 
-export default Sizes;
+export default Variants;
