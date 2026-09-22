@@ -45,7 +45,7 @@ const PageHeader = ({
 
   // Default button styling
   const defaultButtonClass =
-    "flex items-center gap-2 bg-black  text-white cursor-pointer px-4 py-2 rounded-lg transition-all duration-300 ease-in-out hover:bg-gray-600  hover:shadow-lg hover:scale-105";
+    "flex items-center gap-2 bg-primary  text-white cursor-pointer px-4 py-2 rounded-lg transition-all duration-300 ease-in-out hover:bg-primary/90  hover:shadow-lg hover:scale-105";
 
   // Function to close tooltip
   const closeTooltip = (e) => {
@@ -60,18 +60,19 @@ const PageHeader = ({
 
   return (
     <div className="flex flex-1 items-center justify-between">
-      <div className="max-w-sm relative w-full">
+      <div 
+        className="max-w-[400px] relative w-full h-[46px] bg-[#F8FCF8] rounded-[12px] border border-[#0F1E361A] focus-within:border-primary transition-colors flex items-center"
+        style={{ boxShadow: 'inset 0px 2px 4px 1px #00000005' }}
+      >
+        <IoSearch
+          className="absolute text-[#57E77B] top-0 bottom-0 my-auto text-lg left-4"
+        />
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full border bg-white/50 border-gray-200 outline-none
-           rounded-lg text-sm p-3 pl-10"
+          className="w-full h-full bg-transparent outline-none rounded-lg text-[#1A1A2E] text-[16px] placeholder:text-[#757575] font-arial pl-12 pr-10"
           placeholder={searchPlaceholder}
-        />
-        <IoSearch
-          className="absolute text-gray-500 top-0 bottom-0 my-auto
-        text-lg left-3"
         />
 
         {/* Reset search button - only visible when searchQuery has content */}

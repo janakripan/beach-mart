@@ -8,37 +8,26 @@ import {
   addAdvertisement,
   addBanner,
   addBrand,
-  addCategory,
   addColor,
   addProduct,
   addSize,
   adminLogin,
   deleteBrand,
-  deleteCategory,
   deleteImage,
   editBanner,
   editBrand,
   editBrandOrder,
-  editCategory,
-  editCategoryOrder,
   editColor,
   editOrderStatus,
   editProduct,
   editSizee,
   getAdvertisement,
-  getAllUsers,
   getBanner,
   getBrand,
-  getCategory,
   getColors,
-  getMetrics,
   getOrderes,
   getProducts,
-  getRecentOrders,
-  getSellingProducts,
   getSizes,
-  getSummeryChart,
-  getTopCustomers,
   uploadImage,
 } from "./service";
 import { useState } from "react";
@@ -61,39 +50,6 @@ export const useAdminLogin = () =>
   useMutation({
     mutationKey: ["adminLogin"],
     mutationFn: adminLogin,
-  });
-//////////////////////   CATEGORY SECTION ⚠️⚠️⚠️⚠️⚠️⚠️   ////////////////////////////
-// GET ALL CATEGORY
-export const useGetAllCategory = (options = {}) =>
-  useQuery({
-    queryKey: ["allCategory"],
-    queryFn: getCategory,
-    ...options, // spread options like select, enabled, etc.
-  });
-
-// ADD CATEGORY
-export const usePostCategory = () =>
-  useMutation({
-    mutationKey: ["postCategory"],
-    mutationFn: addCategory,
-  });
-// EDIT CATEGORY
-export const usePutCategory = () =>
-  useMutation({
-    mutationKey: ["putCategory"],
-    mutationFn: editCategory,
-  });
-// EDIT CATEGORY ORDER
-export const usePutCategoryOrder = () =>
-  useMutation({
-    mutationKey: ["categoryOrder"],
-    mutationFn: editCategoryOrder,
-  });
-// DELETE CATEGORY
-export const useDeleteCategory = () =>
-  useMutation({
-    mutationKey: ["deleteCategory"],
-    mutationFn: deleteCategory,
   });
 
 //////////////////////   BRAND SECTION ⚠️⚠️⚠️⚠️⚠️⚠️   ////////////////////////////
@@ -283,56 +239,6 @@ export const useEditOrderStatus = () =>{
     },
   });
 }
-//////////////////////   DASHBOARD SECTION ⚠️⚠️⚠️⚠️⚠️⚠️   ////////////////////////////
-
-export const useGetMetrics = (dateRange) => {
-  return useQuery({
-    queryKey: ["getMetrics", dateRange?.fromDate, dateRange?.toDate],
-    queryFn: () => getMetrics(dateRange),
-    enabled: !!dateRange?.fromDate && !!dateRange?.toDate,
-    select: (res) => res.data.data,
-  });
-};
-
-
-export const useGetSellingProducts = (dateRange) => {
-  return useQuery({
-    queryKey: [
-      "getSellingProducts",
-      dateRange?.fromDate,
-      dateRange?.toDate,
-    ],
-    queryFn: () => getSellingProducts(dateRange),
-    enabled: !!dateRange?.fromDate && !!dateRange?.toDate,
-    select: (res) => res.data,
-  });
-};
-
-
-export const useGetRecentOrders = (dateRange) => {
-  return useQuery({
-    queryKey: ["getRecentOrders", dateRange?.fromDate, dateRange?.toDate],
-    queryFn: () => getRecentOrders(dateRange),
-    enabled: !!dateRange?.fromDate && !!dateRange?.toDate,
-    select: (res) => res.data.data,
-  });
-};
-
-export const useGetTopCustomers = (dateRange) => {
-  return useQuery({
-    queryKey: ["getTopCustomers", dateRange],
-    queryFn: () => getTopCustomers(dateRange),
-    enabled: Boolean(dateRange?.fromDate && dateRange?.toDate),
-    select: (data) => data.data.data,
-  });
-};
-
-export const useGetSummeryChart = (dateRange) =>
-  useQuery({
-    queryKey: ["getSummeryChart", dateRange],
-    queryFn: () => getSummeryChart(dateRange),
-    select: (data) => data.data?.data,
-  });
 
 //////////////////////   ADVERTISEMENT SECTION ⚠️⚠️⚠️⚠️⚠️⚠️   ////////////////////////////
 
@@ -350,11 +256,3 @@ export const useGetAdvertisement = () =>
     select: (data) => JSON.parse(data.data?.[0]?.AdsData),
   });
 
-
-  export const useGetCustomers = () => {
-  return useQuery({
-    queryKey: ["getAllUsers"],
-    queryFn: getAllUsers,
-    select: (res) => res.data.data,
-  });
-};

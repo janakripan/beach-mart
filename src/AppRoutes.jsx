@@ -24,15 +24,12 @@ import CheckoutGuard from "./components/user/CheckoutGuard";
 const CheckoutLayout = lazy(() => import("./layout/CheckoutLayout"));
 
 // Admin pages
-const Dashboard = lazy(() => import("./pages/admin/DashboardHome"));
 const Orders = lazy(() => import("./pages/admin/Orders"));
-const Customers = lazy(() => import("./pages/admin/Customers/Customers"));
 const Categories = lazy(() => import("./pages/admin/Categories"));
 const Brands = lazy(() => import("./pages/admin/Brands"));
 const ProductList = lazy(() => import('./pages/admin/ProductList'));
 const Sizes = lazy(() => import("./pages/admin/Sizes"));
 const BannerManagement = lazy(() => import("./pages/admin/Banner"));
-const Returns = lazy(() => import("./pages/admin/Returns"));
 
 const AppRoutes = () => {
   return (
@@ -65,10 +62,8 @@ const AppRoutes = () => {
           {/* Admin routes */}
           <Route element={<ProtectedRoute adminOnly />}>
             <Route path="/admin" element={<AdminLayout />}>
-              <Route index element={<Dashboard />} />
+              <Route index element={<Orders />} />
               <Route path="orders" element={<Orders />} />
-              <Route path="returns" element={<Returns />} />
-              <Route path="customers" element={<Customers />} />
               <Route path="categories" element={<Categories />} />
               <Route path="brands" element={<Brands />} />
               <Route path="banner" element={<BannerManagement />} />

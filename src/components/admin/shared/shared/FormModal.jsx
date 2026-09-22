@@ -79,10 +79,10 @@ const FormModal = ({
         </div>
 
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold text-gray-700">{title}</h2>
+          <h2 className="text-lg font-bold text-[#1A1A2E]">{title}</h2>
           <button
             onClick={onClose}
-            className="text-gray-500 cursor-pointer hover:text-gray-700"
+            className="text-[#1A1A2E] cursor-pointer hover:text-gray-700"
           >
             <X size={20} />
           </button>
@@ -101,16 +101,16 @@ const FormModal = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 border cursor-pointer hover:bg-black hover:text-white border-gray-300 rounded-md text-sm"
+                className="px-4 py-2 border cursor-pointer hover:bg-[#1A1A2E] hover:text-white border-[#E3F0E2] bg-[#F8FCF8] rounded-md text-sm text-[#1A1A2E] transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className={`px-4 py-2 bg-black text-white
+                className={`px-4 py-2 bg-primary text-white
                  ${
-                   isLoading ? `cursor-not-allowed` : `cursor-pointer`
-                 } rounded-md text-sm hover:bg-black/70`}
+                   isLoading ? `cursor-not-allowed opacity-70` : `cursor-pointer hover:bg-[#2D4535]`
+                 } rounded-md text-sm transition-colors`}
                 disabled={isLoading}
               >
                 {isLoading ? (

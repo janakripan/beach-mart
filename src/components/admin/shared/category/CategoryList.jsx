@@ -1,6 +1,5 @@
 import React from "react";
 import CategoryGrid from "./CategoryGrid";
-import { useGetAllCategory } from "../../../../api/admin/hooks";
 import DynamicTable from "../shared/DynamicTable";
 import { Edit2 } from "lucide-react";
 
@@ -10,8 +9,8 @@ const CategoryList = ({
   handleEditCategory,
   selectedCategories,
   setSelectedCategories,
+  onReorder,
 }) => {
-  const { isLoading, isError, refetch } = useGetAllCategory();
   const CATEGORY_TABLE_COLUMNS = [
     {
       key: "Id",
@@ -70,9 +69,9 @@ const CategoryList = ({
         <CategoryGrid
           categories={filteredCategories}
           handleEditCategory={handleEditCategory}
-          refetch={refetch}
-          isLoading={isLoading}
-          isError={isError}
+          onReorder={onReorder}
+          isLoading={false}
+          isError={false}
         />
       </div>
     );
@@ -80,8 +79,8 @@ const CategoryList = ({
 
   return (
     <DynamicTable
-      isLoading={isLoading}
-      isError={isError}
+      isLoading={false}
+      isError={false}
       selectedItems={selectedCategories}
       setSelectedItems={setSelectedCategories}
       columns={CATEGORY_TABLE_COLUMNS}

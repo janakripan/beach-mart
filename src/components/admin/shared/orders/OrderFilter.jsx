@@ -272,12 +272,8 @@ const OrderFilter = ({
   // Get color class based on status
   const getStatusColorClass = (status) => {
     switch (status) {
-      case "ordered":
-        return "bg-blue-100 text-blue-800";
-      case "processing":
+      case "pending":
         return "bg-yellow-100 text-yellow-800";
-      case "shipped":
-        return "bg-purple-100 text-purple-800";
       case "delivered":
         return "bg-green-100 text-green-800";
       case "cancelled":
@@ -290,10 +286,11 @@ const OrderFilter = ({
   return (
     <div className="relative" ref={filterRef}>
       <button
-        className={`flex items-center gap-2 ${
-          isFilterActive ? "bg-black " : "bg-gray-100 text-gray-700"
-        } ${isFilterActive ? "text-white" : ""} cursor-pointer px-4 
-        rounded-lg hover:bg-[#67807d] hover:text-white transition-colors h-fit py-2`}
+        className={`flex items-center gap-2 border rounded-[12px] cursor-pointer px-4 h-[46px] shadow-sm transition-colors ${
+          isFilterActive 
+            ? "bg-primary text-white border-primary" 
+            : "bg-[#F8FCF8] text-[#1A1A2E] border-[#E3F0E2] hover:border-primary"
+        }`}
         onClick={() => setIsFilterOpen(!isFilterOpen)}
       >
         <FiFilter />
@@ -603,7 +600,6 @@ const OrderFilter = ({
                               setDatePreset("all");
                               setFromDate("");
                               setToDate("");
-                              gray;
                             }}
                           >
                             <MdDeleteOutline />
@@ -637,7 +633,7 @@ const OrderFilter = ({
               Reset All
             </button>
             <button
-              className="text-sm px-3 py-2 bg-black  text-white rounded-lg cursor-pointer"
+              className="text-sm px-3 py-2 bg-primary text-white rounded-lg cursor-pointer"
               onClick={handleApplyFilters}
             >
               Apply

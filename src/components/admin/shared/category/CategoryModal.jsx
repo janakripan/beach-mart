@@ -41,7 +41,7 @@ const CategoryModal = ({
       title={isEditing ? "Edit Category" : "Add New Category"}
     >
       <div className="w-full">
-        <label className="block text-sm font-medium text-gray-600 mb-2">
+        <label className="block text-sm font-medium text-[#1A1A2E] mb-2">
           Category Image
         </label>
         <ImageUploader
@@ -57,7 +57,7 @@ const CategoryModal = ({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="block text-sm font-medium text-[#1A1A2E] mb-2">
           Category Name
         </label>
         <input
@@ -65,21 +65,21 @@ const CategoryModal = ({
           name="name"
           value={formData.name}
           onChange={handleInputChange}
-          className="w-full border border-gray-300 rounded-md p-2 text-sm"
+          className="w-full border border-[#E3F0E2] bg-[#F8FCF8] rounded-[12px] p-3 text-sm text-[#1A1A2E] focus:outline-none focus:border-primary transition-colors"
           placeholder="Enter category name"
           required
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="block text-sm font-medium text-[#1A1A2E] mb-2">
           Description
         </label>
         <textarea
           name="description"
           value={formData.description}
           onChange={handleInputChange}
-          className="w-full border border-gray-300 rounded-md p-2 text-sm"
+          className="w-full border border-[#E3F0E2] bg-[#F8FCF8] rounded-[12px] p-3 text-sm text-[#1A1A2E] focus:outline-none focus:border-primary transition-colors"
           placeholder="Enter category description"
           rows="3"
         />
@@ -98,7 +98,7 @@ const CategoryModal = ({
               />
               <div
                 className={`block w-12 h-6 rounded-full transition-colors ${
-                  formData.IsActive ? "bg-black " : "bg-gray-300"
+                  formData.IsActive ? "bg-primary " : "bg-[#E3F0E2]"
                 }`}
               ></div>
               <div
@@ -107,7 +107,7 @@ const CategoryModal = ({
                 }`}
               ></div>
             </div>
-            <span className="text-sm font-medium text-gray-700">
+            <span className="text-sm font-medium text-[#1A1A2E]">
               {formData.IsActive ? "Active" : "Inactive"}
             </span>
           </label>
@@ -130,7 +130,7 @@ const CategoryModal = ({
               />
               <div
                 className={`block w-12 h-6 rounded-full transition-colors ${
-                  formData.isMain ? "bg-black " : "bg-gray-300"
+                  formData.isMain ? "bg-primary " : "bg-[#E3F0E2]"
                 }`}
               ></div>
               <div
@@ -139,7 +139,7 @@ const CategoryModal = ({
                 }`}
               ></div>
             </div>
-            <span className="text-sm font-medium text-gray-700">
+            <span className="text-sm font-medium text-[#1A1A2E]">
               {formData.isMain ? "Master Category" : "Sub Category"}
             </span>
           </label>

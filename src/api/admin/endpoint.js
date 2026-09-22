@@ -6,11 +6,7 @@ export const IMAGE_DELETE_ENDPOINT =
 // Login
 export const ADMIN_LOGIN = "oauth";
 
-// Category
-export const GET_CATEGORY = "getCategoryMaster";
-export const POST_CATEGORY = "postCategoryMaster";
-export const PUT_CATEGORY = "putCategoryMaster";
-export const DELETE_CATEGORY = "deleteCategoryMaster";
+
 
 // Brand
 export const GET_BRAND = "getBrandMaster";
@@ -45,18 +41,6 @@ export const ACTIVE_PRODUCT = "ProductMasterInactive";
 export const GET_ORDERS = "getOrders";
 export const PUT_ORDER_STATUS = "putOrderStatus";
 
-// dashboard
-export const GET_METRICS = "getRevenueMetrics";
-export const GET_SELLING_PRODUCTS = "getTopProducts";
-export const GET_RECENT_ORDERS = "getRecentOrders";
-export const GET_WEEKLY_CUSTOMERS = "getWeeklyCustomers";
-export const GET_TOP_CUSTOMERS = "getTopCustomers";
-export const GET_SUMMERY_CHART = "getCardMetrics";
-
 // advertisement
 export const POST_ADVERTISEMENT = "postAdsData";
 export const GET_ADVERTISEMENT = "getAdsData";
-
-//returns
-
-export const GET_ALL_USERS = "getAllUsers"

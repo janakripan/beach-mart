@@ -3,34 +3,24 @@ import {
   ACTIVE_PRODUCT,
   ADMIN_LOGIN,
   DELETE_BRAND,
-  DELETE_CATEGORY,
   EDIT_PRODUCT,
   GET_ADVERTISEMENT,
-  GET_ALL_USERS,
   GET_BANNER,
   GET_BRAND,
-  GET_CATEGORY,
   GET_COLOR,
-  GET_METRICS,
   GET_ORDERS,
   GET_PRODUCTS,
-  GET_RECENT_ORDERS,
-  GET_SELLING_PRODUCTS,
   GET_SIZE,
-  GET_SUMMERY_CHART,
-  GET_TOP_CUSTOMERS,
   IMAGE_DELETE_ENDPOINT,
   IMAGE_UPLOAD_ENDPOINT,
   POST_ADVERTISEMENT,
   POST_BANNER,
   POST_BRAND,
-  POST_CATEGORY,
   POST_COLOR,
   POST_PRODUCT,
   POST_SIZE,
   PUT_BANNER,
   PUT_BRAND,
-  PUT_CATEGORY,
   PUT_COLOR,
   PUT_COLOR_ACITVE,
   PUT_ORDER_STATUS,
@@ -85,68 +75,7 @@ export const adminLogin = (credential) =>
     Password: credential.password,
   }).then((res) => res.data);
 
-//////////////////////   CATEGORY SECTION ⚠️⚠️⚠️⚠️⚠️⚠️   ////////////////////////////
 
-export const getCategory = () =>
-  apiClient.get(GET_CATEGORY).then((res) => res.data.data);
-
-export const addCategory = (category) =>
-  apiClient.post(POST_CATEGORY, {
-    categoryName: category.name,
-    categoryDescription: category.description,
-    parentCategoryId: 0,
-    imageUrl: category.imageUrl,
-    isActive: category.IsActive,
-    isMain: category.isMain,
-  }).then((res) => res.data);
-
-export const editCategory = ({ category, categoryId }) =>
-  apiClient.put(
-    PUT_CATEGORY,
-    [
-      {
-        categoryName: category.name,
-        categoryDescription: category.description,
-        parentCategoryId: category.parentId,
-        imageUrl: category.imageUrl,
-        isActive: category.IsActive,
-        isMain: category.isMain,
-      },
-    ],
-    {
-      headers: {
-        categoryID: categoryId,
-        bulkUpdate: false,
-      },
-    }
-  );
-
-export const editCategoryOrder = (category) =>
-  apiClient.put(PUT_CATEGORY, category, {
-    headers: {
-      bulkUpdate: true,
-    },
-  });
-
-export const deleteCategory = async (categoryId) => {
-  try {
-    const response = await apiClient.delete(DELETE_CATEGORY, {
-      headers: {
-        categoryID: categoryId,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    const errorMessage =
-      error.response?.data?.message ||
-      error.message ||
-      "Failed to delete category";
-
-    const enhancedError = new Error(errorMessage);
-    enhancedError.originalError = error;
-    throw enhancedError;
-  }
-};
 
 //////////////////////   BRAND SECTION ⚠️⚠️⚠️⚠️⚠️⚠️   ////////////////////////////
 
@@ -366,52 +295,6 @@ export const editOrderStatus = ({ OrderId, OrderStatus }) =>
       },
     }
   ).then((response) => response.data);
-
-//////////////////////   DASHBOARD SECTION ⚠️⚠️⚠️⚠️⚠️⚠️   ////////////////////////////
-
-export const getAllUsers = () =>
-  apiClient.get(GET_ALL_USERS);
-
-export const getMetrics = (dateRange) =>
-  apiClient.get(GET_METRICS, {
-    headers: {
-      fromDate: dateRange.fromDate,
-      toDate: dateRange.toDate,
-    },
-  });
-
-export const getSellingProducts = (dateRange) =>
-  apiClient.get(GET_SELLING_PRODUCTS, {
-    headers: {
-      fromDate: dateRange.fromDate,
-      toDate: dateRange.toDate,
-    },
-  });
-
-export const getRecentOrders = (dateRange) =>
-  apiClient.get(GET_RECENT_ORDERS, {
-    headers: {
-      fromDate: dateRange.fromDate,
-      toDate: dateRange.toDate,
-    },
-  });
-
-export const getTopCustomers = (dateRange) =>
-  apiClient.get(GET_TOP_CUSTOMERS, {
-    headers: {
-      fromDate: dateRange.fromDate,
-      toDate: dateRange.toDate,
-    },
-    
-  });
-
-export const getSummeryChart = (dateRange) =>
-  apiClient.get(GET_SUMMERY_CHART, {
-    headers: {
-      fromDate: dateRange.fromDate,
-      toDate: dateRange.toDate,
-    },
-  });
 
 //////////////////////   ADVERTISEMENT SECTION ⚠️⚠️⚠️⚠️⚠️⚠️   ////////////////////////////
 

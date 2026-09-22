@@ -1,16 +1,16 @@
 export const categories = [
-  { id: 'cat-1', title: 'Fresh Fruit', image: '/assets/landing/category/fruits.png' },
-  { id: 'cat-2', title: 'Fresh Vegetables', image: '/assets/landing/category/vegetables.png' },
-  { id: 'cat-3', title: 'Meat & Fish', image: '/assets/landing/category/meat&fish.png' },
-  { id: 'cat-4', title: 'Snacks', image: '/assets/landing/category/snacks.png' },
-  { id: 'cat-5', title: 'Beverages', image: '/assets/landing/category/fresh-fruit.png' },
-  { id: 'cat-6', title: 'Beauty & Health', image: '/assets/landing/category/beauty and health.png' },
-  { id: 'cat-7', title: 'Diabetic Food', image: '/assets/landing/category/diabetic food.png' },
-  { id: 'cat-8', title: 'Bread & Bakery', image: '/assets/landing/category/bakery.png' },
-  { id: 'cat-9', title: 'Baking Needs', image: '/assets/landing/category/baking-needs.png' },
-  { id: 'cat-10', title: 'Cooking', image: '/assets/landing/category/cooking.png' },
-  { id: 'cat-11', title: 'Dish Detergents', image: '/assets/landing/category/cleaning.png' },
-  { id: 'cat-12', title: 'Cooking Oil', image: '/assets/landing/category/oil.png' }
+  { id: 'cat-1', title: 'Fresh Fruit', image: '/assets/landing/category/fruits.png', description: 'Freshly picked seasonal fruits', isActive: true, isMain: true },
+  { id: 'cat-2', title: 'Fresh Vegetables', image: '/assets/landing/category/vegetables.png', description: 'Farm fresh organic vegetables', isActive: true, isMain: true },
+  { id: 'cat-3', title: 'Meat & Fish', image: '/assets/landing/category/meat&fish.png', description: 'Premium quality meats and fresh seafood', isActive: true, isMain: true },
+  { id: 'cat-4', title: 'Snacks', image: '/assets/landing/category/snacks.png', description: 'Tasty snacks and munchies', isActive: true, isMain: false },
+  { id: 'cat-5', title: 'Beverages', image: '/assets/landing/category/fresh-fruit.png', description: 'Refreshing drinks and beverages', isActive: true, isMain: false },
+  { id: 'cat-6', title: 'Beauty & Health', image: '/assets/landing/category/beauty and health.png', description: 'Personal care and wellness products', isActive: true, isMain: false },
+  { id: 'cat-7', title: 'Diabetic Food', image: '/assets/landing/category/diabetic food.png', description: 'Healthy choices for diabetic diets', isActive: true, isMain: false },
+  { id: 'cat-8', title: 'Bread & Bakery', image: '/assets/landing/category/bakery.png', description: 'Freshly baked breads and pastries', isActive: true, isMain: false },
+  { id: 'cat-9', title: 'Baking Needs', image: '/assets/landing/category/baking-needs.png', description: 'Ingredients and supplies for baking', isActive: true, isMain: false },
+  { id: 'cat-10', title: 'Cooking', image: '/assets/landing/category/cooking.png', description: 'Spices, sauces, and cooking essentials', isActive: true, isMain: false },
+  { id: 'cat-11', title: 'Dish Detergents', image: '/assets/landing/category/cleaning.png', description: 'Cleaning supplies and detergents', isActive: true, isMain: false },
+  { id: 'cat-12', title: 'Cooking Oil', image: '/assets/landing/category/oil.png', description: 'Various cooking oils and ghee', isActive: true, isMain: false }
 ];
 
 export const offerProducts = [

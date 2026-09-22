@@ -7,7 +7,7 @@ import DashboardHeader from "../../components/admin/shared/DashboardHeader";
 function AdminLayout() {
   const [open, setOpen] = useState(false);
   return (
-    <div>
+    <div data-lenis-prevent="true">
       <DashboardSidebar open={open} setOpen={setOpen} />
 
       <div

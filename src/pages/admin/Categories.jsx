@@ -1,16 +1,21 @@
 import { LayoutGrid, PlusCircle, Table, Trash2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import {
-  useDeleteCategory,
-  useGetAllCategory,
-  usePostCategory,
-  usePutCategory,
-} from "../../api/admin/hooks";
+import { categories as initialCategoriesData } from "../../constants/data";
 import CategoryList from "../../components/admin/shared/category/CategoryList";
 import CategoryModal from "../../components/admin/shared/category/CategoryModal";
 import DeleteModal from "../../components/admin/shared/shared/DeleteModal";
 import PageHeader from "../../components/admin/shared/shared/PageHeader";
 import FloatingDeleteButton from "../../components/admin/shared/shared/FloatingDeleteButton";
+
+const initialMappedCategories = initialCategoriesData.map((c) => ({
+  Id: c.id,
+  Name: c.title,
+  CategoryDescription: c.description || "",
+  ImageUrl: c.image,
+  IsActive: c.isActive !== undefined ? c.isActive : true,
+  isMain: c.isMain || false,
+  ParentCategoryId: null,
+}));
 
 const Categories = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -34,13 +39,11 @@ const Categories = () => {
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [deletedError, setDeleteError] = useState(null);
 
-  // Fetch categories
-  const { data: categories, refetch } = useGetAllCategory();
-
-  // Mutations
-  const postCategory = usePostCategory();
-  const putCategory = usePutCategory();
-  const deleteCategory = useDeleteCategory();
+  // Local categories state
+  const [categories, setCategories] = useState(initialMappedCategories);
+  
+  // Loading state for UX
+  const [isLoading, setIsLoading] = useState(false);
 
   // Handle form input changes
   const handleInputChange = (e) => {
@@ -50,7 +53,6 @@ const Categories = () => {
 
   // Handle image upload
   const handleImageUploaded = (data) => {
-    // Assuming the API returns an imageUrl field
     if (data && data.FileDetails) {
       setFormData((prev) => ({
         ...prev,
@@ -77,7 +79,7 @@ const Categories = () => {
       imageUrl: category.ImageUrl,
       parentId: category.ParentCategoryId,
       IsActive: category.IsActive,
-      isMain: category.IsMain !== undefined ? category.IsMain : (category.isMain || false),
+      isMain: category.isMain !== undefined ? category.isMain : (category.IsMain || false),
     });
     setIsModalOpen(true);
   };
@@ -87,54 +89,77 @@ const Categories = () => {
     setIsModalOpen(false);
   };
 
-  // Submit form (create or update)
+  // Submit form (create or update) locally
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    
     try {
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
       if (isEditing && currentCategory) {
-        await putCategory.mutateAsync({
-          category: formData,
-          categoryId: currentCategory.Id,
-        });
+        setCategories(prev => prev.map(c => {
+          if (c.Id === currentCategory.Id) {
+            return {
+              ...c,
+              Name: formData.name,
+              CategoryDescription: formData.description,
+              ImageUrl: formData.imageUrl,
+              IsActive: formData.IsActive,
+              isMain: formData.isMain,
+            };
+          }
+          return c;
+        }));
       } else {
-        await postCategory.mutateAsync(formData);
+        const newCategory = {
+          Id: `cat-${Date.now()}`,
+          Name: formData.name,
+          CategoryDescription: formData.description,
+          ImageUrl: formData.imageUrl,
+          IsActive: formData.IsActive,
+          isMain: formData.isMain,
+          ParentCategoryId: null,
+        };
+        setCategories(prev => [...prev, newCategory]);
       }
 
-      // Close modal and refresh data
       setIsModalOpen(false);
-      refetch();
     } catch (error) {
       console.error("Error saving category:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // Delete selected categories
+  // Delete selected categories locally
   const handleDeleteSelected = async () => {
     try {
       setDeleteError(null);
-      // Create an array of promises for each delete operation
-      const deletePromises = selectedCategories.map((categoryId) =>
-        deleteCategory.mutateAsync(categoryId)
-      );
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 500));
 
-      // Wait for all delete operations to complete
-      await Promise.all(deletePromises);
+      setCategories(prev => prev.filter(c => !selectedCategories.includes(c.Id)));
 
-      // Refresh data and clear selection
-      refetch();
       setSelectedCategories([]);
       setIsDeleteModalVisible(false);
     } catch (error) {
       setDeleteError(error);
-
       console.error("Error deleting categories:", error);
     }
+  };
+  
+  // Handle order update locally
+  const handleReorder = (newCategories) => {
+    setCategories(newCategories);
   };
 
   const handleCloseDeleteModal = () => {
     setIsDeleteModalVisible(false);
     setDeleteError(null);
   };
+
   // Filter categories based on search query
   const filteredCategories = categories
     ? categories.filter((category) =>
@@ -146,8 +171,9 @@ const Categories = () => {
   useEffect(() => {
     localStorage.setItem("gridView", gridView);
   }, [gridView]);
+  
   return (
-    <div className="w-full h-screen overflow-hidden gap-y-4 flex flex-col p-5">
+    <div className="w-full h-screen overflow-hidden gap-y-4 flex flex-col p-5" data-lenis-prevent="true">
       <PageHeader
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
@@ -175,6 +201,7 @@ const Categories = () => {
         handleEditCategory={handleEditCategory}
         selectedCategories={selectedCategories}
         setSelectedCategories={setSelectedCategories}
+        onReorder={handleReorder}
       />
 
       {/* Category Modal - appears at the right */}
@@ -186,7 +213,7 @@ const Categories = () => {
         formData={formData}
         handleInputChange={handleInputChange}
         handleImageUploaded={handleImageUploaded}
-        isLoading={postCategory.isLoading || putCategory.isLoading}
+        isLoading={isLoading}
       />
 
       {/* Delete Confirmation Modal - appears at the bottom right */}
@@ -210,3 +237,4 @@ const Categories = () => {
 };
 
 export default Categories;
+

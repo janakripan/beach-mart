@@ -17,7 +17,6 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Edit2 } from "lucide-react";
-import { usePutCategoryOrder } from "../../../../api/admin/hooks";
 import ErrorDisplay from "../shared/ErrorDisplay";
 import TableSkeleton from "../shared/TableSkeleton";
 
@@ -115,7 +114,7 @@ const CategoryCard = ({ category }) => {
 const CategoryGrid = ({
   categories,
   handleEditCategory,
-  refetch,
+  onReorder,
   isError,
   isLoading,
 }) => {
@@ -123,8 +122,6 @@ const CategoryGrid = ({
   const [activeId, setActiveId] = useState(null);
   const [orderChanged, setOrderChanged] = useState(false);
   const updateTimer = useRef(null);
-
-  const putCategoryOrder = usePutCategoryOrder();
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -172,21 +169,9 @@ const CategoryGrid = ({
 
   const saveOrder = async () => {
     try {
-      const orderData = items.map((item, index) => ({
-        categoryName: item.Name,
-        categoryDescription: item.CategoryDescription,
-        parentCategoryId: item.ParentCategoryId,
-        imageUrl: item.ImageUrl,
-        sortOrder: index + 1,
-        categoryId: item.Id,
-      }));
-      console.log(orderData);
-      await putCategoryOrder.mutateAsync(orderData, {
-        onSuccess: () => {
-          refetch();
-        },
-      });
-      console.log("Category order updated successfully");
+      if (onReorder) {
+        onReorder(items);
+      }
     } catch (error) {
       console.error("Error updating category order:", error);
     }

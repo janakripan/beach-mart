@@ -2,7 +2,7 @@
 const ProductRow = ({ product }) => {
   const ImageCell = ({ imageUrl, productName }) => {
     return (
-      <div className="w-16 h-16 flex-shrink-0 rounded overflow-hidden bg-gray-100 border border-gray-200">
+      <div className="w-16 h-16 flex-shrink-0 rounded overflow-hidden bg-gray-100 border border-[#E3F0E2]">
         {imageUrl ? (
           <img
             src={imageUrl}
@@ -18,47 +18,42 @@ const ProductRow = ({ product }) => {
     );
   };
   return (
-    <div className="flex items-start py-2 px-4 hover:bg-gray-50 border-t border-gray-100">
+    <div className="flex items-start py-3 px-4 hover:bg-[#F0F8F1] border-t border-[#E3F0E2] transition-colors">
       <ImageCell
-        imageUrl={product.primaryImageUrl}
+        imageUrl={product.imageUrl}
         productName={product.productName}
       />
       <div className="ml-4 flex-1">
-        <div className="font-medium text-sm text-gray-800">
+        <div className="font-bold text-sm text-[#1A1A2E]">
           {product.productName}
         </div>
         <div className="mt-1 flex flex-wrap gap-4 text-xs text-gray-500">
           <div>
             Price:{" "}
-            <span className="text-gray-700 font-medium">
-              AED {product.price.toFixed(2)}
+            <span className="text-[#1A1A2E] font-bold">
+              AED {(product.price || 0).toFixed(2)}
             </span>
           </div>
           <div>
-            Quantity:{" "}
-            <span className="text-gray-700 font-medium">
-              {product.quantity}
+            Count:{" "}
+            <span className="text-[#1A1A2E] font-bold">
+              {product.count}
             </span>
           </div>
-          <div>
-            Product ID:{" "}
-            <span className="text-gray-700 font-medium">
-              {product.productId}
-            </span>
-          </div>
-          {product.varientID !== -1 && (
+          {product.variant && (
             <div>
-              Variant ID:{" "}
-              <span className="text-gray-700 font-medium">
-                {product.varientID}
+              Variant:{" "}
+              <span className="text-[#1A1A2E] font-bold">
+                {product.variant}
               </span>
             </div>
           )}
         </div>
       </div>
       <div className="text-right">
-        <div className="font-medium text-sm">
-          AED {(product.price * product.quantity).toFixed(2)}
+        <div className="text-xs text-gray-500 mb-1">Total</div>
+        <div className="font-bold text-sm text-[#1A1A2E]">
+          AED {((product.price || 0) * (product.count || 0)).toFixed(2)}
         </div>
       </div>
     </div>

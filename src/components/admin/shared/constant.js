@@ -1,24 +1,9 @@
 export const SIDE_MENU = {
   "Main Menu": [
     {
-      title: "dashboard",
-      path: "",
-      icon: "solar:home-smile-outline",
-    },
-    {
       title: "order management ",
       path: "orders",
       icon: "flowbite:cart-outline",
-    },
-    {
-      title: "return management ",
-      path: "returns",
-      icon: "flowbite:cart-outline",
-    },
-    {
-      title: "Customers",
-      path: "customers",
-      icon: "material-symbols-light:account-circle-outline",
     },
     {
       title: "Banner",
@@ -30,11 +15,6 @@ export const SIDE_MENU = {
       path: "categories",
       icon: "tabler:circle-square",
     },
-    // {
-    //   title: "Colors",
-    //   path: "colors",
-    //   icon: "lucide:paint-bucket",
-    // },
     {
       title: "brand",
       path: "brands",
@@ -45,11 +25,6 @@ export const SIDE_MENU = {
       path: "size",
       icon: "lucide:cuboid",
     },
-    // {
-    //   title: "Payment Integration",
-    //   path: "payment",
-    //   icon: "bxl:stripe",
-    // },
   ],
   Products: [
     {
@@ -64,18 +39,10 @@ export const SIDE_MENU = {
       path: "admin",
       icon: "material-symbols-light:account-circle-outline",
     },
-    // {
-    //   title: "settings",
-    //   path: "settings",
-    //   icon: "clarity:settings-line",
-    // },
   ],
 };
 
 export const HEADER_TITLE = [
-  {
-    title: "dashboard",
-  },
   {
     title: "order management ",
   },
@@ -108,33 +75,6 @@ export const HEADER_TITLE = [
   },
   {
     title: "settings",
-  },
-];
-export const REPORTS_GRAPH_NAV = [
-  {
-    title: "customers",
-    option: "totalCustomers",
-    metric: "customers",
-  },
-  {
-    title: "total products",
-    option: "totalProducts",
-    metric: "totalProducts",
-  },
-  {
-    title: "stock products",
-    option: "productsInStock",
-    metric: "productsInStock",
-  },
-  {
-    title: "total sold ",
-    option: "totalsoldProducts",
-    metric: "soldProducts",
-  },
-  {
-    title: "revenue",
-    option: "totalRevenue",
-    metric: "totalRevenue",
   },
 ];
 
@@ -220,9 +160,7 @@ export const INITIAL_PRODUCT_DETAILS = {
 
 export const STATUS_OPTIONS = [
   { value: "", label: "All Statuses" },
-  { value: "ordered", label: "Ordered" },
-  { value: "processing", label: "Processing" },
-  { value: "shipped", label: "Shipped" },
+  { value: "pending", label: "Pending" },
   { value: "delivered", label: "Delivered" },
   { value: "cancelled", label: "Cancelled" },
 ];
