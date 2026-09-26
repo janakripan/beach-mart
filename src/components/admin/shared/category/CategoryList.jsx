@@ -12,6 +12,7 @@ const CategoryList = ({
   selectedCategories,
   setSelectedCategories,
   onReorder,
+  isLoading,
 }) => {
   const CATEGORY_TABLE_COLUMNS = [
     {
@@ -91,7 +92,7 @@ const CategoryList = ({
           handleDeleteSingle={handleDeleteSingle}
           handleToggleActive={handleToggleActive}
           onReorder={onReorder}
-          isLoading={false}
+          isLoading={isLoading}
           isError={false}
         />
       </div>
@@ -100,7 +101,7 @@ const CategoryList = ({
 
   return (
     <DynamicTable
-      isLoading={false}
+      isLoading={isLoading}
       isError={false}
       selectedItems={selectedCategories}
       setSelectedItems={setSelectedCategories}

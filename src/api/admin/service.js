@@ -19,6 +19,10 @@ import {
   PUT_CATEGORIES,
   ACTIVATE_CATEGORY,
   DELETE_CATEGORIES,
+  POST_VARIANT,
+  POST_DELIVERY_LOCATION,
+  POST_DELIVERY_MODES,
+  POST_PAYMENT_MODES,
 } from "./endpoint";
 import apiClient from "../apiClient";
 export { getProducts, getCategories, getVariants, getBanner } from "../shared/service";
@@ -157,12 +161,42 @@ export const activeCategory = async ({ categoryId, status }) => {
 };
 //////////////////////   VARIANTS SECTION ⚠️⚠️⚠️⚠️⚠️⚠️   ////////////////////////////
 
+export const toggleVariantActive = async ({ varientId, varientName, isActive }) => {
+  const payload = {
+    VarientID: varientId,
+    VarientName: varientName,
+    IsActive: isActive
+  };
+  const response = await apiClient.post(POST_VARIANT, payload);
+  return response.data;
+};
 
+export const saveVariantMaster = async ({ varientId, varientName, secondaryName, isActive }) => {
+  const payload = {
+    VarientID: varientId,
+    VarientName: varientName,
+    SecondaryName: secondaryName,
+    IsActive: isActive
+  };
+  const response = await apiClient.post(POST_VARIANT, payload);
+  return response.data;
+};
 
 //////////////////////   DELIVERY LOCATION SECTION ⚠️⚠️⚠️⚠️⚠️⚠️   ////////////////////////////
 
 export const getDeliveryLocations = async () => {
   const response = await apiClient.get(GET_DELIVERY_LOCATION);
+  return response.data;
+};
+
+export const saveDeliveryLocation = async ({ locationId, locationName, secondaryName, isActive }) => {
+  const payload = {
+    LocationID: locationId,
+    LocationName: locationName,
+  };
+  if (secondaryName !== undefined) payload.SecondaryName = secondaryName;
+  if (isActive !== undefined) payload.IsActive = isActive;
+  const response = await apiClient.post(POST_DELIVERY_LOCATION, payload);
   return response.data;
 };
 
@@ -173,10 +207,32 @@ export const getDeliveryModes = async () => {
   return response.data;
 };
 
+export const saveDeliveryMode = async ({ deliveryModeId, deliveryModeName, secondaryName, isActive }) => {
+  const payload = {
+    deliverymodID: deliveryModeId,
+    deliveryModeName: deliveryModeName,
+  };
+  if (secondaryName !== undefined) payload.SecondaryName = secondaryName;
+  if (isActive !== undefined) payload.IsActive = isActive;
+  const response = await apiClient.post(POST_DELIVERY_MODES, payload);
+  return response.data;
+};
+
 //////////////////////   PAYMENT MODES SECTION ⚠️⚠️⚠️⚠️⚠️⚠️   ////////////////////////////
 
 export const getPaymentModes = async () => {
   const response = await apiClient.get(GET_PAYMENT_MODES);
+  return response.data;
+};
+
+export const savePaymentMode = async ({ paymentModeId, paymentModeName, secondaryName, isActive }) => {
+  const payload = {
+    paymodID: paymentModeId,
+    payModeName: paymentModeName,
+  };
+  if (secondaryName !== undefined) payload.SecondaryName = secondaryName;
+  if (isActive !== undefined) payload.IsActive = isActive;
+  const response = await apiClient.post(POST_PAYMENT_MODES, payload);
   return response.data;
 };
 

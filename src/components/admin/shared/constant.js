@@ -185,15 +185,12 @@ export const STATUS_OPTIONS = [
 // Date preset options
 export const DATE_PRESET = [
   { value: "all", label: "All Time" },
-  { value: "custom", label: "Custom Range" },
-  { value: "last30days", label: "Last 30 Days" },
-  { value: "thisMonth", label: "This Month" },
+  { value: "today", label: "Today" },
+  { value: "yesterday", label: "Yesterday" },
+  { value: "lastWeek", label: "Last Week" },
   { value: "lastMonth", label: "Last Month" },
-  { value: "thisQuarter", label: "This Quarter" },
-  { value: "lastQuarter", label: "Last Quarter" },
-  { value: "twoQuartersAgo", label: "2 Quarters Ago" },
-  { value: "thisYear", label: "This Year" },
   { value: "lastYear", label: "Last Year" },
+  { value: "custom", label: "Custom Range" },
 ];
 
 export const DATE_OPTIONS = [

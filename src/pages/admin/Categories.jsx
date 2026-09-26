@@ -283,6 +283,7 @@ const Categories = () => {
         selectedCategories={selectedCategories}
         setSelectedCategories={setSelectedCategories}
         onReorder={handleReorder}
+        isLoading={isFetching}
       />
 
       {/* Category Modal - appears at the right */}

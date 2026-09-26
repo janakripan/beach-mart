@@ -1,17 +1,22 @@
 import React, { useState } from "react";
 import DynamicTable from "../../components/admin/shared/shared/DynamicTable";
 import PageHeader from "../../components/admin/shared/shared/PageHeader";
-import ConfirmModal from "../../components/admin/shared/shared/ConfirmModal";
-import { Edit2, PlusCircle, Trash2 } from "lucide-react";
+import { PlusCircle } from "lucide-react";
 import SizeModal from "../../components/admin/shared/size/sizeModal";
-import { useGetVariants } from "../../api/admin/hooks";
+import { useGetVariants, useActiveVariant, useSaveVariant } from "../../api/admin/hooks";
+import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
 
 const Variants = () => {
+  const queryClient = useQueryClient();
   const { data: variants = [], isLoading, isError } = useGetVariants();
+  const { mutate: activeVariantMutation } = useActiveVariant();
+  const { mutate: saveVariantMutation, isPending: isSaving } = useSaveVariant();
+  const [togglingIds, setTogglingIds] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [currentSize, setCurrentSize] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [deleteModal, setDeleteModal] = useState({ isOpen: false, id: null });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     sizeLable: "",
@@ -39,36 +44,55 @@ const Variants = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (isEditing && currentSize) {
-      setVariants((prev) =>
-        prev.map((v) =>
-          v.SizeId === currentSize.SizeId
-            ? { ...v, SizeLabel: formData.sizeLable, isActive: formData.isActive }
-            : v
-        )
-      );
-    } else {
-      setVariants((prev) => [
-        ...prev,
-        {
-          SizeId: Date.now(),
-          SizeLabel: formData.sizeLable,
-          isActive: formData.isActive,
+    
+    // Map ID if editing, otherwise pass -1 for creation
+    const varientId = isEditing && currentSize ? (currentSize.ID || currentSize.VarientID || currentSize.VariantId || currentSize.VariantID || -1) : -1;
+    
+    saveVariantMutation(
+      {
+        varientId: varientId,
+        varientName: formData.sizeLable,
+        secondaryName: null,
+        isActive: formData.isActive
+      },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ["getVariants"] });
+          toast.success(`Variant ${isEditing ? "updated" : "added"} successfully`);
+          setIsModalOpen(false);
         },
-      ]);
-    }
-    setIsModalOpen(false);
+        onError: (err) => {
+          console.error("Error saving variant:", err);
+          toast.error("Failed to save variant");
+        }
+      }
+    );
   };
 
-  const handleDelete = (id) => {
-    setDeleteModal({ isOpen: true, id });
-  };
-
-  const confirmDelete = () => {
-    if (deleteModal.id) {
-      setVariants((prev) => prev.filter((v) => v.VariantId !== deleteModal.id));
-      setDeleteModal({ isOpen: false, id: null });
-    }
+  const handleToggleActive = (variant) => {
+    const varientId = variant.ID || variant.VarientID || variant.VariantId || variant.VariantID;
+    
+    if (togglingIds.includes(varientId)) return;
+    
+    const newStatus = !variant.IsActive;
+    setTogglingIds(prev => [...prev, varientId]);
+    
+    activeVariantMutation(
+      { varientId: varientId, varientName: variant.Name, isActive: newStatus },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ["getVariants"] });
+          toast.success(`Variant ${newStatus ? 'activated' : 'deactivated'} successfully`);
+        },
+        onError: (err) => {
+          console.error("Error toggling variant status:", err);
+          toast.error("Failed to update variant status");
+        },
+        onSettled: () => {
+          setTogglingIds(prev => prev.filter(id => id !== varientId));
+        }
+      }
+    );
   };
 
   const filteredVariants = variants.filter((variant) =>
@@ -104,22 +128,29 @@ const Variants = () => {
     {
       key: "actions",
       header: "Actions",
-      render: (variant) => (
-        <div className="flex space-x-3 pl-4 items-center">
-          <button
-            onClick={() => handleEditColor(variant)}
-            className="text-gray-400 cursor-pointer hover:text-primary transition-colors"
-          >
-            <Edit2 size={16} />
-          </button>
-          <button
-            onClick={() => handleDelete(variant.ID)}
-            className="text-gray-400 cursor-pointer hover:text-red-500 transition-colors"
-          >
-            <Trash2 size={16} />
-          </button>
-        </div>
-      ),
+      render: (variant) => {
+        const varientId = variant.ID || variant.VarientID || variant.VariantId || variant.VariantID;
+        const isToggling = togglingIds.includes(varientId);
+        
+        return (
+          <div className="flex space-x-3 pl-4 items-center">
+            <div
+              title={variant.IsActive ? "Deactivate" : "Activate"}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleToggleActive(variant);
+              }}
+              className={`relative ${isToggling ? "cursor-not-allowed opacity-70" : "cursor-pointer"}`}
+            >
+              <input type="checkbox" className="sr-only" checked={variant.IsActive} readOnly disabled={isToggling} />
+              <div className={`block w-10 h-5 rounded-full transition-colors ${variant.IsActive ? "bg-primary" : "bg-gray-300"}`} />
+              <div className={`absolute left-1 top-1 bg-white w-3 h-3 rounded-full transition-transform flex items-center justify-center ${variant.IsActive ? "transform translate-x-5" : ""}`}>
+                {isToggling && <Loader2 size={10} className="animate-spin text-primary" />}
+              </div>
+            </div>
+          </div>
+        );
+      },
     },
   ];
 
@@ -143,6 +174,7 @@ const Variants = () => {
         idField="ID"
         data={filteredVariants}
         emptyMessage="No variants found"
+        onRowClick={(variant) => handleEditColor(variant)}
       />
       
       <SizeModal
@@ -152,17 +184,7 @@ const Variants = () => {
         handleSubmit={handleSubmit}
         isEditing={isEditing}
         isModalOpen={isModalOpen}
-        isLoading={false}
-      />
-
-      <ConfirmModal
-        isOpen={deleteModal.isOpen}
-        onClose={() => setDeleteModal({ isOpen: false, id: null })}
-        onConfirm={confirmDelete}
-        title="Delete Variant"
-        message="Are you sure you want to delete this variant? This action cannot be undone."
-        confirmText="Delete"
-        isDestructive={true}
+        isLoading={isSaving}
       />
     </div>
   );

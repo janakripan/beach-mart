@@ -45,4 +45,4 @@ export const POST_DELIVERY_MODES = "7366/ecom/postDeliveryMode";
 //payment mode
 
 export const GET_PAYMENT_MODES = "7366/ecom/getpaymentMode";
-// export const POST_PAYMENT_MODES = "7366/ecom/postPaymentMode";
+export const POST_PAYMENT_MODES = "7366/ecom/postPaymentMode";

@@ -192,8 +192,18 @@ const Advertisement = () => {
 
   if (isLoading) {
     return (
-      <div className="p-6 w-full h-full flex items-center justify-center">
-        <div className="text-gray-500">Loading advertisements...</div>
+      <div className="p-6 w-full h-full overflow-y-auto">
+        <div className="space-y-6">
+          <div className="flex justify-between items-center">
+            <h2 className="text-2xl font-bold text-gray-800">Advertisements</h2>
+            <div className="w-32 h-10 bg-gray-200 animate-pulse rounded"></div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[1, 2, 3, 4, 5, 6].map((idx) => (
+              <div key={idx} className="bg-gray-50 rounded-lg p-3 shadow-sm h-64 animate-pulse"></div>
+            ))}
+          </div>
+        </div>
       </div>
     );
   }

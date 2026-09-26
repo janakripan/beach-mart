@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from "react";
+import TableSkeleton from "../../components/admin/shared/shared/TableSkeleton";
 import OrderFilter from "../../components/admin/shared/orders/OrderFilter";
 import PageNavigation from "../../components/admin/shared/products/PageNavigation";
 import PageHeader from "../../components/admin/shared/shared/PageHeader";
@@ -22,38 +23,6 @@ const Orders = () => {
   const [datePreset, setDatePreset] = useState("today");
   const [fromDate, setFromDate] = useState(getTodayDate());
   const [toDate, setToDate] = useState(getTodayDate());
-
-  const handleDatePresetChange = (preset) => {
-    setDatePreset(preset);
-    const date = new Date();
-    let start = getTodayDate();
-    let end = getTodayDate();
-    
-    if (preset === "yesterday") {
-      date.setDate(date.getDate() - 1);
-      date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
-      start = date.toISOString().split("T")[0];
-      end = start;
-    } else if (preset === "lastWeek") {
-      const startD = new Date(date);
-      startD.setDate(date.getDate() - 7);
-      startD.setMinutes(startD.getMinutes() - startD.getTimezoneOffset());
-      start = startD.toISOString().split("T")[0];
-    } else if (preset === "lastMonth") {
-      const startD = new Date(date);
-      startD.setMonth(date.getMonth() - 1);
-      startD.setMinutes(startD.getMinutes() - startD.getTimezoneOffset());
-      start = startD.toISOString().split("T")[0];
-    } else if (preset === "lastYear") {
-      const startD = new Date(date);
-      startD.setFullYear(date.getFullYear() - 1);
-      startD.setMinutes(startD.getMinutes() - startD.getTimezoneOffset());
-      start = startD.toISOString().split("T")[0];
-    }
-    
-    setFromDate(start);
-    setToDate(end);
-  };
 
   const [expandedOrders, setExpandedOrders] = useState({});
 
@@ -119,9 +88,9 @@ const Orders = () => {
   const clearFilters = () => {
     setSearchQuery("");
     setStatusFilter("");
-    setDatePreset("today");
-    setFromDate(getTodayDate());
-    setToDate(getTodayDate());
+    setDatePreset("all");
+    setFromDate("2000-01-01");
+    setToDate("2100-12-31");
     setCurrentPage(1);
   };
 
@@ -159,42 +128,7 @@ const Orders = () => {
           setSearchQuery={setSearchQuery}
           searchPlaceholder="Search order by customer name or ID"
           viewToggle={null}
-        >
-          {datePreset !== 'today' && (
-             <button 
-                onClick={() => handleDatePresetChange('today')} 
-                className="text-sm px-3 py-2 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg cursor-pointer transition-colors font-medium mr-2"
-             >
-               Reset Date Filter
-             </button>
-          )}
-
-          <div className="flex items-center gap-2">
-            <input 
-               type="date" 
-               className="border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none bg-white text-gray-700"
-               value={fromDate}
-               onChange={(e) => {
-                 setFromDate(e.target.value);
-                 setToDate(e.target.value);
-                 setDatePreset("custom");
-               }} 
-            />
-            
-            <select 
-              value={datePreset} 
-              onChange={(e) => handleDatePresetChange(e.target.value)}
-              className="border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none bg-white text-gray-700 cursor-pointer"
-            >
-              <option value="today">Today</option>
-              <option value="yesterday">Yesterday</option>
-              <option value="lastWeek">Last Week</option>
-              <option value="lastMonth">Last Month</option>
-              <option value="lastYear">Last Year</option>
-              <option value="custom" disabled hidden>Custom</option>
-            </select>
-          </div>
-        </PageHeader>
+        />
         <OrderFilter
           filters={{
             orderId: {
@@ -219,7 +153,9 @@ const Orders = () => {
       </div>
       {/* Orders List */}
       <div className="space-y-4 flex-1 overflow-y-auto min-h-0 pb-4 pr-1">
-        {paginatedOrders.length === 0 ? (
+        {isLoading ? (
+          <TableSkeleton />
+        ) : paginatedOrders.length === 0 ? (
           <div className="text-center py-10 text-gray-500">No orders found.</div>
         ) : (
           paginatedOrders.map((order) => {

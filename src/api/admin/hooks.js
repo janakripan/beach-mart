@@ -18,6 +18,12 @@ import {
   updateCategory,
   deleteCategory,
   activeCategory,
+  toggleVariantActive,
+  saveVariantMaster,
+  getPaymentModes,
+  saveDeliveryLocation,
+  saveDeliveryMode,
+  savePaymentMode
 } from "./service";
 import { useState } from "react";
 export { useGetBanner, useGetProducts, useGetCategories, useGetVariants } from "../shared/hooks";
@@ -114,6 +120,18 @@ export const useActiveCategory = () =>
 
 //////////////////////   VARIANTS SECTION ⚠️⚠️⚠️⚠️⚠️⚠️   ////////////////////////////
 
+export const useActiveVariant = () =>
+  useMutation({
+    mutationKey: ["activeVariant"],
+    mutationFn: toggleVariantActive,
+  });
+
+export const useSaveVariant = () =>
+  useMutation({
+    mutationKey: ["saveVariant"],
+    mutationFn: saveVariantMaster,
+  });
+
 
 
 //////////////////////   DELIVERY LOCATION SECTION ⚠️⚠️⚠️⚠️⚠️⚠️   ////////////////////////////
@@ -125,6 +143,12 @@ export const useGetDeliveryLocations = () =>
     select: (data) => data.data || [],
   });
 
+export const useSaveDeliveryLocation = () =>
+  useMutation({
+    mutationKey: ["saveDeliveryLocation"],
+    mutationFn: saveDeliveryLocation,
+  });
+
 //////////////////////   DELIVERY MODES SECTION ⚠️⚠️⚠️⚠️⚠️⚠️   ////////////////////////////
 
 export const useGetDeliveryModes = () =>
@@ -134,6 +158,12 @@ export const useGetDeliveryModes = () =>
     select: (data) => data.data || [],
   });
 
+export const useSaveDeliveryMode = () =>
+  useMutation({
+    mutationKey: ["saveDeliveryMode"],
+    mutationFn: saveDeliveryMode,
+  });
+
 //////////////////////   PAYMENT MODES SECTION ⚠️⚠️⚠️⚠️⚠️⚠️   ////////////////////////////
 
 export const useGetPaymentModes = () =>
@@ -141,6 +171,12 @@ export const useGetPaymentModes = () =>
     queryKey: ["getPaymentModes"],
     queryFn: getPaymentModes,
     select: (data) => data.data || [],
+  });
+
+export const useSavePaymentMode = () =>
+  useMutation({
+    mutationKey: ["savePaymentMode"],
+    mutationFn: savePaymentMode,
   });
 
 //////////////////////   ORDER SECTION ⚠️⚠️⚠️⚠️⚠️⚠️   ////////////////////////////

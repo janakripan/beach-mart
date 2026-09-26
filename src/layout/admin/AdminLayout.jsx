@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import { Outlet } from "react-router";
 import DashboardSidebar from "../../components/admin/shared/Sidebar";
 import DashboardHeader from "../../components/admin/shared/DashboardHeader";
+import TableSkeleton from "../../components/admin/shared/shared/TableSkeleton";
 
 
 function AdminLayout() {
@@ -17,7 +18,9 @@ function AdminLayout() {
         }`}
       >
         <DashboardHeader />
-        <Outlet />
+        <Suspense fallback={<div className="flex-1 overflow-hidden p-5"><TableSkeleton /></div>}>
+          <Outlet />
+        </Suspense>
       </div>
     </div>
   );

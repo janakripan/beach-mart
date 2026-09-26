@@ -66,54 +66,26 @@ const OrderFilter = ({
     let toDate = "";
 
     switch (preset) {
-      case "last30days":
-        fromDate = new Date(today);
-        fromDate.setDate(today.getDate() - 30);
+      case "today":
+        fromDate = today;
         toDate = today;
         break;
 
-      case "thisMonth":
-        fromDate = new Date(today.getFullYear(), today.getMonth(), 1);
-        toDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+      case "yesterday":
+        fromDate = new Date(today);
+        fromDate.setDate(today.getDate() - 1);
+        toDate = new Date(fromDate);
+        break;
+
+      case "lastWeek":
+        fromDate = new Date(today);
+        fromDate.setDate(today.getDate() - 7);
+        toDate = today;
         break;
 
       case "lastMonth":
         fromDate = new Date(today.getFullYear(), today.getMonth() - 1, 1);
         toDate = new Date(today.getFullYear(), today.getMonth(), 0);
-        break;
-
-      case "thisQuarter":
-        const currentQuarter = Math.floor(today.getMonth() / 3);
-        fromDate = new Date(today.getFullYear(), currentQuarter * 3, 1);
-        toDate = new Date(today.getFullYear(), (currentQuarter + 1) * 3, 0);
-        break;
-
-      case "lastQuarter":
-        const lastQuarter = Math.floor(today.getMonth() / 3) - 1;
-        const lastQuarterYear =
-          lastQuarter < 0 ? today.getFullYear() - 1 : today.getFullYear();
-        const adjustedLastQuarter = lastQuarter < 0 ? 3 : lastQuarter;
-        fromDate = new Date(lastQuarterYear, adjustedLastQuarter * 3, 1);
-        toDate = new Date(lastQuarterYear, (adjustedLastQuarter + 1) * 3, 0);
-        break;
-
-      case "twoQuartersAgo":
-        const twoQuartersAgo = Math.floor(today.getMonth() / 3) - 2;
-        const twoQuartersAgoYear =
-          twoQuartersAgo < 0 ? today.getFullYear() - 1 : today.getFullYear();
-        const adjustedTwoQuartersAgo =
-          twoQuartersAgo < 0 ? 4 + twoQuartersAgo : twoQuartersAgo;
-        fromDate = new Date(twoQuartersAgoYear, adjustedTwoQuartersAgo * 3, 1);
-        toDate = new Date(
-          twoQuartersAgoYear,
-          (adjustedTwoQuartersAgo + 1) * 3,
-          0
-        );
-        break;
-
-      case "thisYear":
-        fromDate = new Date(today.getFullYear(), 0, 1);
-        toDate = new Date(today.getFullYear(), 11, 31);
         break;
 
       case "lastYear":
@@ -123,8 +95,8 @@ const OrderFilter = ({
 
       case "all":
       default:
-        fromDate = "";
-        toDate = "";
+        fromDate = new Date("2000-01-01");
+        toDate = new Date("2100-12-31");
         break;
     }
 
@@ -146,7 +118,11 @@ const OrderFilter = ({
     setIsDateDropdownOpen(false);
 
     if (preset === "custom") {
-      // For custom range, don't automatically set dates
+      // For custom range, default to today
+      const today = new Date();
+      const formatDate = (date) => date.toISOString().split("T")[0];
+      setFromDate(formatDate(today));
+      setToDate(formatDate(today));
       return;
     }
 
@@ -199,8 +175,8 @@ const OrderFilter = ({
     setOrderIdSearch("");
     setStatusFilter("");
     setDatePreset("all");
-    setFromDate("");
-    setToDate("");
+    setFromDate("2000-01-01");
+    setToDate("2100-12-31");
 
     // Only call parent's clearAll when Apply is clicked
     // This prevents immediate data fetching on reset
@@ -571,7 +547,7 @@ const OrderFilter = ({
                   )}
 
                   <div className="flex-1 overflow-y-auto">
-                    {datePreset !== "all" && (
+                    {datePreset && (
                       <div className="p-3 border rounded-lg border-gray-200 bg-gray-50">
                         <div className="text-xs font-medium text-gray-700 mb-2">
                           Active Date Filter:
