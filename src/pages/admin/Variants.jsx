@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import DynamicTable from "../../components/admin/shared/shared/DynamicTable";
 import PageHeader from "../../components/admin/shared/shared/PageHeader";
+import ConfirmModal from "../../components/admin/shared/shared/ConfirmModal";
 import { Edit2, PlusCircle, Trash2 } from "lucide-react";
 import SizeModal from "../../components/admin/shared/size/sizeModal";
 import { useGetVariants } from "../../api/admin/hooks";
@@ -10,6 +11,7 @@ const Variants = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [currentSize, setCurrentSize] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [deleteModal, setDeleteModal] = useState({ isOpen: false, id: null });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     sizeLable: "",
@@ -59,8 +61,13 @@ const Variants = () => {
   };
 
   const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this variant?")) {
-      setVariants((prev) => prev.filter((v) => v.SizeId !== id));
+    setDeleteModal({ isOpen: true, id });
+  };
+
+  const confirmDelete = () => {
+    if (deleteModal.id) {
+      setVariants((prev) => prev.filter((v) => v.VariantId !== deleteModal.id));
+      setDeleteModal({ isOpen: false, id: null });
     }
   };
 
@@ -146,6 +153,16 @@ const Variants = () => {
         isEditing={isEditing}
         isModalOpen={isModalOpen}
         isLoading={false}
+      />
+
+      <ConfirmModal
+        isOpen={deleteModal.isOpen}
+        onClose={() => setDeleteModal({ isOpen: false, id: null })}
+        onConfirm={confirmDelete}
+        title="Delete Variant"
+        message="Are you sure you want to delete this variant? This action cannot be undone."
+        confirmText="Delete"
+        isDestructive={true}
       />
     </div>
   );

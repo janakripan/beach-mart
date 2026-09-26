@@ -1,16 +1,15 @@
 import { useEffect, useState } from 'react';
 
-const SplashScreen = ({ onFinish }) => {
+const SplashScreen = ({ isDataLoaded, onFinish }) => {
   const [exiting, setExiting] = useState(false);
 
   useEffect(() => {
-    const exitTimer   = setTimeout(() => setExiting(true), 3500);
-    const finishTimer = setTimeout(() => onFinish(), 4200);
-    return () => {
-      clearTimeout(exitTimer);
-      clearTimeout(finishTimer);
-    };
-  }, [onFinish]);
+    if (isDataLoaded) {
+      setExiting(true);
+      const finishTimer = setTimeout(() => onFinish(), 700);
+      return () => clearTimeout(finishTimer);
+    }
+  }, [isDataLoaded, onFinish]);
 
   return (
     <>

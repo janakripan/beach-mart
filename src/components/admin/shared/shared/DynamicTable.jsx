@@ -25,6 +25,7 @@ const DynamicTable = ({
   emptyMessage = "No items found",
   isLoading = false,
   isError = false,
+  onRowClick = null,
 }) => {
   // Handle checkbox selection for a single item
   const handleSelectItem = (itemId) => {
@@ -102,7 +103,8 @@ const DynamicTable = ({
             data.map((item) => (
               <tr
                 key={item[idField]}
-                className="hover:bg-gray-50 border-b border-gray-200/85"
+                onClick={() => onRowClick && onRowClick(item)}
+                className={`border-b border-gray-200/85 ${onRowClick ? 'cursor-pointer hover:bg-gray-100' : 'hover:bg-gray-50'}`}
               >
                 {isSelectable && (
                   <td className="px-6 py-4 whitespace-nowrap">

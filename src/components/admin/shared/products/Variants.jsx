@@ -4,12 +4,14 @@ import { Plus, Trash2, AlertTriangle } from "lucide-react";
 // Mock variants list
 const VARIANT_OPTIONS = ["Small", "Medium", "Large", "500g", "1KG", "2KG", "1L"];
 
-const Variants = forwardRef(({ isOpen, setFormData, formData }, ref) => {
+const Variants = forwardRef(({ isOpen, setFormData, formData, variantsList = [] }, ref) => {
   const [showWarning, setShowWarning] = useState(false);
+  const [validationError, setValidationError] = useState("");
   
   // Temporary state for the variant currently being added
   const [currentVariant, setCurrentVariant] = useState({
     name: "",
+    variantID: 0,
     price: "",
     inStock: true
   });
@@ -28,23 +30,27 @@ const Variants = forwardRef(({ isOpen, setFormData, formData }, ref) => {
 
   const handleAddVariant = () => {
     if (!currentVariant.name || !currentVariant.price) {
-      alert("Please select a variant and enter a price.");
+      setValidationError("Please select a variant and enter a price.");
       return;
     }
 
     setFormData(prev => ({
       ...prev,
-      variants: [...(prev.variants || []), { ...currentVariant, id: Date.now() }]
+      variants: [...(prev.variants || []), { 
+        ...currentVariant, 
+        id: Date.now() // Unique id for frontend rendering
+      }]
     }));
 
-    setCurrentVariant({ name: "", price: "", inStock: true });
+    setCurrentVariant({ name: "", variantID: 0, price: "", inStock: true });
     setShowWarning(false);
+    setValidationError("");
   };
 
-  const handleRemoveVariant = (id) => {
+  const handleRemoveVariant = (indexToRemove) => {
     setFormData(prev => ({
       ...prev,
-      variants: (prev.variants || []).filter(v => v.id !== id)
+      variants: (prev.variants || []).filter((_, idx) => idx !== indexToRemove)
     }));
   };
 
@@ -60,12 +66,21 @@ const Variants = forwardRef(({ isOpen, setFormData, formData }, ref) => {
             <label className="block text-sm font-medium text-[#1A1A2E] mb-2">Variant Option</label>
             <select
               value={currentVariant.name}
-              onChange={(e) => setCurrentVariant(prev => ({ ...prev, name: e.target.value }))}
+              onChange={(e) => {
+                const selectedName = e.target.value;
+                const matchedVariant = variantsList.find(v => v.Name === selectedName);
+                setCurrentVariant(prev => ({ 
+                  ...prev, 
+                  name: selectedName,
+                  variantID: matchedVariant ? matchedVariant.ID : 0
+                }));
+                if (validationError) setValidationError("");
+              }}
               className="w-full border-2 border-[#E3F0E2] rounded-md p-2.5 text-sm focus:border-primary focus:outline-none"
             >
               <option value="">Select Option</option>
-              {VARIANT_OPTIONS.map(opt => (
-                <option key={opt} value={opt}>{opt}</option>
+              {variantsList.map(opt => (
+                <option key={opt.ID} value={opt.Name}>{opt.Name}</option>
               ))}
             </select>
           </div>
@@ -97,10 +112,16 @@ const Variants = forwardRef(({ isOpen, setFormData, formData }, ref) => {
             Add
           </button>
         </div>
+        {validationError && (
+          <div className="mt-3 p-3 bg-red-50 border border-red-200 text-red-800 text-sm rounded flex items-center">
+            <AlertTriangle size={16} className="mr-2 flex-shrink-0" />
+            {validationError}
+          </div>
+        )}
         
         {showWarning && (
           <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 text-yellow-800 text-sm rounded flex items-center">
-            <AlertTriangle size={16} className="mr-2" />
+            <AlertTriangle size={16} className="mr-2 flex-shrink-0" />
             You have unsaved variant data. Click Add to save it.
           </div>
         )}
@@ -110,24 +131,29 @@ const Variants = forwardRef(({ isOpen, setFormData, formData }, ref) => {
       {formData.variants && formData.variants.length > 0 && (
         <div className="space-y-2">
           <h4 className="text-sm font-semibold text-[#1A1A2E] mb-2">Saved Variants</h4>
-          {formData.variants.map((variant) => (
-            <div key={variant.id} className="flex items-center justify-between p-3 border border-[#E3F0E2] rounded-md bg-white">
-              <div className="flex items-center space-x-6">
-                <span className="font-medium text-[#1A1A2E] min-w-[100px]">{variant.name}</span>
-                <span className="text-gray-500">AED {variant.price}</span>
-                <span className={`text-xs px-2 py-1 rounded-full ${variant.inStock ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                  {variant.inStock ? 'In Stock' : 'Out of Stock'}
-                </span>
+          {formData.variants.map((variant, idx) => {
+            const vName = variant.name || variant.VariantName;
+            const vPrice = variant.price || variant.Price;
+            const vStock = variant.inStock !== undefined ? variant.inStock : variant.IsStock;
+            return (
+              <div key={variant.id || idx} className="flex items-center justify-between p-3 border border-[#E3F0E2] rounded-md bg-white">
+                <div className="flex items-center space-x-6">
+                  <span className="font-medium text-[#1A1A2E] min-w-[100px]">{vName}</span>
+                  <span className="text-gray-500">AED {vPrice}</span>
+                  <span className={`text-xs px-2 py-1 rounded-full ${vStock ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                    {vStock ? 'In Stock' : 'Out of Stock'}
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveVariant(idx)}
+                  className="text-gray-400 hover:text-red-500 transition-colors p-1"
+                >
+                  <Trash2 size={16} />
+                </button>
               </div>
-              <button
-                type="button"
-                onClick={() => handleRemoveVariant(variant.id)}
-                className="text-gray-400 hover:text-red-500 transition-colors p-1"
-              >
-                <Trash2 size={16} />
-              </button>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>

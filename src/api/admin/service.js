@@ -14,7 +14,7 @@ import {
 
   POST_PRODUCT,
   PUT_BANNER,
-
+  DELETE_PRODUCT,
 } from "./endpoint";
 import apiClient from "../apiClient";
 export { getProducts, getCategories, getVariants, getBanner } from "../shared/service";
@@ -35,20 +35,20 @@ export const uploadImage = async ({file, category}) => {
   return response.data;
 };
 
-export const deleteImage = async (url) => {
+export const deleteImage = async ({url, category = "products"}) => {
   // Extract the filename from the URL
   const urlParts = url.split("/");
   const filename = urlParts[urlParts.length - 1];
-  const thumbFilename = `thumb_${filename}`;
-  // Create the request payload
+  
+  // Create the request payload with just the filename
   const payload = {
-    fileNames: [filename, thumbFilename],
+    fileNames: [filename],
   };
   const response = await axios.delete(IMAGE_DELETE_ENDPOINT, {
     headers: {
       Token: import.meta.env.VITE_UPLOAD_TOKEN,
       clientID: import.meta.env.VITE_CLIENT_ID,
-      imageClassification: "dtac",
+      imageClassification: category,
       "Content-Type": "application/json",
     },
     data: payload,
@@ -96,18 +96,24 @@ export const editProduct = ({ updatedProduct, productId }) =>
     },
   });
 export const activeProduct = ({ productId, status }) => {
-  apiClient.put(
+  return apiClient.put(
     ACTIVE_PRODUCT,
     {},
     {
       headers: {
         productID: productId,
+        _status: String(!status),
       },
-      params: {
-      isActive: !status,
-    },
     }
-  );
+  ).then(res => res.data);
+};
+
+export const deleteProduct = (productId) => {
+  return apiClient.delete(DELETE_PRODUCT, {
+    headers: {
+      productID: productId,
+    },
+  }).then(res => res.data);
 };
 
 //////////////////////   CATEGORY SECTION ⚠️⚠️⚠️⚠️⚠️⚠️   ////////////////////////////

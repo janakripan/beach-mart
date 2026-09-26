@@ -113,23 +113,9 @@ const ImageUploader = ({
         return;
       }
 
-      deleteImage(imageUrl, {
-        onSuccess: () => {
-          onImageDelete && onImageDelete(imageUrl);
-          onImageUpload &&
-            onImageUpload({
-              FileDetails: [
-                {
-                  FileUrl: null,
-                },
-              ],
-            });
-          resolve();
-        },
-        onError: (error) => {
-          console.error("Error deleting image:", error);
-          reject(error);
-        },
+      deleteImage({url: imageUrl, category}, {
+        onSuccess: () => resolve(),
+        onError: (error) => resolve() // Resolve anyway so UI clears on 400 not found
       });
     });
   };
@@ -177,17 +163,9 @@ const ImageUploader = ({
               }
 
               // Set the image from the server response
-              if (data.FileDetails) {
+              if (data.FileDetails && data.FileDetails[0] && data.FileDetails[0].FileUrl) {
                 setImage(data.FileDetails[0].FileUrl);
                 setPreviewImage(data.FileDetails[0].FileUrl);
-              } else {
-                // If no URL is returned, use the local file as fallback
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                  setImage(e.target.result);
-                  setPreviewImage(e.target.result);
-                };
-                reader.readAsDataURL(file);
               }
               onImageUpload(data);
               setIsUploading(false);
@@ -262,6 +240,11 @@ const ImageUploader = ({
           if (fileInputRef.current) {
             fileInputRef.current.value = "";
           }
+          if (onImageDelete) {
+            onImageDelete(image);
+          } else if (onImageUpload) {
+            onImageUpload({ FileDetails: [{ FileUrl: null }] });
+          }
         })
         .catch((error) => {
           setError("Failed to delete image. Please try again.");
@@ -277,6 +260,11 @@ const ImageUploader = ({
       setDimensions(null);
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
+      }
+      if (onImageDelete) {
+        onImageDelete(image);
+      } else if (onImageUpload) {
+        onImageUpload({ FileDetails: [{ FileUrl: null }] });
       }
       setIsDeleting(false);
     }
@@ -306,6 +294,7 @@ const ImageUploader = ({
           border-dashed
           relative
           transition-all
+          group
           ${
             isDragging
               ? "border-primary bg-primary/10"
@@ -326,7 +315,7 @@ const ImageUploader = ({
         onClick={
           !previewImage || showLoading
             ? handleClickUpload
-            : () => setShowEditMenu(!showEditMenu)
+            : undefined
         }
       >
         <input
@@ -340,13 +329,13 @@ const ImageUploader = ({
         {showLoading && (
           <div
             className="absolute inset-0 flex flex-col items-center
-          gap-y-3 justify-center bg-white bg-opacity-60 z-10"
+          gap-y-2 justify-center bg-white bg-opacity-70 z-10 p-2"
           >
-            <img src={loader} alt="" className="w-20" />
-            <p className="text-gray-500 text-sm">
+            <img src={loader} alt="" className="w-8 h-8" />
+            <p className="text-gray-600 text-[10px] font-medium text-center">
               {isDeleting || isLoadingDelete
-                ? "Deleting image..."
-                : "Uploading image..."}
+                ? "Deleting..."
+                : "Uploading..."}
             </p>
           </div>
         )}
@@ -367,48 +356,33 @@ const ImageUploader = ({
             </p>
           </div>
         ) : (
-          <div className="relative min-h-[200px] h-full w-full">
+          <div className="absolute inset-0 bg-gray-50 flex items-center justify-center p-2">
             <img
               src={previewImage}
               alt="Uploaded content"
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain"
               key={previewImage} // Add key to force re-render when image changes
             />
 
             {dimensions && (
-              <div className="absolute top-2 left-2 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded">
-                {dimensions.width} × {dimensions.height}px
+              <div className="absolute bottom-1 left-1 bg-black bg-opacity-60 text-white text-[10px] px-1.5 py-0.5 rounded shadow-sm backdrop-blur-sm">
+                {dimensions.width} × {dimensions.height}
               </div>
             )}
 
-            {showEditMenu && (
-              <div
-                className="absolute top-0 bottom-10 my-auto h-fit left-0 right-0 bg-black/20
-               bg-opacity-60 p-3 flex justify-center space-x-4"
+            {/* Hover Delete Button */}
+            <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleRemoveImage();
+                }}
+                className="p-2 rounded-full bg-red-600 text-white shadow-md hover:bg-red-700 hover:scale-105 transition-all duration-300"
+                title="Delete Image"
               >
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleEditImage();
-                  }}
-                  className="p-2 rounded-full bg-[#1A1A2E] text-white hover:bg-primary
-                  cursor-pointer transition-all duration-300 hover:scale-105"
-                >
-                  <Edit3 size={20} />
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleRemoveImage();
-                  }}
-                  className="p-2 rounded-full bg-[#1A1A2E] text-white
-                  cursor-pointer hover:scale-105 transition-all duration-300 hover:bg-red-600 
-                  "
-                >
-                  <Trash2 size={20} />
-                </button>
-              </div>
-            )}
+                <Trash2 size={16} />
+              </button>
+            </div>
           </div>
         )}
       </div>

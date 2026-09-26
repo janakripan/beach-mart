@@ -7,6 +7,7 @@ import {
   addProduct,
   adminLogin,
   deleteImage,
+  deleteProduct,
   editBanner,
   editProduct,
   getDeliveryLocations,
@@ -75,6 +76,12 @@ export const useActiveProduct = () =>
   useMutation({
     mutationKey: ["activeProduct"],
     mutationFn: ({productId,status}) => activeProduct({ productId,status }),
+  });
+// DELETE PRODUCT
+export const useDeleteProduct = () =>
+  useMutation({
+    mutationKey: ["deleteProduct"],
+    mutationFn: deleteProduct,
   });
 
 //////////////////////   CATEGORY SECTION ⚠️⚠️⚠️⚠️⚠️⚠️   ////////////////////////////

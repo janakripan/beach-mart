@@ -32,6 +32,7 @@ const ProductModal = ({
   brands,
   colors,
   sizes,
+  variantsList,
 }) => {
   const [enableVariants, setEnableVariants] = useState(false);
   const variantsRef = useRef(null);
@@ -46,7 +47,7 @@ const ProductModal = ({
   }, [isModalOpen]);
 
   // Custom form submission handler with variant validation
-  const handleFormSubmit = () => {
+  const handleFormSubmit = (values) => {
     // Check if variants are enabled and if there's unsaved variant data
     if (enableVariants && variantsRef.current) {
       const hasUnsavedVariant = variantsRef.current.checkForUnsavedVariant();
@@ -57,7 +58,7 @@ const ProductModal = ({
     }
 
     // Proceed with normal form submission
-    handleSubmit();
+    handleSubmit(values);
   };
 
   const formik = useFormik({
@@ -99,6 +100,7 @@ const ProductModal = ({
         formData={formData}
         colors={colors}
         sizes={sizes}
+        variantsList={variantsList}
       />
     </FormModal>
   );

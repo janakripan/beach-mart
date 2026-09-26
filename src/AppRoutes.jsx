@@ -34,20 +34,12 @@ const DeliveryMode = lazy(() => import("./pages/admin/DeliveryMode"));
 const PaymentMode = lazy(() => import("./pages/admin/PaymentMode"));
 
 const AppRoutes = () => {
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
-
-  useEffect(() => {
-    // Hide the DotWaveLoader for the first 5 seconds to let the SplashScreen cover the initial loading
-    const timer = setTimeout(() => setIsInitialLoad(false), 5000);
-    return () => clearTimeout(timer);
-  }, []);
-
   return (
     <Router>
       <ScrollToTop />
       <Suspense fallback={
         <div className="flex items-center justify-center min-h-screen bg-white">
-          {!isInitialLoad && <DotWaveLoader />}
+          <DotWaveLoader />
         </div>
       }>
         <Routes>

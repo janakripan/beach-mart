@@ -17,15 +17,16 @@ export const GET_BANNER = "7366/ecom/getBannerImage";
 
 // product
 export const GET_PRODUCTS = "7366/ecom/getProductMaster";
-export const POST_PRODUCT = "postProductMaster";
-export const EDIT_PRODUCT = "putProductMaster";
-export const ACTIVE_PRODUCT = "ProductMasterInactive";
+export const POST_PRODUCT = "7366/ecom/postProductMaster";
+export const EDIT_PRODUCT = "7366/ecom/putProductMaster";
+export const ACTIVE_PRODUCT = "7366/putProductMasterUpdate";
+export const DELETE_PRODUCT = "7366/ecom/deleteProduct";
 
 //category
-export const GET_CATEGORIES = "7366/ecom/getCategoriesMaster"
-export const POST_CATEGORIES = "7366/ecom/postCategoriesMaster"
-export const PUT_CATEGORIES = "7366/ecom/putCategoriesMaster"
-export const DELETE_CATEGORIES = "7366/ecom/deleteCategory"
+export const GET_CATEGORIES = "7366/ecom/getCategoriesMaster";
+export const POST_CATEGORIES = "7366/ecom/postCategoriesMaster";
+export const PUT_CATEGORIES = "7366/ecom/putCategoriesMaster";
+export const DELETE_CATEGORIES = "7366/ecom/deleteCategory";
 
 // order
 export const GET_ORDERS = "7364/ecom/getOrders";

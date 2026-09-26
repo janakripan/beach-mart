@@ -285,13 +285,12 @@ const AddNewVariant = ({
           Variant Images (Up to 4)
         </label>
 
-        {/* 2x2 Grid for 4 image upload slots */}
-        <div className="grid grid-cols-2 gap-2">
+        <div className="flex flex-wrap gap-4">
           {/* Generate 4 image upload slots */}
           {[0, 1, 2, 3].map((slotIndex) => (
             <div
               key={slotIndex}
-              className={`relative border rounded-md p-2 ${
+              className={`relative border rounded-md p-2 w-32 sm:w-36 flex-shrink-0 ${
                 !getImageUrlForSlot(slotIndex) && !isSlotAvailable(slotIndex)
                   ? "border-gray-200 bg-gray-100 opacity-60"
                   : "border-gray-300"
@@ -341,7 +340,7 @@ const AddNewVariant = ({
                 <ImageUploader
                   maxHeight={3000}
                   max_Width={3000}
-                  aspectRatio="aspect-auto"
+                  aspectRatio="aspect-square"
                   maxWidth="max-w-full"
                   onImageUpload={(data) =>
                     handleImageUploadedForSlot(data, slotIndex)

@@ -76,7 +76,7 @@ function App() {
     <AppLoadingContext.Provider value={{ isLoading: isAppLoading }}>
       <ReactLenis root>
         <QueryClientProvider client={queryClient}>
-          {showSplash && <SplashScreen onFinish={handleSplashFinish} />}
+          {showSplash && <SplashScreen isDataLoaded={authInitialized} onFinish={handleSplashFinish} />}
           {authInitialized && (
             <>
               <AppRoutes />

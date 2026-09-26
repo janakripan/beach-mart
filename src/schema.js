@@ -2,7 +2,7 @@ import * as Yup from "yup";
 
 export const PRODUCT_VALIDATION = (enableVariants) =>
   Yup.object().shape({
-    productName: Yup.string()
+    name: Yup.string()
       .required("Product Name is required")
       .min(2, "Product name must be atleast 2 character")
       .max(100, "Product name must be less than 100 characters"),
@@ -21,8 +21,7 @@ export const PRODUCT_VALIDATION = (enableVariants) =>
         }
       ),
 
-    categoryId: Yup.number().required("Category is required"),
-    brandID: Yup.number().required("Brand is required"),
+    categoryName: Yup.string().required("Category is required"),
 
     ...(!enableVariants
       ? {
