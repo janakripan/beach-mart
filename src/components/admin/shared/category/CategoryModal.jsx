@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import FormModal from "../shared/FormModal";
-import ImageUploader from "../shared/ImageUploader";
+import ImageUploader from "../../../shared/ImageUploader";
 
 const CategoryModal = ({
   isOpen,

@@ -5,10 +5,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useShop } from "../../../../context/ShopContext";
 import { useAppLoading } from "../../../../context/AppLoadingContext";
 
-export default function OfferProductCard({ product }) {
+export default function OfferProductCard({ product, isLoading: propIsLoading }) {
   const [isHovered, setIsHovered] = useState(false);
   const { addToCart, cartItems, updateQuantity, removeFromCart } = useShop();
-  const { isLoading } = useAppLoading();
+  const { isLoading: appLoading } = useAppLoading();
+  const isLoading = appLoading || propIsLoading;
   
   const cartItem = cartItems.find((item) => item.product.id === product.id);
   const inCart = !!cartItem;
@@ -51,7 +52,7 @@ export default function OfferProductCard({ product }) {
         <img
           src={product.image}
           alt={product.name}
-          className="w-auto h-[110%] object-cover"
+          className="w-full h-full object-contain"
         />
       </div>
 
@@ -69,11 +70,18 @@ export default function OfferProductCard({ product }) {
 
         {/* Price & Cart Container */}
         <div className="flex flex-row justify-between items-end w-full gap-1 sm:gap-2 min-h-fit">
-         <div className="flex items-center gap-1 font-poppins font-semibold text-[11px] xs:text-[13px] md:text-[16px] leading-[100%] text-text-main shrink-0 pb-1 md:pb-1.5">
-            <span className="flex items-center justify-center pt-0.5">
-              <DirhamIcon className="w-2 h-2 xs:w-2.5 xs:h-2.5 md:w-3.5 md:h-3.5" />
-            </span> 
-            {product.price}
+         <div className="flex flex-col gap-0">
+           {product.originalPrice && (
+             <div className="text-[10px] md:text-[12px] text-gray-400 line-through leading-[100%] ml-0.5">
+               AED {product.originalPrice}
+             </div>
+           )}
+           <div className="flex items-center gap-1 font-poppins font-semibold text-[11px] xs:text-[13px] md:text-[16px] leading-[100%] text-text-main shrink-0 pb-1 md:pb-1.5 mt-0.5">
+              <span className="flex items-center justify-center pt-0.5">
+                <DirhamIcon className="w-2 h-2 xs:w-2.5 xs:h-2.5 md:w-3.5 md:h-3.5" />
+              </span> 
+              {product.price}
+            </div>
           </div>
         {/* Cart / Quantity Button */}
         <AnimatePresence mode="wait">

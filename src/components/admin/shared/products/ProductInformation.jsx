@@ -1,5 +1,5 @@
 import React from "react";
-import ImageUploader from "../shared/ImageUploader";
+import ImageUploader from "../../../shared/ImageUploader";
 import RichTextEditor from "./RichTextEditor";
 
 const ProductInformation = ({

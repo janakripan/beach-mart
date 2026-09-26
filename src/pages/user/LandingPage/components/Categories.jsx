@@ -1,10 +1,24 @@
 import CategoryCard from './CategoryCard';
 import { ArrowUpRight } from 'lucide-react';
-import { categories } from "../../../../constants/data";
 import { useAppLoading } from '../../../../context/AppLoadingContext';
+import { useGetCategories } from '../../../../api/shared/hooks';
+import { parseImages } from '../../../../utils/parseImages';
+import { useNavigate } from 'react-router-dom';
+
+import { useAppStore } from '../../../../store/appStore';
 
 export default function Categories() {
-  const { isLoading } = useAppLoading();
+  const { isLoading: appLoading } = useAppLoading();
+  const rawCategories = useAppStore((state) => state.categories);
+  const navigate = useNavigate();
+
+  const categories = (rawCategories || []).map(c => ({
+    id: c.CategoryID,
+    title: c.CategoryName,
+    image: c.ImageUrl || "https://placehold.co/400"
+  }));
+
+  const isLoading = appLoading || (!rawCategories || rawCategories.length === 0);
 
   return (
     <section className="relative w-full bg-white border-b border-border-light py-[40px] md:py-[60px] xl:py-[80px] overflow-hidden">
@@ -72,7 +86,7 @@ export default function Categories() {
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-2 md:gap-4 max-w-[1120px] mx-auto">
           {isLoading ? (
             Array.from({ length: 6 }).map((_, index) => (
-              <CategoryCard key={index} title="" image="" />
+              <CategoryCard key={index} isLoading={true} />
             ))
           ) : (
             categories.map((category, index) => (
@@ -80,6 +94,7 @@ export default function Categories() {
                 key={index} 
                 title={category.title} 
                 image={category.image} 
+                onClick={() => navigate(`/shop?category=${category.id}`)}
               />
             ))
           )}

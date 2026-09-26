@@ -1,49 +1,59 @@
 import { Edit2, PlusCircle, Trash2 } from "lucide-react";
-import React, { useMemo, useState } from "react";
-// Constants
-import { offerProducts, vegetableProducts, categories } from "../../constants/data";
+import React, { useMemo, useState, useEffect } from "react";
 // Components
 import PageNavigation from "../../components/admin/shared/products/PageNavigation";
 import ProductModal from '../../components/admin/shared/products/ProductModal';
 import DynamicTable from "../../components/admin/shared/shared/DynamicTable";
 import PageHeader from "../../components/admin/shared/shared/PageHeader";
-
-// Mock mapping
-const initialProducts = [
-  ...offerProducts.map(p => ({ ...p, categoryName: 'Fresh Fruit', discountPrice: '0.00', isActive: true })),
-  ...vegetableProducts.map(p => ({ ...p, categoryName: 'Fresh Vegetables', discountPrice: '0.00', isActive: true }))
-];
+import { useGetProducts, useGetCategories } from "../../api/admin/hooks";
 
 const ProductList = () => {
-  const [products, setProducts] = useState(initialProducts);
   const [searchQuery, setSearchQuery] = useState("");
   
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
+
+  // Fetch data
+  const { data: productsData, isLoading: isLoadingProducts, isError: isErrorProducts } = useGetProducts({
+    page: currentPage,
+    pageSize,
+  });
+  const { data: categories = [], isLoading: isLoadingCategories } = useGetCategories();
+
+  // Log to console as requested
+  useEffect(() => {
+    if (productsData?.products) {
+      console.log("Fetched Products:", productsData.products);
+    }
+    if (categories.length > 0) {
+      console.log("Fetched Categories:", categories);
+    }
+  }, [productsData, categories]);
+
   // Modal states
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState(null);
 
-  // Pagination states
-  const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 10;
+  const rawProducts = productsData?.products || [];
+  const totalPages = productsData?.totalPages || 1;
 
-  // Filter products by search
+  // Search filter (client-side for now, but API has productName param we could use)
   const filteredProducts = useMemo(() => {
-    return products.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()));
-  }, [products, searchQuery]);
-
-  const totalPages = Math.ceil(filteredProducts.length / pageSize) || 1;
-  const paginatedProducts = filteredProducts.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+    if (!searchQuery) return rawProducts;
+    return rawProducts.filter(p => p.ProductName?.toLowerCase().includes(searchQuery.toLowerCase()));
+  }, [rawProducts, searchQuery]);
 
   const handleToggleProduct = (productId) => {
-    setProducts(prev => prev.map(p => 
-      p.id === productId ? { ...p, isActive: !p.isActive } : p
-    ));
+    // API integration needed for toggle
+    console.log("Toggle product", productId);
   };
 
   const handleDeleteProduct = (productId) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
-      setProducts(prev => prev.filter(p => p.id !== productId));
+      // API integration needed for delete
+      console.log("Delete product", productId);
     }
   };
 
@@ -89,8 +99,8 @@ const ProductList = () => {
       header: "Image",
       render: (product) => (
         <div className="h-12 w-12 rounded-md overflow-hidden bg-gray-100 flex items-center justify-center">
-          {product.image ? (
-            <img src={product.image} alt={product.name} className="h-full w-full object-cover" />
+          {product.ImageUrl1 ? (
+            <img src={product.ImageUrl1} alt={product.ProductName} className="h-full w-full object-cover" />
           ) : (
             <span className="text-gray-400 text-xs">No img</span>
           )}
@@ -101,34 +111,41 @@ const ProductList = () => {
       key: "name",
       className: "w-40 font-medium text-[#1A1A2E]",
       header: "Name",
-      render: (product) => product.name
+      render: (product) => product.ProductName
     },
     {
       key: "categoryName",
       header: "Category",
       className: "w-40 text-sm text-gray-500",
-      render: (product) => product.categoryName
+      render: (product) => {
+        // Fallback checks for common category ID property names
+        const catId = product.Categorie || product.CategoryID || product.CategoryId;
+        const matchedCategory = categories.find(
+          c => c.CategoryID === catId || c.categoryId === catId || c.id === catId || c.Categorie === catId
+        );
+        return matchedCategory ? (matchedCategory.CategoryName || matchedCategory.categoryName || matchedCategory.Name) : `ID: ${catId || 'Unknown'}`;
+      }
     },
     {
       key: "price",
       header: "Price",
       className: "w-24 font-semibold text-[#1A1A2E]",
-      render: (product) => `AED ${product.price}`
+      render: (product) => `AED ${product.Price || 0}`
     },
     {
       key: "discount",
       header: "Discount",
       className: "w-24 text-sm text-primary",
-      render: (product) => product.discountPrice !== "0.00" && product.discountPrice ? `AED ${product.discountPrice}` : "-"
+      render: (product) => product.Discount ? `AED ${product.Discount}` : "-"
     },
     {
       key: "isActive",
       header: "Active",
       render: (product) => (
-        <div onClick={() => handleToggleProduct(product.id)} className="relative cursor-pointer">
-          <input type="checkbox" className="sr-only" checked={product.isActive} readOnly />
-          <div className={`block w-10 h-5 rounded-full transition-colors ${product.isActive ? "bg-primary" : "bg-gray-300"}`} />
-          <div className={`absolute left-1 top-1 bg-white w-3 h-3 rounded-full transition-transform ${product.isActive ? "transform translate-x-5" : ""}`} />
+        <div onClick={() => handleToggleProduct(product.ProductID)} className="relative cursor-pointer">
+          <input type="checkbox" className="sr-only" checked={product.IsActive} readOnly />
+          <div className={`block w-10 h-5 rounded-full transition-colors ${product.IsActive ? "bg-primary" : "bg-gray-300"}`} />
+          <div className={`absolute left-1 top-1 bg-white w-3 h-3 rounded-full transition-transform ${product.IsActive ? "transform translate-x-5" : ""}`} />
         </div>
       ),
     },
@@ -140,7 +157,7 @@ const ProductList = () => {
           <button onClick={() => handleEditProduct(product)} className="text-gray-400 hover:text-primary transition-colors">
             <Edit2 size={16} />
           </button>
-          <button onClick={() => handleDeleteProduct(product.id)} className="text-gray-400 hover:text-red-500 transition-colors">
+          <button onClick={() => handleDeleteProduct(product.ProductID)} className="text-gray-400 hover:text-red-500 transition-colors">
             <Trash2 size={16} />
           </button>
         </div>
@@ -166,13 +183,13 @@ const ProductList = () => {
       
       <div className="flex-1 overflow-y-auto">
         <DynamicTable
-          isLoading={false}
-          isError={false}
+          isLoading={isLoadingProducts || isLoadingCategories}
+          isError={isErrorProducts}
           columns={PRODUCT_TABLE_COLUMNS}
           selectedItems={[]}
           setSelectedItems={() => {}}
-          idField="id"
-          data={paginatedProducts}
+          idField="ProductID"
+          data={filteredProducts}
           emptyMessage="No products found"
         />
       </div>

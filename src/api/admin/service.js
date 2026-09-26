@@ -2,32 +2,22 @@ import axios from "axios";
 import {
   ACTIVE_PRODUCT,
   ADMIN_LOGIN,
-  DELETE_BRAND,
+  
   EDIT_PRODUCT,
-  GET_ADVERTISEMENT,
-  GET_BANNER,
-  GET_BRAND,
-  GET_COLOR,
   GET_ORDERS,
-  GET_PRODUCTS,
-  GET_SIZE,
+  GET_DELIVERY_LOCATION,
+  GET_DELIVERY_MODES,
+  GET_PAYMENT_MODES,
   IMAGE_DELETE_ENDPOINT,
   IMAGE_UPLOAD_ENDPOINT,
-  POST_ADVERTISEMENT,
   POST_BANNER,
-  POST_BRAND,
-  POST_COLOR,
+
   POST_PRODUCT,
-  POST_SIZE,
   PUT_BANNER,
-  PUT_BRAND,
-  PUT_COLOR,
-  PUT_COLOR_ACITVE,
-  PUT_ORDER_STATUS,
-  PUT_SIZE,
-  PUT_SIZE_ACTIVE,
+
 } from "./endpoint";
 import apiClient from "../apiClient";
+export { getProducts, getCategories, getVariants, getBanner } from "../shared/service";
 
 //////////////////////   IMAGEG UPLOAD AND DELETE ⚠️⚠️⚠️⚠️⚠️⚠️   ////////////////////////////
 
@@ -77,120 +67,8 @@ export const adminLogin = (credential) =>
 
 
 
-//////////////////////   BRAND SECTION ⚠️⚠️⚠️⚠️⚠️⚠️   ////////////////////////////
 
-export const getBrand = () => apiClient.get(GET_BRAND).then((res) => res.data.data);
 
-export const addBrand = (newBrand) =>
-  apiClient.post(POST_BRAND, newBrand).then((res) => res.data);
-
-export const editBrand = ({ updatedBrand, brandId }) =>
-  apiClient.put(PUT_BRAND, { brandID: brandId, ...updatedBrand }).then(
-    (res) => res.data
-  );
-
-export const editBrandOrder = (brand) =>
-  apiClient.put(PUT_BRAND, brand, {
-    headers: {
-      bulkUpdate: true,
-    },
-  });
-
-export const deleteBrand = async (brandId) => {
-  try {
-    const response = await apiClient.delete(DELETE_BRAND, {
-      headers: {
-        brandID: brandId,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    const errorMessage =
-      error.response?.data?.message ||
-      error.message ||
-      "Failed to delete brand";
-
-    const enhancedError = new Error(errorMessage);
-    enhancedError.originalError = error;
-    throw enhancedError;
-  }
-};
-
-//////////////////////   COLOR SECTION ⚠️⚠️⚠️⚠️⚠️⚠️   ////////////////////////////
-
-export const getColors = () => apiClient.get(GET_COLOR).then((res) => res.data.data);
-
-export const addColor = (color) =>
-  apiClient.post(POST_COLOR, {
-    colors: [{ colorName: color.ColorName, hexCode: color.HexCode }],
-  }).then((res) => res.data);
-
-export const editColor = ({ updatedColor, colorId }) =>
-  apiClient.put(
-    PUT_COLOR,
-    {
-      colorName: updatedColor.ColorName,
-      hexCode: updatedColor.HexCode,
-    },
-    {
-      headers: {
-        ColorId: colorId,
-        isActive: String(updatedColor.isActive),
-      },
-    }
-  ).then((res) => res.data);
-
-export const activeColor = (active, colorId) =>
-  apiClient.put(
-    PUT_COLOR_ACITVE,
-    {},
-    {
-      headers: {
-        ColorId: colorId,
-        IsActive: active,
-      },
-    }
-  ).then((res) => res.data);
-
-//////////////////////   SIZE SECTION ⚠️⚠️⚠️⚠️⚠️⚠️   ////////////////////////////
-
-export const getSizes = () => apiClient.get(GET_SIZE).then((res) => res.data.data);
-
-export const addSize = (size) =>
-  apiClient.post(
-    POST_SIZE,
-    {},
-    {
-      headers: {
-        sizeLable: size.sizeLable,
-      },
-    }
-  ).then((res) => res.data);
-
-export const editSizee = ({ updatedSize, sizeId }) =>
-  apiClient.put(
-    PUT_SIZE,
-    {},
-    {
-      headers: {
-        SizeId: sizeId,
-        sizeLable: updatedSize.sizeLable,
-        isActive: updatedSize.isActive,
-      },
-    }
-  ).then((res) => res.data);
-
-export const activeSize = (active, sizeId) =>
-  apiClient.put(
-    PUT_SIZE_ACTIVE,
-    {},
-    {
-      headers: {
-        SizeId: sizeId,
-        IsActive: active,
-      },
-    }
-  ).then((res) => res.data);
 
 //////////////////////   BANNER SECTION ⚠️⚠️⚠️⚠️⚠️⚠️   ////////////////////////////
 
@@ -199,37 +77,14 @@ export const addBanner = (bannerDetails) =>
     (res) => res.data
   );
 
-export const getBanner = () => apiClient.get(GET_BANNER).then((res) => res.data.data);
+
 
 export const editBanner = (updatedBanners) =>
   apiClient.put(PUT_BANNER, updatedBanners).then((res) => res.data);
 
 //////////////////////   PRODUCT SECTION ⚠️⚠️⚠️⚠️⚠️⚠️   ////////////////////////////
 
-export const getProducts = async ({
-  page = 1,
-  pageSize = 5,
-  productID = null,
-  productName = null,
-  categoryID = null,
-  brandID = null,
-}) => {
-  // Create headers object with only the non-null parameters
-  const headers = {};
 
-  // Add pagination parameters
-  headers.page = page;
-  headers.pageSize = pageSize;
-
-  // Add optional filter parameters if they exist
-  if (productID) headers.productID = productID;
-  if (productName) headers.productName = productName;
-  if (categoryID) headers.categoryID = categoryID;
-  if (brandID) headers.brandID = brandID;
-
-  const response = await apiClient.get(GET_PRODUCTS, { headers });
-  return response.data;
-};
 
 export const addProduct = (productDetails) =>
   apiClient.post(POST_PRODUCT, productDetails).then((res) => res.data);
@@ -255,6 +110,35 @@ export const activeProduct = ({ productId, status }) => {
   );
 };
 
+//////////////////////   CATEGORY SECTION ⚠️⚠️⚠️⚠️⚠️⚠️   ////////////////////////////
+
+
+
+//////////////////////   VARIANTS SECTION ⚠️⚠️⚠️⚠️⚠️⚠️   ////////////////////////////
+
+
+
+//////////////////////   DELIVERY LOCATION SECTION ⚠️⚠️⚠️⚠️⚠️⚠️   ////////////////////////////
+
+export const getDeliveryLocations = async () => {
+  const response = await apiClient.get(GET_DELIVERY_LOCATION);
+  return response.data;
+};
+
+//////////////////////   DELIVERY MODES SECTION ⚠️⚠️⚠️⚠️⚠️⚠️   ////////////////////////////
+
+export const getDeliveryModes = async () => {
+  const response = await apiClient.get(GET_DELIVERY_MODES);
+  return response.data;
+};
+
+//////////////////////   PAYMENT MODES SECTION ⚠️⚠️⚠️⚠️⚠️⚠️   ////////////////////////////
+
+export const getPaymentModes = async () => {
+  const response = await apiClient.get(GET_PAYMENT_MODES);
+  return response.data;
+};
+
 //////////////////////   ORDER SECTION ⚠️⚠️⚠️⚠️⚠️⚠️   ////////////////////////////
 export const getOrderes = async ({
   isAdmin = true,
@@ -269,14 +153,14 @@ export const getOrderes = async ({
   const headers = {};
   headers.isAdmin = true,
   // Add pagination parameters
-  headers.pageNo = pageNo;
-  headers.pageSize = pageSize;
+  headers.pageno = pageNo;
+  headers.pagesize = pageSize;
 
   // Add optional filter parameters if they exist
   if (email) headers.email = email;
   if (orderID) headers.orderID = orderID;
-  if (fromdate) headers.fromdate = fromdate;
-  if (todate) headers.todate = todate;
+  if (fromdate) headers._fromdate = fromdate;
+  if (todate) headers._todate = todate;
   if (orderStatus) headers.orderStatus = orderStatus;
 
   const response = await apiClient.get(GET_ORDERS, {
@@ -284,22 +168,4 @@ export const getOrderes = async ({
   });
   return response.data;
 };
-export const editOrderStatus = ({ OrderId, OrderStatus }) =>
-  apiClient.put(
-    PUT_ORDER_STATUS,
-    {},
-    {
-      headers: {
-        OrderId,
-        OrderStatus,
-      },
-    }
-  ).then((response) => response.data);
 
-//////////////////////   ADVERTISEMENT SECTION ⚠️⚠️⚠️⚠️⚠️⚠️   ////////////////////////////
-
-export const addAdvertisement = (advertisementDetails) =>
-  apiClient.post(POST_ADVERTISEMENT, advertisementDetails).then((res) => res.data);
-
-export const getAdvertisement = () =>
-  apiClient.get(GET_ADVERTISEMENT).then((res) => res.data);

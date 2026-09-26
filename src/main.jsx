@@ -16,3 +16,20 @@ createRoot(document.getElementById('root')).render(
     </GoogleOAuthProvider>
   </>,
 )
+
+// Prevent scrolling on number inputs from changing their value
+document.addEventListener("wheel", (event) => {
+  if (document.activeElement.type === "number") {
+    document.activeElement.blur();
+  }
+});
+
+// Prevent typing non-numeric characters (like 'e', 'E', '+', '-', '.') in number inputs
+document.addEventListener("keydown", (event) => {
+  if (event.target.type === "number") {
+    const invalidChars = ["e", "E", "+", "-", "."];
+    if (invalidChars.includes(event.key)) {
+      event.preventDefault();
+    }
+  }
+});

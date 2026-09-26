@@ -8,10 +8,12 @@ import usePlacesAutocomplete, { getGeocode, getLatLng } from "use-places-autocom
 import { Search, MapPin, Target } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useCheckoutStore } from "../../store/CheckoutStore";
+import { useShop } from "../../../../../context/ShopContext";
+import { OrderService } from "../../../../../api/user/services/orderService";
 
 const libraries = ["places"];
 const mapContainerStyle = { width: "100%", height: "200px" };
-const defaultCenter = { lat: 25.2048, lng: 55.2708 }; // Dubai default
+const defaultCenter = { lat: 25.1447541, lng: 55.1988443 }; // Beach Circle Mini Mart LLC
 
 /* ===================== VALIDATION ===================== */
 const validationSchema = Yup.object({
@@ -86,7 +88,7 @@ const PlacesAutocomplete = ({ setFieldValue, onLocationSelect, onSelectComplete 
       setFieldValue("pinCode", pincode || "00000"); // default fallback if maps doesn't have it
       setFieldValue("city", city || "Dubai");
       setFieldValue("district", areaStr);
-      setFieldValue("address", description);
+      // Removed filling "address" (Flat/Building field)
       setFieldValue("locationPlace", description);
       
       if (onSelectComplete) onSelectComplete();
@@ -137,6 +139,30 @@ const AddressForm = () => {
   const [markerPos, setMarkerPos] = useState(defaultCenter);
   const [showSearch, setShowSearch] = useState(false);
   const mapRef = useRef(null);
+  
+  const [deliveryLocations, setDeliveryLocations] = useState([]);
+  const [deliveryModes, setDeliveryModes] = useState([]);
+  const [paymentModes, setPaymentModes] = useState([]);
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [locs, dModes, pModes] = await Promise.all([
+          OrderService.getDeliveryLocations(),
+          OrderService.getDeliveryModes(),
+          OrderService.getPaymentModes()
+        ]);
+        if (locs) setDeliveryLocations(Array.isArray(locs) ? locs : []);
+        if (dModes) setDeliveryModes(Array.isArray(dModes) ? dModes : []);
+        if (pModes) setPaymentModes(Array.isArray(pModes) ? pModes : []);
+      } catch (err) {
+        console.error("Failed to load dropdowns", err);
+      }
+    };
+    fetchData();
+  }, []);
+  
+  const { cartItems, cartTotal } = useShop();
 
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
@@ -147,10 +173,12 @@ const AddressForm = () => {
     mapRef.current = map;
   }, []);
 
-  const performReverseGeocode = async (lat, lng, setFieldValue) => {
-    try {
-      const results = await getGeocode({ location: { lat, lng } });
-      if (results && results.length > 0) {
+  const performReverseGeocode = (lat, lng, setFieldValue) => {
+    if (!window.google || !window.google.maps) return;
+    const geocoder = new window.google.maps.Geocoder();
+    
+    geocoder.geocode({ location: { lat, lng } }, (results, status) => {
+      if (status === "OK" && results && results.length > 0) {
         let pincode = "";
         let city = "";
         let district = "";
@@ -159,21 +187,30 @@ const AddressForm = () => {
         results[0].address_components.forEach((c) => {
           if (c.types.includes("postal_code")) pincode = c.long_name;
           if (c.types.includes("locality") || c.types.includes("administrative_area_level_1")) city = c.long_name;
-          if (c.types.includes("sublocality") || c.types.includes("neighborhood")) district = c.long_name;
+          if (c.types.includes("sublocality") || c.types.includes("neighborhood") || c.types.includes("sublocality_level_1")) district = c.long_name;
           if (c.types.includes("route")) street = c.long_name;
         });
         
-        const areaStr = [district, street].filter(Boolean).join(", ");
+        let areaStr = [district, street].filter(Boolean).join(", ");
+        if (!areaStr) {
+          const fallback = results[0].address_components.find(c => c.types.includes("political") && !c.types.includes("country"));
+          areaStr = fallback ? fallback.long_name : city;
+        }
         
         setFieldValue("pinCode", pincode || "00000");
         setFieldValue("city", city || "Dubai");
-        setFieldValue("district", areaStr);
-        setFieldValue("address", results[0].formatted_address);
+        setFieldValue("district", areaStr || "Dubai");
+        // Removed filling "address" (Flat/Building field)
         setFieldValue("locationPlace", results[0].formatted_address);
+      } else {
+        console.error("Reverse geocoding failed with status:", status);
+        // Removed filling "address" (Flat/Building field)
+        setFieldValue("locationPlace", "Selected on map");
+        setFieldValue("district", "Dubai");
+        
+        alert("Reverse Geocoding failed with status: " + status + ". Please check your Google Cloud Console if API is enabled.");
       }
-    } catch (e) {
-      console.error("Reverse geocoding failed", e);
-    }
+    });
   };
 
   const handleUseMyLocation = (setFieldValue) => {
@@ -184,6 +221,10 @@ const AddressForm = () => {
           const lng = position.coords.longitude;
           setMapCenter({ lat, lng });
           setMarkerPos({ lat, lng });
+          if (mapRef.current) {
+            mapRef.current.panTo({ lat, lng });
+            mapRef.current.setZoom(16);
+          }
           performReverseGeocode(lat, lng, setFieldValue);
         },
         () => alert("Location access denied or failed.")
@@ -193,13 +234,13 @@ const AddressForm = () => {
 
   const initialValues = {
     userName: "",
-    email: user?.email || "", // prefill email if possible
     phoneNumber: "",
     pinCode: "00000",
     address: "",
     district: "",
     city: "Dubai",
-    addressLabel: "CARD",
+    addressLabel: "",
+    paymentMode: "Cash on Deliver",
     landMark: "",
     locationPlace: "",
     rememberAddress: false,
@@ -208,20 +249,46 @@ const AddressForm = () => {
   /* ===================== SUBMIT ===================== */
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      const addressData = {
-        name: values.userName,
-        email: values.email || "",
-        phone: values.phoneNumber,
-        address: values.address,
-        district: values.district,
-        city: values.city,
-        pincode: values.pinCode,
-        landmark: values.landMark || "",
-        addressLabel: values.addressLabel || "",
+      if (cartItems.length === 0) {
+        message.error("Cart is empty");
+        setSubmitting(false);
+        return;
+      }
+
+      const orderDetails = cartItems.map((item, idx) => ({
+        SI_No: idx + 1,
+        ProductID: item.product.id || item.product.ProductID || 0,
+        ProductName: item.product.name,
+        Qty: item.quantity,
+        Price: parseFloat(item.product.price) || 0,
+        Discount: parseFloat(item.product.discount) || 0,
+      }));
+
+      let formattedMobile = String(values.phoneNumber);
+      if (!formattedMobile.startsWith("+")) {
+        formattedMobile = "+971" + formattedMobile;
+      }
+
+      const locMatch = deliveryLocations.find(loc => (loc.LocationName || loc.Name || loc.name || loc.id) === values.district);
+      const locationId = locMatch ? (locMatch.LocationID || locMatch.id || 1) : 1;
+
+      const payload = {
+        CustomerAddress: `${values.address}\n${values.district}\n${values.city}`,
+        CustomerName: values.userName,
+        Latitude: markerPos.lat,
+        LocationID: locationId,
+        Longitude: markerPos.lng,
+        MapUrl: `https://www.google.com/maps?q=${markerPos.lat},${markerPos.lng}`,
+        MobileNo: formattedMobile,
+        OnlinePaymentRef: null,
+        OrderDetails: orderDetails,
+        PaymentMode: values.paymentMode || "Cash on Deliver",
+        ServiceType: values.addressLabel || "CARD",
+        TotalAmount: parseFloat(cartTotal) || 0,
+        placeName: values.locationPlace || values.address,
       };
 
-      /* ---------- GUEST FLOW (SIMULATE PAYMENT) ---------- */
-      await new Promise((r) => setTimeout(r, 1500));
+      await OrderService.postOrder(payload);
       
       message.success("Order placed successfully!");
       
@@ -234,10 +301,39 @@ const AddressForm = () => {
       });
 
     } catch (err) {
-      console.error("Address save failed", err);
-      message.error("Failed to add address. Please try again.");
+      console.error("Order submission failed", err);
+      message.error("Failed to place order. Please try again.");
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleMobileBlur = async (e, handleChange, setFieldValue) => {
+    handleChange(e); // Let formik update its state
+    const mobileNo = e.target.value;
+    if (mobileNo && mobileNo.length >= 7) {
+      try {
+        const formattedMobile = mobileNo.startsWith("+") ? mobileNo : `+971${mobileNo}`;
+        const res = await OrderService.getCustomerDetailsByMobileNo(formattedMobile);
+        if (res && res.length > 0) {
+          const cust = res[0]; // Assuming array response
+          if (cust.CustomerName) setFieldValue("userName", cust.CustomerName);
+          if (cust.CustomerAddress) setFieldValue("address", cust.CustomerAddress);
+          if (cust.Latitude && cust.Longitude) {
+             const lat = parseFloat(cust.Latitude);
+             const lng = parseFloat(cust.Longitude);
+             setMapCenter({ lat, lng });
+             setMarkerPos({ lat, lng });
+             if (mapRef.current) {
+               mapRef.current.panTo({ lat, lng });
+               mapRef.current.setZoom(16);
+             }
+             performReverseGeocode(lat, lng, setFieldValue);
+          }
+        }
+      } catch (err) {
+        console.error("Customer fetch failed", err);
+      }
     }
   };
 
@@ -266,11 +362,17 @@ const AddressForm = () => {
                       <span className="text-lg">🇦🇪</span>
                       <span className="text-gray-700 text-sm">(+971)</span>
                     </div>
-                    <Field
-                      name="phoneNumber"
-                      placeholder="Enter WhatsApp number"
-                      className="w-full px-4 py-2 bg-transparent focus:outline-none"
-                    />
+                    <Field name="phoneNumber">
+                      {({ field, form }) => (
+                        <input
+                          {...field}
+                          type="number"
+                          placeholder="Enter WhatsApp number"
+                          className="w-full px-4 py-2 bg-transparent focus:outline-none"
+                          onBlur={(e) => handleMobileBlur(e, field.onBlur, form.setFieldValue)}
+                        />
+                      )}
+                    </Field>
                   </div>
                   <ErrorMessage name="phoneNumber" component="div" className="text-red-500 text-xs mt-1" />
                 </div>
@@ -329,6 +431,10 @@ const AddressForm = () => {
                       onLocationSelect={({ lat, lng }) => {
                         setMapCenter({ lat, lng });
                         setMarkerPos({ lat, lng });
+                        if (mapRef.current) {
+                          mapRef.current.panTo({ lat, lng });
+                          mapRef.current.setZoom(16);
+                        }
                       }}
                     />
                   )}
@@ -371,21 +477,49 @@ const AddressForm = () => {
                 <div>
                   <div className="text-gray-600 text-sm mb-1 font-medium">Delivery Area</div>
                   <Field
+                    as="select"
                     name="district"
-                    placeholder="Delivery Area"
-                    className="w-full px-4 py-2 rounded-xl border border-gray-300 bg-white focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
-                  />
+                    className="w-full px-4 py-2 rounded-xl border border-gray-300 bg-white focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary appearance-none"
+                  >
+                    <option value="" disabled>Select Delivery Area</option>
+                    {deliveryLocations.map((item, idx) => {
+                      const val = item.LocationName || item.Name || item.name || item.id || "";
+                      return <option key={idx} value={val}>{val}</option>;
+                    })}
+                  </Field>
                   <ErrorMessage name="district" component="div" className="text-red-500 text-xs mt-1" />
                 </div>
 
                 <div>
                   <div className="text-gray-600 text-sm mb-1 font-medium">Delivery/Pickup/Dine-in</div>
                   <Field
+                    as="select"
                     name="addressLabel"
-                    placeholder="CARD"
-                    className="w-full px-4 py-2 rounded-xl border border-gray-300 bg-white focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
-                  />
+                    className="w-full px-4 py-2 rounded-xl border border-gray-300 bg-white focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary appearance-none"
+                  >
+                    <option value="" disabled>Select Mode</option>
+                    {deliveryModes.map((item, idx) => {
+                      const val = item.DeliveryModeName || item.ModeName || item.Name || item.name || item.Mode || item.id || "";
+                      return <option key={idx} value={val}>{val}</option>;
+                    })}
+                  </Field>
                   <ErrorMessage name="addressLabel" component="div" className="text-red-500 text-xs mt-1" />
+                </div>
+                
+                <div>
+                  <div className="text-gray-600 text-sm mb-1 font-medium">Payment Mode</div>
+                  <Field
+                    as="select"
+                    name="paymentMode"
+                    className="w-full px-4 py-2 rounded-xl border border-gray-300 bg-white focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary appearance-none"
+                  >
+                    <option value="" disabled>Select Payment Mode</option>
+                    {paymentModes.map((item, idx) => {
+                      const val = item.PaymentModeName || item.PaymentMode || item.Name || item.name || item.Mode || item.id || "";
+                      return <option key={idx} value={val}>{val}</option>;
+                    })}
+                  </Field>
+                  <ErrorMessage name="paymentMode" component="div" className="text-red-500 text-xs mt-1" />
                 </div>
 
                 {/* Hidden Fields */}

@@ -1,8 +1,8 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import { Trash2, Edit3, Upload, Loader, AlertCircle } from "lucide-react";
-import { useImageUpload } from "../../../../api/admin/hooks";
-import { useImageDelete } from "../../../../api/admin/hooks"; // Import the delete hook
-import loader from "../../../../assets/dashboard/loader2.svg";
+import { useImageUpload } from "../../api/admin/hooks";
+import { useImageDelete } from "../../api/admin/hooks"; // Import the delete hook
+import loader from "../../assets/dashboard/loader2.svg";
 
 const ImageUploader = ({
   className = "",

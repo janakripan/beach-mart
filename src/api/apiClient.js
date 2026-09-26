@@ -18,7 +18,7 @@ apiClient.interceptors.request.use(
   (config) => {
     const token = useAuthStore.getState().accessToken;
 
-    if (token) {
+    if (token && !config.headers.Authorization) {
       config.headers.Authorization = `Bearer ${token}`;
     }
 
@@ -49,6 +49,11 @@ apiClient.interceptors.response.use(
     const originalRequest = error.config;
 
     if (!error.response || error.response.status !== 401) {
+      return Promise.reject(error);
+    }
+
+    // If it's a login request that failed with 401, don't trigger the logout/redirect flow
+    if (originalRequest.url?.includes("/clientAuthentication") || originalRequest.url?.includes("/getAuthenticated")) {
       return Promise.reject(error);
     }
 

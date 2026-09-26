@@ -8,7 +8,7 @@ import { Search, MapPin, Target } from "lucide-react";
 
 const libraries = ["places"];
 const mapContainerStyle = { width: "100%", height: "200px" };
-const defaultCenter = { lat: 25.2048, lng: 55.2708 }; // Dubai default
+const defaultCenter = { lat: 25.1447541, lng: 55.1988443 }; // Beach Circle Mini Mart LLC
 
 /* ================= VALIDATION ================= */
 const validationSchema = Yup.object({
@@ -141,10 +141,12 @@ const AddressForm = ({ closeForm, editingAddress }) => {
     mapRef.current = map;
   }, []);
 
-  const performReverseGeocode = async (lat, lng, setFieldValue) => {
-    try {
-      const results = await getGeocode({ location: { lat, lng } });
-      if (results && results.length > 0) {
+  const performReverseGeocode = (lat, lng, setFieldValue) => {
+    if (!window.google || !window.google.maps) return;
+    const geocoder = new window.google.maps.Geocoder();
+    
+    geocoder.geocode({ location: { lat, lng } }, (results, status) => {
+      if (status === "OK" && results && results.length > 0) {
         let pincode = "";
         let city = "";
         let district = "";
@@ -153,21 +155,30 @@ const AddressForm = ({ closeForm, editingAddress }) => {
         results[0].address_components.forEach((c) => {
           if (c.types.includes("postal_code")) pincode = c.long_name;
           if (c.types.includes("locality") || c.types.includes("administrative_area_level_1")) city = c.long_name;
-          if (c.types.includes("sublocality") || c.types.includes("neighborhood")) district = c.long_name;
+          if (c.types.includes("sublocality") || c.types.includes("neighborhood") || c.types.includes("sublocality_level_1")) district = c.long_name;
           if (c.types.includes("route")) street = c.long_name;
         });
         
-        const areaStr = [district, street].filter(Boolean).join(", ");
+        let areaStr = [district, street].filter(Boolean).join(", ");
+        if (!areaStr) {
+          const fallback = results[0].address_components.find(c => c.types.includes("political") && !c.types.includes("country"));
+          areaStr = fallback ? fallback.long_name : city;
+        }
         
         setFieldValue("pinCode", pincode || "00000");
         setFieldValue("city", city || "Dubai");
-        setFieldValue("district", areaStr); // Delivery Area / Street
-        setFieldValue("address", results[0].formatted_address); // Flat/Building/Address
+        setFieldValue("district", areaStr || "Dubai");
+        setFieldValue("address", results[0].formatted_address);
         setFieldValue("locationPlace", results[0].formatted_address);
+      } else {
+        console.error("Reverse geocoding failed with status:", status);
+        setFieldValue("address", "Selected on map");
+        setFieldValue("locationPlace", "Selected on map");
+        setFieldValue("district", "Dubai");
+        
+        alert("Reverse Geocoding failed with status: " + status + ". Please check your Google Cloud Console if API is enabled.");
       }
-    } catch (e) {
-      console.error("Reverse geocoding failed", e);
-    }
+    });
   };
 
   const handleUseMyLocation = (setFieldValue) => {
@@ -178,6 +189,10 @@ const AddressForm = ({ closeForm, editingAddress }) => {
           const lng = position.coords.longitude;
           setMapCenter({ lat, lng });
           setMarkerPos({ lat, lng });
+          if (mapRef.current) {
+            mapRef.current.panTo({ lat, lng });
+            mapRef.current.setZoom(16);
+          }
           performReverseGeocode(lat, lng, setFieldValue);
         },
         () => alert("Location access denied or failed.")
@@ -316,6 +331,10 @@ const AddressForm = ({ closeForm, editingAddress }) => {
                   onLocationSelect={({ lat, lng }) => {
                     setMapCenter({ lat, lng });
                     setMarkerPos({ lat, lng });
+                    if (mapRef.current) {
+                      mapRef.current.panTo({ lat, lng });
+                      mapRef.current.setZoom(16);
+                    }
                   }}
                 />
               )}

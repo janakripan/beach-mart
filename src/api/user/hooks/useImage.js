@@ -7,3 +7,9 @@ export const useImageUpload = () =>
     mutationKey: ["uploadImage"],
     mutationFn: imageService.uploadImage,
   });
+
+export const useImageDelete = () =>
+  useMutation({
+    mutationKey: ["deleteImage"],
+    mutationFn: imageService.deleteImage,
+  });

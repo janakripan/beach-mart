@@ -10,6 +10,15 @@ export default defineConfig({
   ],
   server: {
     host: true,
+     allowedHosts: ["badly-maximize-suffice.ngrok-free.dev"],
+
+        proxy: {
+      "/api": {
+        target: "https://ecomapi.sacrosys.net",
+        changeOrigin: true,
+        secure: true,
+      },
+    },
   },
   build: {
     // Raise the warning threshold slightly (500 kB default → 600 kB)

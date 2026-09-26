@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useState, useEffect } from "react";
 import UserLayout from "./layout/user/UserLayout";
 import AdminLayout from "./layout/admin/AdminLayout";
 import ProtectedRoute from "./components/admin/ProtectedRoute";
@@ -31,14 +31,23 @@ const Variants = lazy(() => import("./pages/admin/Variants"));
 const BannerManagement = lazy(() => import("./pages/admin/Banner"));
 const DeliveryLocation = lazy(() => import("./pages/admin/DeliveryLocation"));
 const DeliveryMode = lazy(() => import("./pages/admin/DeliveryMode"));
+const PaymentMode = lazy(() => import("./pages/admin/PaymentMode"));
 
 const AppRoutes = () => {
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+
+  useEffect(() => {
+    // Hide the DotWaveLoader for the first 5 seconds to let the SplashScreen cover the initial loading
+    const timer = setTimeout(() => setIsInitialLoad(false), 5000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <Router>
       <ScrollToTop />
       <Suspense fallback={
         <div className="flex items-center justify-center min-h-screen bg-white">
-          <DotWaveLoader />
+          {!isInitialLoad && <DotWaveLoader />}
         </div>
       }>
         <Routes>
@@ -71,6 +80,7 @@ const AppRoutes = () => {
               <Route path="productlist" element={<ProductList />} />
               <Route path="delivery-location" element={<DeliveryLocation />} />
               <Route path="delivery-mode" element={<DeliveryMode />} />
+              <Route path="payment-mode" element={<PaymentMode />} />
             </Route>
           </Route>
         </Routes>

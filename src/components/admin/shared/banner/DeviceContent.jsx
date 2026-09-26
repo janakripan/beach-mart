@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import ImageUploader from "../shared/ImageUploader";
+import ImageUploader from "../../../shared/ImageUploader";
 import { BANNER_DEV_CONFIG } from "../constant";
 
 const DeviceContent = ({

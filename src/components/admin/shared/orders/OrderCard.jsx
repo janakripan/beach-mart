@@ -43,7 +43,27 @@ const OrderCard  = ({ order, isExpanded, toggleExpand, onStatusChange, onEdit, o
   // Helper function to format date
   const formatDate = (dateString) => {
     if (!dateString) return "N/A";
-    const date = new Date(dateString);
+    
+    let date;
+    // Check if format is DD/MM/YYYY (e.g. "25/09/2026 05:31 PM")
+    if (typeof dateString === 'string' && /^\d{2}\/\d{2}\/\d{4}/.test(dateString)) {
+      const parts = dateString.split(' ');
+      const datePart = parts[0];
+      const [day, month, year] = datePart.split('/');
+      
+      // Reconstruct as MM/DD/YYYY which JS Date can parse
+      let usFormatStr = `${month}/${day}/${year}`;
+      if (parts.length > 1) {
+        usFormatStr += ` ${parts.slice(1).join(' ')}`;
+      }
+      date = new Date(usFormatStr);
+    } else {
+      date = new Date(dateString);
+    }
+
+    // If it is still an invalid date, just return the raw string to avoid "Invalid Date"
+    if (isNaN(date.getTime())) return dateString;
+
     return date.toLocaleDateString("en-US", {
       year: "numeric",
       month: "short",
@@ -216,7 +236,7 @@ const OrderCard  = ({ order, isExpanded, toggleExpand, onStatusChange, onEdit, o
                   <h4 className="text-sm font-medium text-gray-900 mb-1">
                     Shipping Address
                   </h4>
-                  <div className="text-sm text-gray-700">
+                  <div className="text-sm text-gray-700 whitespace-pre-line">
                     {order.address}
                   </div>
                 </div>
@@ -237,13 +257,15 @@ const OrderCard  = ({ order, isExpanded, toggleExpand, onStatusChange, onEdit, o
           {/* Order Summary */}
           <div className="px-4 py-3 bg-[#F8FCF8] border-t border-[#E3F0E2]">
             <div className="flex justify-between items-center">
-              <div className="text-sm text-gray-500">
-                <span>Payment Method: </span>
-                <span className="font-medium text-[#1A1A2E]">
-                  {order.paymentMethod !== "null"
-                    ? order.paymentMethod
-                    : "Not specified"}
-                </span>
+              <div className="text-sm text-gray-500 flex flex-col gap-1">
+                <div>
+                  <span>Payment Method: </span>
+                  <span className="font-medium text-[#1A1A2E]">
+                    {order.paymentMethod && order.paymentMethod !== "null"
+                      ? order.paymentMethod
+                      : "Not specified"}
+                  </span>
+                </div>
               </div>
               <div className="text-right">
                 <div className="text-xs text-gray-500">Total Amount</div>

@@ -4,22 +4,23 @@ import { useMemo, useState, useEffect } from "react";
 import FilterGroup from "./filters/FilterGroup";
 import CheckboxItem from "./filters/CheckboxItem";
 // import { useGetFilters } from "../../../../api/user/hooks/useProduct";
-import { categories } from "../../../../constants/data";
+import { useAppStore } from "../../../../store/appStore";
 import SortComp from "./SortComp";
 import { useAppLoading } from "../../../../context/AppLoadingContext";
 
 const MobileFilter = ({ filters, setFilters }) => {
   const [isOpen, setIsOpen] = useState(false);
   const lenis = useLenis();
-  const { isLoading } = useAppLoading();
+  const { isLoading: appLoading } = useAppLoading();
   
-  // --- COMMENTED OUT DILKA DYNAMIC FETCHING ---
-  // const { data: filterData = [], isLoading: filtersLoading } = useGetFilters();
-  // const CATEGORY_FILTERS = filterData?._category ?? [];
-  // const BRANDS_LIST = filterData?._brand ?? [];
+  const rawCategories = useAppStore(state => state.categories);
+  const isLoading = appLoading || (!rawCategories || rawCategories.length === 0);
 
-  // --- NEW STATIC DATA MAPPING ---
-  const CATEGORY_FILTERS = categories.map(cat => ({ CategoryId: cat.title, CategoryName: cat.title, count: 0 }));
+  const CATEGORY_FILTERS = (rawCategories || []).filter(c => c.IsActive).map(cat => ({ 
+    CategoryId: cat.CategoryID, 
+    CategoryName: cat.CategoryName, 
+    count: 0 
+  }));
   const BRANDS_LIST = [];
 
   /* ---------- HELPERS ---------- */
@@ -143,11 +144,11 @@ const MobileFilter = ({ filters, setFilters }) => {
                   key={cat.CategoryId}
                   label={cat.CategoryName}
                   count={cat.count}
-                  checked={filters.categoryIDs.includes(cat.CategoryId)}
+                  checked={filters.categoryIDs.includes(String(cat.CategoryId))}
                   onChange={() =>
                     setFilters((f) => ({
                       ...f,
-                      categoryIDs: toggleValue(f.categoryIDs, cat.CategoryId),
+                      categoryIDs: toggleValue(f.categoryIDs, String(cat.CategoryId)),
                     }))
                   }
                 />

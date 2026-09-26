@@ -1,33 +1,21 @@
 import React from 'react'
 import { Lock } from 'lucide-react'
-// import { useCartStore } from '../../../../user/Cart/store/CartStore'
 import DirhamIcon from '../../../../../components/user/CustomIcons/DirhamIcon'
-// import { useCheckoutStore } from '../../store/CheckoutStore'
+import { useShop } from '../../../../../context/ShopContext'
 
 const OrderSummary = () => {
-    // COMMENTED OUT FOR NOW - Switching to purely static data per user request
-    // const mode = useCheckoutStore((s) => s.mode);
-    // const checkoutItems = useCheckoutStore((s) => s.items);
-    // const cartItems = useCartStore((s) => s.items);
-    // const cartSummary = useCartStore((s) => s.summary);
-    // const items = mode === "buy_now" ? checkoutItems : cartItems;
+    const { cartItems } = useShop();
     
-    // Static fallback data so the UI layout is visible when cart is empty
-    const fallbackItems = [
-        { name: "Signature Aqua Perfume", sizeLabel: "50ml", qty: 1, price: 120.0, originalPrice: 150.0, image: "https://placehold.co/100?text=Aqua" },
-        { name: "Ocean Breeze Body Mist", sizeLabel: "100ml", qty: 2, price: 45.0, originalPrice: 50.0, image: "https://placehold.co/100?text=Breeze" }
-    ];
-    
-    const displayItems = fallbackItems; // Force static data
-    const itemCount = displayItems.reduce((sum, i) => sum + i.qty, 0);
+    const displayItems = cartItems;
+    const itemCount = displayItems.reduce((sum, i) => sum + (i.quantity || i.qty || 1), 0);
 
     const computedSummary = React.useMemo(() => {
-        // ALWAYS use static data calculation for now
-        const subtotal = fallbackItems.reduce((sum, i) => sum + i.price * i.qty, 0);
-        const originalSubtotal = fallbackItems.reduce((sum, i) => sum + (i.originalPrice ?? i.price) * i.qty, 0);
+        const subtotal = displayItems.reduce((sum, i) => sum + (i.product?.price || i.price || 0) * (i.quantity || i.qty || 1), 0);
+        const originalSubtotal = displayItems.reduce((sum, i) => sum + ((i.product?.originalPrice || i.product?.price || i.originalPrice || i.price || 0)) * (i.quantity || i.qty || 1), 0);
         const discount = originalSubtotal - subtotal;
         return { subtotal, discount, tax: 0, shipping: 0, total: subtotal };
-    }, []);
+    }, [displayItems]);
+    
     const mrpTotal = computedSummary.subtotal + computedSummary.discount;
 
     return (

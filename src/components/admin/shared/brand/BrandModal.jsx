@@ -1,6 +1,6 @@
 import React from "react";
 import FormModal from "../shared/FormModal";
-import ImageUploader from "../shared/ImageUploader";
+import ImageUploader from "../../../shared/ImageUploader";
 
 const BrandModal = ({
   isLoading,

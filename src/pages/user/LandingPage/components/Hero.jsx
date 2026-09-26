@@ -1,26 +1,39 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination } from 'swiper/modules';
 import { useAppLoading } from '../../../../context/AppLoadingContext';
+import { useAppStore } from '../../../../store/appStore';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
 
-const banners = [
-  {
-    id: 1,
-    pc: '/assets/landing/hero/Bannar-pc-1.png',
-    mobile: '/assets/landing/hero/Bannar mobile-1.png'
-  },
-  {
-    id: 2,
-    pc: '/assets/landing/hero/Bannar-pc-2.png',
-    mobile: '/assets/landing/hero/banner mobile-2.png'
-  }
-];
-
 export default function Hero() {
-  const { isLoading } = useAppLoading();
+  const { isLoading: appLoading } = useAppLoading();
+  const bannerData = useAppStore((state) => state.banner);
+
+  const banners = useMemo(() => {
+    if (!bannerData) return [];
+    
+    // In case the API returns an array, take the first element
+    const data = Array.isArray(bannerData) ? bannerData[0] : bannerData;
+    const items = [];
+    
+    for (let i = 1; i <= 6; i++) {
+      const pc = data?.desktop?.[0]?.[`imgurl_${i}`];
+      const mobile = data?.mobile?.[0]?.[`imgurl_${i}`];
+      
+      if (pc || mobile) {
+        items.push({
+          id: i,
+          pc: pc || mobile,
+          mobile: mobile || pc
+        });
+      }
+    }
+    return items;
+  }, [bannerData]);
+
+  const isLoading = appLoading || banners.length === 0;
 
   if (isLoading) {
     return (

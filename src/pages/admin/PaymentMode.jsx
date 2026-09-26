@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import DynamicTable from "../../components/admin/shared/shared/DynamicTable";
 import { PlusCircle } from "lucide-react";
-import { useGetDeliveryModes } from "../../api/admin/hooks";
+import { useGetPaymentModes } from "../../api/admin/hooks";
 
-const DeliveryMode = () => {
-  const { data: modes = [], isLoading, isError } = useGetDeliveryModes();
+const PaymentMode = () => {
+  const { data: modes = [], isLoading, isError } = useGetPaymentModes();
   const [formData, setFormData] = useState({ name: "", secondaryName: "" });
 
   const handleInputChange = (e) => {
@@ -14,24 +14,22 @@ const DeliveryMode = () => {
 
   const handleAddMode = () => {
     if (!formData.name) return;
-    setModes((prev) => [
-      { id: Date.now(), name: formData.name, isActive: true },
-      ...prev,
-    ]);
+    // API integration needed for POST
+    console.log("Add payment mode", formData);
     setFormData({ name: "", secondaryName: "" });
   };
 
   const handleToggle = (id) => {
     // API integration needed for toggle
-    console.log("Toggle delivery mode", id);
+    console.log("Toggle payment mode", id);
   };
 
   const COLUMNS = [
     {
-      key: "DeliveryModeName",
-      header: "Delivery Mode",
+      key: "PaymentModeName",
+      header: "Payment Mode",
       className: "w-1/2 font-medium text-[#1A1A2E]",
-      render: (mode) => mode.DeliveryModeName,
+      render: (mode) => mode.PaymentModeName || mode.name || "-",
     },
     {
       key: "SecondaryName",
@@ -44,7 +42,7 @@ const DeliveryMode = () => {
       header: "Status",
       className: "w-32",
       render: (mode) => (
-        <div onClick={() => handleToggle(mode.DeliveryModeID)} className="relative cursor-pointer flex items-center">
+        <div onClick={() => handleToggle(mode.PaymentModeID || mode.id)} className="relative cursor-pointer flex items-center">
           <input type="checkbox" className="sr-only" checked={mode.IsActive} readOnly />
           <div className={`block w-10 h-5 rounded-full transition-colors ${mode.IsActive ? "bg-primary" : "bg-gray-300"}`} />
           <div className={`absolute left-1 top-1 bg-white w-3 h-3 rounded-full transition-transform ${mode.IsActive ? "transform translate-x-5" : ""}`} />
@@ -58,14 +56,14 @@ const DeliveryMode = () => {
       {/* Top Section */}
       <div className="flex items-end gap-4 w-full bg-white p-5 rounded-[12px] border border-[#E3F0E2]">
         <div className="flex-1">
-          <label className="block text-sm font-medium text-[#1A1A2E] mb-2">Delivery Mode</label>
+          <label className="block text-sm font-medium text-[#1A1A2E] mb-2">Payment Mode</label>
           <input
             type="text"
             name="name"
             value={formData.name}
             onChange={handleInputChange}
             className="w-full border border-[#E3F0E2] bg-[#F8FCF8] rounded-[12px] p-3 text-sm focus:outline-none focus:border-primary transition-colors"
-            placeholder="Enter new delivery mode"
+            placeholder="Enter new payment mode"
           />
         </div>
         <div className="flex-1">
@@ -94,13 +92,13 @@ const DeliveryMode = () => {
           isLoading={isLoading}
           isError={isError}
           columns={COLUMNS}
-          idField="DeliveryModeID"
+          idField="PaymentModeID"
           data={modes}
-          emptyMessage="No delivery modes added yet"
+          emptyMessage="No payment modes added yet"
         />
       </div>
     </div>
   );
 };
 
-export default DeliveryMode;
+export default PaymentMode;

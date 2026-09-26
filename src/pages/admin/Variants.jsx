@@ -3,17 +3,10 @@ import DynamicTable from "../../components/admin/shared/shared/DynamicTable";
 import PageHeader from "../../components/admin/shared/shared/PageHeader";
 import { Edit2, PlusCircle, Trash2 } from "lucide-react";
 import SizeModal from "../../components/admin/shared/size/sizeModal";
-
-const initialVariants = [
-  { SizeId: 1, SizeLabel: "Small", isActive: true },
-  { SizeId: 2, SizeLabel: "Medium", isActive: true },
-  { SizeId: 3, SizeLabel: "Large", isActive: true },
-  { SizeId: 4, SizeLabel: "500g", isActive: true },
-  { SizeId: 5, SizeLabel: "1KG", isActive: true },
-];
+import { useGetVariants } from "../../api/admin/hooks";
 
 const Variants = () => {
-  const [variants, setVariants] = useState(initialVariants);
+  const { data: variants = [], isLoading, isError } = useGetVariants();
   const [isEditing, setIsEditing] = useState(false);
   const [currentSize, setCurrentSize] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -71,49 +64,49 @@ const Variants = () => {
     }
   };
 
-  const filteredVariants = variants.filter((size) =>
-    size.SizeLabel.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredVariants = variants.filter((variant) =>
+    variant.Name?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleEditColor = (size) => {
+  const handleEditColor = (variant) => {
     setIsEditing(true);
-    setCurrentSize(size);
+    setCurrentSize(variant);
     setFormData({
-      sizeLable: size.SizeLabel,
-      isActive: size.isActive,
+      sizeLable: variant.Name,
+      isActive: variant.IsActive,
     });
     setIsModalOpen(true);
   };
 
   const SIZE_TABLE_COLUMNS = [
     {
-      key: "SizeId",
+      key: "ID",
       header: "ID",
       className: "w-16",
     },
     {
-      key: "SizeLabel",
+      key: "Name",
       header: "Name",
       className: "w-full",
-      render: (size) => (
+      render: (variant) => (
         <span className="bg-[#E3F0E2] text-[#00380E] px-5 text-xs font-medium py-1 rounded-full border border-primary/20">
-          {size.SizeLabel}
+          {variant.Name}
         </span>
       ),
     },
     {
       key: "actions",
       header: "Actions",
-      render: (size) => (
+      render: (variant) => (
         <div className="flex space-x-3 pl-4 items-center">
           <button
-            onClick={() => handleEditColor(size)}
+            onClick={() => handleEditColor(variant)}
             className="text-gray-400 cursor-pointer hover:text-primary transition-colors"
           >
             <Edit2 size={16} />
           </button>
           <button
-            onClick={() => handleDelete(size.SizeId)}
+            onClick={() => handleDelete(variant.ID)}
             className="text-gray-400 cursor-pointer hover:text-red-500 transition-colors"
           >
             <Trash2 size={16} />
@@ -137,10 +130,10 @@ const Variants = () => {
         }}
       />
       <DynamicTable
-        isLoading={false}
-        isError={false}
+        isLoading={isLoading}
+        isError={isError}
         columns={SIZE_TABLE_COLUMNS}
-        idField="SizeId"
+        idField="ID"
         data={filteredVariants}
         emptyMessage="No variants found"
       />

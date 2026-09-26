@@ -39,6 +39,11 @@ export const SIDE_MENU = {
       path: "delivery-mode",
       icon: "lucide:truck",
     },
+    {
+      title: "payment mode",
+      path: "payment-mode",
+      icon: "lucide:credit-card",
+    },
   ],
   Admin: [
     {
@@ -73,6 +78,9 @@ export const HEADER_TITLE = [
   },
   {
     title: "delivery mode",
+  },
+  {
+    title: "payment mode",
   },
   {
     title: "add product",

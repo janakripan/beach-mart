@@ -47,3 +47,9 @@ export function useGuestLogin(){
     mutationFn: authService.guestlogin,
   })
 }
+
+export function useAdminLogin() {
+  return useMutation({
+    mutationFn: authService.adminLogin,
+  });
+}

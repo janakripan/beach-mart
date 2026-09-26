@@ -1,6 +1,6 @@
 import { CheckCircle, PlusCircle } from "lucide-react";
 import React from "react";
-import ImageUploader from "../shared/ImageUploader";
+import ImageUploader from "../../../shared/ImageUploader";
 
 const AddNewVariant = ({
   currentVariant,

@@ -1,12 +1,49 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { ArrowRight } from "lucide-react";
 import OfferProductCard from "./OfferProductCard";
 import SectionHeader from "./SectionHeader";
-import { offerProducts } from "../../../../constants/data";
 import { useAppLoading } from "../../../../context/AppLoadingContext";
+import { useAppStore } from "../../../../store/appStore";
 
 export default function OfferSection() {
-  const { isLoading } = useAppLoading();
+  const { isLoading: appLoading } = useAppLoading();
+  const rawProducts = useAppStore(state => state.products) || [];
+  const rawCategories = useAppStore(state => state.categories) || [];
+
+  const targetCategoryIds = useMemo(() => {
+    return rawCategories
+      .filter(c => c.CategoryName?.toLowerCase().includes('daily offer'))
+      .map(c => c.CategoryID);
+  }, [rawCategories]);
+
+  const products = rawProducts.filter(p => p.IsActive && targetCategoryIds.includes(p.Categorie)).map(product => {
+    let priceVal = product.Price;
+    
+    if (product.ProductVariants?.length > 0) {
+      priceVal = product.ProductVariants[0]?.price?.price ?? priceVal;
+    }
+
+    let originalPrice = priceVal;
+    if (product.Discount > 0) {
+      if (product.DiscMode === 'Percentage' || product.DiscMode === 'percentage') {
+        priceVal = priceVal - (priceVal * (product.Discount / 100));
+      } else {
+        priceVal = priceVal - product.Discount;
+      }
+    }
+
+    return {
+      id: product.ProductID,
+      name: product.ProductName,
+      image: product.ImageUrl1 || "https://placehold.co/400",
+      price: Math.max(0, priceVal).toFixed(2),
+      originalPrice: product.Discount > 0 ? originalPrice.toFixed(2) : null,
+      categoryId: product.Categorie,
+      brandId: null,
+    };
+  }).slice(0, 15); // Show up to 15 products
+
+  const isLoading = appLoading || rawProducts.length === 0;
 
   return (
     <section className="w-full flex justify-center bg-white py-6 lg:py-12">
@@ -80,13 +117,17 @@ export default function OfferSection() {
             {/* Products Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-[4px] xs:gap-[8px] md:gap-[12px] lg:gap-[16px] gap-y-[12px] xs:gap-y-[24px] mt-4 justify-items-center">
               {isLoading ? (
-                Array.from({ length: 5 }).map((_, index) => (
-                  <OfferProductCard key={index} product={{}} />
+                Array.from({ length: 15 }).map((_, index) => (
+                  <OfferProductCard key={index} product={{}} isLoading={true} />
                 ))
-              ) : (
-                offerProducts.map((product) => (
+              ) : products.length > 0 ? (
+                products.map((product) => (
                   <OfferProductCard key={product.id} product={product} />
                 ))
+              ) : (
+                <div className="col-span-full py-12 flex flex-col items-center justify-center text-center w-full">
+                  <p className="text-text-main font-poppins font-medium text-[14px] md:text-[16px]">There are no daily offers currently</p>
+                </div>
               )}
             </div>
           </div>

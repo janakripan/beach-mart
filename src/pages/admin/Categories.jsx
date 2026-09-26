@@ -1,21 +1,11 @@
 import { LayoutGrid, PlusCircle, Table, Trash2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { categories as initialCategoriesData } from "../../constants/data";
 import CategoryList from "../../components/admin/shared/category/CategoryList";
 import CategoryModal from "../../components/admin/shared/category/CategoryModal";
 import DeleteModal from "../../components/admin/shared/shared/DeleteModal";
 import PageHeader from "../../components/admin/shared/shared/PageHeader";
 import FloatingDeleteButton from "../../components/admin/shared/shared/FloatingDeleteButton";
-
-const initialMappedCategories = initialCategoriesData.map((c) => ({
-  Id: c.id,
-  Name: c.title,
-  CategoryDescription: c.description || "",
-  ImageUrl: c.image,
-  IsActive: c.isActive !== undefined ? c.isActive : true,
-  isMain: c.isMain || false,
-  ParentCategoryId: null,
-}));
+import { useAppStore } from "../../store/appStore";
 
 const Categories = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -40,10 +30,27 @@ const Categories = () => {
   const [deletedError, setDeleteError] = useState(null);
 
   // Local categories state
-  const [categories, setCategories] = useState(initialMappedCategories);
+  const [categories, setCategories] = useState([]);
   
   // Loading state for UX
+  const fetchedCategories = useAppStore(state => state.categories);
+  const isFetching = !fetchedCategories || fetchedCategories.length === 0;
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (fetchedCategories && fetchedCategories.length > 0) {
+      const mapped = fetchedCategories.map((c) => ({
+        Id: c.CategoryID || c.CategorieID,
+        Name: c.CategoryName || c.CategorieName,
+        CategoryDescription: c.Description || "",
+        ImageUrl: c.ImageUrl,
+        IsActive: c.IsActive !== undefined ? c.IsActive : true,
+        isMain: false,
+        ParentCategoryId: null,
+      }));
+      setCategories(mapped);
+    }
+  }, [fetchedCategories]);
 
   // Handle form input changes
   const handleInputChange = (e) => {

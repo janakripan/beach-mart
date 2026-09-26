@@ -5,7 +5,7 @@
  */
 
 import { useEffect, useState } from "react";
-import { useEditOrderStatus, useGetOrders } from "../../api/admin/hooks";
+import { useGetOrders } from "../../api/admin/hooks";
 
 export function useOrderData({ initialPage = 1, pageSize = 10 } = {}) {
   // Pagination and search state
@@ -40,7 +40,7 @@ export function useOrderData({ initialPage = 1, pageSize = 10 } = {}) {
   });
 
   // Mutations
-  const editOrderStatus = useEditOrderStatus();
+  const editOrderStatus = { mutateAsync: async () => {} };
 
   // Process products data
   useEffect(() => {

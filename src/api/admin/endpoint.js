@@ -4,43 +4,43 @@ export const IMAGE_DELETE_ENDPOINT =
   "https://fileserver.sacrosys.net/api/1234/DeleteImages";
 
 // Login
-export const ADMIN_LOGIN = "oauth";
+export const ADMIN_LOGIN = "7763/clientAuthentication";
 
-
-
-// Brand
-export const GET_BRAND = "getBrandMaster";
-export const POST_BRAND = "BrandMaster";
-export const PUT_BRAND = "putBrandMaster";
-export const DELETE_BRAND = "deleteBrandMaster";
-
-// Color
-export const GET_COLOR = "getColorsMaster";
-export const POST_COLOR = "postColorsMaster";
-export const PUT_COLOR = "putColorsMaster";
-export const PUT_COLOR_ACITVE = "putColorActive";
-
-// size
-export const GET_SIZE = "getSizeMaster";
-export const POST_SIZE = "postSizeMaster";
-export const PUT_SIZE = "putSizeMaster";
-export const PUT_SIZE_ACTIVE = "putSizeActive";
+// variant
+export const GET_VARIANT = "7366/ecom/getProductVariants";
+export const POST_VARIANT = "7366/ecom/postVariantMaster";
 
 // banner
-export const POST_BANNER = "postEcommerceConfig";
-export const PUT_BANNER = "putEcommerceConfig";
-export const GET_BANNER = "getEcommerceConfig";
+export const POST_BANNER = "7366/ecom/postBannerImage";
+export const PUT_BANNER = "7366/ecom/putBannerImage";
+export const GET_BANNER = "7366/ecom/getBannerImage";
 
 // product
-export const GET_PRODUCTS = "getProductMaster";
+export const GET_PRODUCTS = "7366/ecom/getProductMaster";
 export const POST_PRODUCT = "postProductMaster";
 export const EDIT_PRODUCT = "putProductMaster";
 export const ACTIVE_PRODUCT = "ProductMasterInactive";
 
-// order
-export const GET_ORDERS = "getOrders";
-export const PUT_ORDER_STATUS = "putOrderStatus";
+//category
+export const GET_CATEGORIES = "7366/ecom/getCategoriesMaster"
+export const POST_CATEGORIES = "7366/ecom/postCategoriesMaster"
+export const PUT_CATEGORIES = "7366/ecom/putCategoriesMaster"
+export const DELETE_CATEGORIES = "7366/ecom/deleteCategory"
 
-// advertisement
-export const POST_ADVERTISEMENT = "postAdsData";
-export const GET_ADVERTISEMENT = "getAdsData";
+// order
+export const GET_ORDERS = "7364/ecom/getOrders";
+export const POST_ECOM_ORDER = "7364/ecom/postOrderInfo";
+export const GET_CUSTOMER_DETAILS = "7364/ecom/getCustomerDetailsByMobileNo";
+
+// delivery location
+export const GET_DELIVERY_LOCATION = "7366/ecom/getdeliveryLocation";
+export const POST_DELIVERY_LOCATION = "7366/ecom/deliveryLocation";
+
+// delivery modes
+export const GET_DELIVERY_MODES = "7366/ecom/getDeliveryMode";
+export const POST_DELIVERY_MODES = "7366/ecom/postDeliveryMode";
+
+//payment mode
+
+export const GET_PAYMENT_MODES = "7366/ecom/getpaymentMode";
+// export const POST_PAYMENT_MODES = "7366/ecom/postPaymentMode";

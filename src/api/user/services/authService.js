@@ -1,39 +1,28 @@
-
 import apiClient from "../../apiClient";
 
 export const authService = {
-  login: async (payload) => {
-    const res = await apiClient.post("/oauth/", payload);
-    const data = res.data.data;
-
-    return {
-      accessToken: data.accessToken,
-      refreshToken: data.refreshToken,
-      refreshTokenExpiry: data.refreshTokenExpiry,
-      user: data.userInfo?.[0],
-    };
+  getAuthenticated: async () => {
+    const res = await apiClient.get("/7763/getAuthenticated", {
+      headers: {
+        Authorization: `Bearer ${import.meta.env.VITE_GET_AUTH_TOKEN}`,
+        url: "https://beachmarts.com/beachmart",
+      },
+    });
+    return res.data;
   },
 
-  googleLogin: async (payload) => {
-    const res = await apiClient.post("/google-auth/", payload);
-    const data = res.data.data;
-
-    return {
-      accessToken: data.accessToken,
-      refreshToken: data.refreshToken,
-      refreshTokenExpiry: data.refreshTokenExpiry,
-      user: data.userInfo,
-    };
+  adminLogin: async (payload) => {
+    const res = await apiClient.post(
+      "/7763/clientAuthentication",
+      {},
+      {
+        headers: {
+          userid: payload.email,
+          password: payload.password,
+          url: "https://beachmarts.com/beachmart",
+        },
+      },
+    );
+    return res.data;
   },
-
-  signup: async (payload) => {
-    const res = await apiClient.post("/postUserMaster/", payload);
-    return res.data.data;
-  },
-
-  guestlogin: async () => {
-    const res = await apiClient.post('/oauth/guest/');
-    return res.data.data
-  }
 };
-

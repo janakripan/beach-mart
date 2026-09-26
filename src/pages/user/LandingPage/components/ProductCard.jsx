@@ -48,7 +48,7 @@ export default function ProductCard({ product }) {
         <img
           src={product.image}
           alt={product.name}
-          className="w-full h-full object-cover mix-blend-multiply rounded-t-[11px]" 
+          className="w-full h-full object-contain mix-blend-multiply rounded-t-[11px]" 
         />
       </div>
 

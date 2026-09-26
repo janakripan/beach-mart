@@ -1,7 +1,6 @@
 import { useLocation } from "react-router-dom";
 import OrderSummary from "../pages/user/Checkout/components/shared/OrderSummary";
 import AddressForm from "../pages/user/Checkout/components/shared/AddressForm";
-import SessionExpiryModal from "../pages/user/Checkout/components/shared/SessionExpiryModal";
 import { useAuthStore } from "../pages/Auth/store/AuthStore";
 
 const CheckoutLayout = () => {

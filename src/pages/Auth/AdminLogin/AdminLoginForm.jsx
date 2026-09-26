@@ -5,6 +5,7 @@ import { Eye, EyeOff } from "lucide-react";
 const Logo = "/logo-big.svg";
 
 import { useAuthStore } from "../store/AuthStore";
+import { useAdminLogin } from "../../../api/user/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
 /* ✅ Validation */
@@ -17,19 +18,26 @@ const AdminLoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const navigate = useNavigate();
-  const loginSuccess = useAuthStore((s) => s.loginSuccess);
+  const { mutateAsync: adminLogin, isPending } = useAdminLogin();
 
   const handleSubmit = async (values, { setSubmitting }) => {
     setErrorMsg("");
     try {
-      if (values.email === "admin" && values.password === "admin") {
-        loginSuccess("dummy-token", "dummy-refresh", null, { Role: "Admin", name: "Admin" });
+      const response = await adminLogin(values);
+      if (response.isSucess) {
+        // Store the user info to flag them as authenticated and an Admin
+        useAuthStore.getState().setUser({ 
+          Role: "Admin", 
+          name: response.data?.[0]?.ClientName || "Admin",
+          email: response.data?.[0]?.Email || values.email
+        });
         navigate("/admin");
       } else {
-        setErrorMsg("Invalid credentials. Please use admin/admin");
+        setErrorMsg(response.message || "Invalid credentials");
       }
     } catch (err) {
       console.error("Login failed", err);
+      setErrorMsg(err.response?.data?.message || "An error occurred during login");
     } finally {
       setSubmitting(false);
     }
@@ -110,10 +118,10 @@ const AdminLoginForm = () => {
               {/* Submit */}
               <button
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isSubmitting || isPending}
                 className="w-full bg-primary text-white py-3 rounded-[12px] hover:bg-[#126442]/90 disabled:opacity-50"
               >
-                {isSubmitting ? "Signing In..." : "Sign In"}
+                {isSubmitting || isPending ? "Signing In..." : "Sign In"}
               </button>
             </Form>
           )}

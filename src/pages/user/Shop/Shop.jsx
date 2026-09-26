@@ -7,18 +7,16 @@ import { useSearchParams } from 'react-router-dom'
 import { filtersToSearchParams } from '../../../utils/filtersToSearchParams'
 import { searchParamsToFilters } from '../../../utils/searchParamsToFilters'
 // import { useGetFilters } from '../../../api/user/hooks/useProduct'
-import { categories } from '../../../constants/data'
+import { useAppStore } from '../../../store/appStore';
 
 const Shop = () => {
 
   const [searchParams, setSearchParams] = useSearchParams();
   
-  // --- COMMENTED OUT DILKA DYNAMIC FETCHING ---
-  // const { data: filterData, isLoading } = useGetFilters();
-
-  // --- NEW STATIC DATA MAPPING ---
+  const rawCategories = useAppStore(state => state.categories);
+  
   const filterData = {
-    _category: categories.map(c => ({ CategoryId: c.title, CategoryName: c.title })),
+    _category: (rawCategories || []).filter(c => c.IsActive).map(c => ({ CategoryId: c.CategoryID, CategoryName: c.CategoryName })),
     _brand: []
   };
 

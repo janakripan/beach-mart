@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import ImageUploader from "../../components/admin/shared/shared/ImageUploader";
+import ImageUploader from "../../components/shared/ImageUploader";
 import { MdOutlineDragIndicator } from "react-icons/md";
 import {
   useAddAdvertisement,
