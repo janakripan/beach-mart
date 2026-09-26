@@ -132,13 +132,13 @@ const Variants = forwardRef(({ isOpen, setFormData, formData, variantsList = [] 
         <div className="space-y-2">
           <h4 className="text-sm font-semibold text-[#1A1A2E] mb-2">Saved Variants</h4>
           {formData.variants.map((variant, idx) => {
-            const vName = variant.name || variant.VariantName;
+            const vName = variant.name || variant.VariantName || "Unnamed Variant";
             const vPrice = variant.price || variant.Price;
             const vStock = variant.inStock !== undefined ? variant.inStock : variant.IsStock;
             return (
               <div key={variant.id || idx} className="flex items-center justify-between p-3 border border-[#E3F0E2] rounded-md bg-white">
                 <div className="flex items-center space-x-6">
-                  <span className="font-medium text-[#1A1A2E] min-w-[100px]">{vName}</span>
+                  <span className={`font-medium min-w-[100px] ${!variant.name && !variant.VariantName ? 'text-red-500 italic' : 'text-[#1A1A2E]'}`}>{vName}</span>
                   <span className="text-gray-500">AED {vPrice}</span>
                   <span className={`text-xs px-2 py-1 rounded-full ${vStock ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
                     {vStock ? 'In Stock' : 'Out of Stock'}

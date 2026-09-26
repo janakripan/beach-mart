@@ -16,12 +16,12 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Edit2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import ErrorDisplay from "../shared/ErrorDisplay";
 import TableSkeleton from "../shared/TableSkeleton";
 
 // Sortable Category Card Component
-const SortableCategoryCard = ({ category, handleEditCategory }) => {
+const SortableCategoryCard = ({ category, handleEditCategory, handleDeleteSingle, handleToggleActive }) => {
   const {
     attributes,
     listeners,
@@ -41,7 +41,8 @@ const SortableCategoryCard = ({ category, handleEditCategory }) => {
     <div
       ref={setNodeRef}
       style={style}
-      className={`bg-white rounded-lg shadow border border-gray-200 overflow-hidden flex flex-col 
+      onClick={() => handleEditCategory(category)}
+      className={`bg-white rounded-lg shadow border border-gray-200 overflow-hidden flex flex-col cursor-pointer
         ${isDragging ? "ring-2 ring-blue-500" : ""}`}
     >
       <div
@@ -62,21 +63,39 @@ const SortableCategoryCard = ({ category, handleEditCategory }) => {
           </div>
         )}
       </div>
-      <div className="p-3 flex-1 flex flex-col">
+      <div className="p-3 flex-1 flex flex-col justify-between">
         <h3 className="text-sm font-semibold text-gray-800 mb-1 truncate">
           {category.Name}
         </h3>
 
-        <button
-          title="Edit"
-          onClick={() => handleEditCategory(category)}
-          className="mt-2 text-sm cursor-pointer group text-blue-600 hover:text-blue-800"
-        >
-          <Edit2
-            className="text-gray-500 group-hover:scale-x-125 transition-all duration-300 "
-            size={14}
-          />
-        </button>
+        <div className="flex justify-between items-center mt-2">
+          <div
+            title={category.IsActive ? "Deactivate" : "Activate"}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (handleToggleActive) handleToggleActive(category);
+            }}
+            className="relative cursor-pointer"
+          >
+            <input type="checkbox" className="sr-only" checked={category.IsActive} readOnly />
+            <div className={`block w-8 h-4 rounded-full transition-colors ${category.IsActive ? "bg-primary" : "bg-gray-300"}`} />
+            <div className={`absolute left-0.5 top-0.5 bg-white w-3 h-3 rounded-full transition-transform ${category.IsActive ? "transform translate-x-4" : ""}`} />
+          </div>
+
+          <button
+            title="Delete"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDeleteSingle(category);
+            }}
+            className="text-sm cursor-pointer group text-red-600 hover:text-red-800"
+          >
+            <Trash2
+              className="text-gray-500 group-hover:scale-110 transition-all duration-300 hover:text-red-600"
+              size={14}
+            />
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -114,6 +133,8 @@ const CategoryCard = ({ category }) => {
 const CategoryGrid = ({
   categories,
   handleEditCategory,
+  handleDeleteSingle,
+  handleToggleActive,
   onReorder,
   isError,
   isLoading,
@@ -244,6 +265,8 @@ const CategoryGrid = ({
               key={category.Id}
               category={category}
               handleEditCategory={handleEditCategory}
+              handleDeleteSingle={handleDeleteSingle}
+              handleToggleActive={handleToggleActive}
             />
           ))}
         </div>

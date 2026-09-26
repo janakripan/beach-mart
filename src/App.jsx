@@ -17,7 +17,9 @@ import { useAppStore } from './store/appStore';
 function App() {
   const [isAppLoading, setIsAppLoading] = useState(false);
   const [authInitialized, setAuthInitialized] = useState(false);
-  const [showSplash, setShowSplash] = useState(true);
+  const [showSplash, setShowSplash] = useState(() => {
+    return !sessionStorage.getItem('splashShown');
+  });
   const loginSuccess = useAuthStore((s) => s.loginSuccess);
 
   useEffect(() => {
@@ -69,6 +71,7 @@ function App() {
   }, []);
 
   const handleSplashFinish = () => {
+    sessionStorage.setItem('splashShown', 'true');
     setShowSplash(false);
   };
 

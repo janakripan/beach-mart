@@ -6,8 +6,17 @@ import DeleteModal from "../../components/admin/shared/shared/DeleteModal";
 import PageHeader from "../../components/admin/shared/shared/PageHeader";
 import FloatingDeleteButton from "../../components/admin/shared/shared/FloatingDeleteButton";
 import { useAppStore } from "../../store/appStore";
+import { useAddCategory, useEditCategory, useDeleteCategory, useActiveCategory } from "../../api/admin/hooks";
+import { toast } from "sonner";
+import { getCategories } from "../../api/shared/service";
+import { useQueryClient } from "@tanstack/react-query";
 
 const Categories = () => {
+  const queryClient = useQueryClient();
+  const { mutate: addCategoryMutation } = useAddCategory();
+  const { mutate: editCategoryMutation } = useEditCategory();
+  const { mutate: deleteCategoryMutation } = useDeleteCategory();
+  const { mutate: activeCategoryMutation } = useActiveCategory();
   const [searchQuery, setSearchQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -68,6 +77,10 @@ const Categories = () => {
     }
   };
 
+  const handleRemoveImage = () => {
+    setFormData((prev) => ({ ...prev, imageUrl: null }));
+  };
+
   // Open modal for adding new category
   const handleAddCategory = () => {
     setIsEditing(false);
@@ -96,65 +109,96 @@ const Categories = () => {
     setIsModalOpen(false);
   };
 
-  // Submit form (create or update) locally
-  const handleSubmit = async (e) => {
+  // Submit form (create or update) using API
+  const handleSubmit = (e) => {
     e.preventDefault();
     setIsLoading(true);
-    
-    try {
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      if (isEditing && currentCategory) {
-        setCategories(prev => prev.map(c => {
-          if (c.Id === currentCategory.Id) {
-            return {
-              ...c,
-              Name: formData.name,
-              CategoryDescription: formData.description,
-              ImageUrl: formData.imageUrl,
-              IsActive: formData.IsActive,
-              isMain: formData.isMain,
-            };
-          }
-          return c;
-        }));
-      } else {
-        const newCategory = {
-          Id: `cat-${Date.now()}`,
-          Name: formData.name,
-          CategoryDescription: formData.description,
-          ImageUrl: formData.imageUrl,
-          IsActive: formData.IsActive,
-          isMain: formData.isMain,
-          ParentCategoryId: null,
-        };
-        setCategories(prev => [...prev, newCategory]);
-      }
 
-      setIsModalOpen(false);
-    } catch (error) {
-      console.error("Error saving category:", error);
-    } finally {
-      setIsLoading(false);
+    const payload = {
+      Name: formData.name,
+      SecondaryName: "",
+      CategoryDescription: formData.description || "",
+      ImageUrl: formData.imageUrl || "",
+      IsActive: formData.IsActive,
+      IsMain: formData.isMain || false,
+      ParentCategoryId: formData.parentId || 0
+    };
+
+    if (isEditing && currentCategory) {
+      editCategoryMutation({ categoryData: payload, categoryId: currentCategory.Id }, {
+        onSuccess: async () => {
+          try {
+            const res = await getCategories();
+            useAppStore.getState().setCategories(res.data || []);
+          } catch (e) {
+             console.error("Failed to refresh categories", e);
+          }
+          queryClient.invalidateQueries({ queryKey: ["getCategories"] });
+          setIsModalOpen(false);
+          toast.success("Category updated successfully");
+          setIsLoading(false);
+        },
+        onError: (err) => {
+          console.error("Error saving category:", err);
+          toast.error("Failed to update category");
+          setIsLoading(false);
+        }
+      });
+    } else {
+      addCategoryMutation(payload, {
+        onSuccess: async () => {
+          try {
+            const res = await getCategories();
+            useAppStore.getState().setCategories(res.data || []);
+          } catch (e) {
+             console.error("Failed to refresh categories", e);
+          }
+          queryClient.invalidateQueries({ queryKey: ["getCategories"] });
+          setIsModalOpen(false);
+          toast.success("Category added successfully");
+          setIsLoading(false);
+        },
+        onError: (err) => {
+          console.error("Error saving category:", err);
+          toast.error("Failed to add category");
+          setIsLoading(false);
+        }
+      });
     }
   };
 
-  // Delete selected categories locally
-  const handleDeleteSelected = async () => {
-    try {
-      setDeleteError(null);
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 500));
+  // Delete selected categories using API
+  const handleDeleteSelected = () => {
+    setDeleteError(null);
+    
+    // Create an array of promises for deletion
+    const deletePromises = selectedCategories.map(categoryId => 
+      new Promise((resolve, reject) => {
+        deleteCategoryMutation(categoryId, {
+          onSuccess: resolve,
+          onError: reject
+        });
+      })
+    );
 
-      setCategories(prev => prev.filter(c => !selectedCategories.includes(c.Id)));
-
-      setSelectedCategories([]);
-      setIsDeleteModalVisible(false);
-    } catch (error) {
-      setDeleteError(error);
-      console.error("Error deleting categories:", error);
-    }
+    Promise.all(deletePromises)
+      .then(async () => {
+        try {
+          const res = await getCategories();
+          useAppStore.getState().setCategories(res.data || []);
+        } catch (e) {
+           console.error("Failed to refresh categories", e);
+        }
+        queryClient.invalidateQueries({ queryKey: ["getCategories"] });
+        setSelectedCategories([]);
+        setIsDeleteModalVisible(false);
+        toast.success("Categories deleted successfully");
+      })
+      .catch((error) => {
+        setDeleteError(error);
+        console.error("Error deleting categories:", error);
+        toast.error("Failed to delete one or more categories");
+      });
   };
   
   // Handle order update locally
@@ -165,6 +209,29 @@ const Categories = () => {
   const handleCloseDeleteModal = () => {
     setIsDeleteModalVisible(false);
     setDeleteError(null);
+  };
+
+  const handleToggleActive = (category) => {
+    const newStatus = !category.IsActive;
+    activeCategoryMutation(
+      { categoryId: category.Id, status: newStatus },
+      {
+        onSuccess: async () => {
+          try {
+            const res = await getCategories();
+            useAppStore.getState().setCategories(res.data || []);
+          } catch (e) {
+            console.error("Failed to refresh categories", e);
+          }
+          queryClient.invalidateQueries({ queryKey: ["getCategories"] });
+          toast.success(`Category ${newStatus ? 'activated' : 'deactivated'} successfully`);
+        },
+        onError: (err) => {
+          console.error("Error toggling category status:", err);
+          toast.error("Failed to update category status");
+        }
+      }
+    );
   };
 
   // Filter categories based on search query
@@ -179,6 +246,11 @@ const Categories = () => {
     localStorage.setItem("gridView", gridView);
   }, [gridView]);
   
+  const handleDeleteSingle = (category) => {
+    setSelectedCategories([category.Id]);
+    setIsDeleteModalVisible(true);
+  };
+
   return (
     <div className="w-full h-screen overflow-hidden gap-y-4 flex flex-col p-5" data-lenis-prevent="true">
       <PageHeader
@@ -206,6 +278,8 @@ const Categories = () => {
         filteredCategories={filteredCategories}
         gridView={gridView}
         handleEditCategory={handleEditCategory}
+        handleDeleteSingle={handleDeleteSingle}
+        handleToggleActive={handleToggleActive}
         selectedCategories={selectedCategories}
         setSelectedCategories={setSelectedCategories}
         onReorder={handleReorder}
@@ -220,6 +294,7 @@ const Categories = () => {
         formData={formData}
         handleInputChange={handleInputChange}
         handleImageUploaded={handleImageUploaded}
+        handleRemoveImage={handleRemoveImage}
         isLoading={isLoading}
       />
 

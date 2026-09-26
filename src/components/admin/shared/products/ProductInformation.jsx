@@ -1,7 +1,6 @@
 import React from "react";
 import { AlertTriangle } from "lucide-react";
 import ImageUploader from "../../../shared/ImageUploader";
-import RichTextEditor from "./RichTextEditor";
 
 const ProductInformation = ({
   formData,
@@ -15,11 +14,6 @@ const ProductInformation = ({
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     if (formik) formik.setFieldValue(name, value);
-  };
-
-  const handleDescriptionChange = (content) => {
-    setFormData((prev) => ({ ...prev, description: content }));
-    if (formik) formik.setFieldValue("description", content);
   };
 
   const handleImageUploaded = (data, index) => {
@@ -103,14 +97,14 @@ const ProductInformation = ({
       {/* Description */}
       <div>
         <label className="block text-sm font-medium text-[#1A1A2E] mb-2">Description</label>
-        <div className={`border-2 rounded-md overflow-hidden ${formik?.errors.description && formik?.touched.description ? 'border-red-400' : 'border-[#E3F0E2]'}`}>
-          <RichTextEditor
-            value={formData.description || ""}
-            onChange={handleDescriptionChange}
-            onBlur={() => formik?.setFieldTouched("description", true)}
-            placeholder="Enter product description"
-          />
-        </div>
+        <textarea
+          name="description"
+          value={formData.description || ""}
+          onChange={handleInputChange}
+          onBlur={formik?.handleBlur}
+          className={`w-full border-2 rounded-md p-2.5 text-sm focus:outline-none min-h-[120px] resize-y ${formik?.errors.description && formik?.touched.description ? 'border-red-400 focus:border-red-500' : 'border-[#E3F0E2] focus:border-primary'}`}
+          placeholder="Enter product description"
+        />
         {formik?.errors.description && formik?.touched.description && (
           <div className="mt-2 text-red-600 text-xs flex items-center">
             <AlertTriangle size={14} className="mr-1 flex-shrink-0" />
@@ -158,9 +152,8 @@ const ProductInformation = ({
             onBlur={formik?.handleBlur}
             className={`w-full border-2 rounded-md p-2.5 text-sm focus:outline-none ${formik?.errors.price && formik?.touched.price ? 'border-red-400 focus:border-red-500' : 'border-[#E3F0E2] focus:border-primary'}`}
             placeholder="0.00"
-            disabled={enableVariants}
           />
-          {formik?.errors.price && formik?.touched.price && !enableVariants && (
+          {formik?.errors.price && formik?.touched.price && (
             <div className="mt-2 text-red-600 text-xs flex items-center">
               <AlertTriangle size={14} className="mr-1 flex-shrink-0" />
               {formik.errors.price}

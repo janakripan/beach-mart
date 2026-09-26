@@ -1,12 +1,14 @@
 import React from "react";
 import CategoryGrid from "./CategoryGrid";
 import DynamicTable from "../shared/DynamicTable";
-import { Edit2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 
 const CategoryList = ({
   gridView,
   filteredCategories,
   handleEditCategory,
+  handleDeleteSingle,
+  handleToggleActive,
   selectedCategories,
   setSelectedCategories,
   onReorder,
@@ -51,12 +53,29 @@ const CategoryList = ({
       key: "actions",
       header: "Actions",
       render: (category) => (
-        <div className="flex space-x-2 pl-4">
-          <button
-            onClick={() => handleEditCategory(category)}
-            className="text-black  cursor-pointer hover:text-gray-400"
+        <div className="flex space-x-4 items-center pl-4">
+          <div
+            title={category.IsActive ? "Deactivate" : "Activate"}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (handleToggleActive) handleToggleActive(category);
+            }}
+            className="relative cursor-pointer"
           >
-            <Edit2 size={18} />
+            <input type="checkbox" className="sr-only" checked={category.IsActive} readOnly />
+            <div className={`block w-10 h-5 rounded-full transition-colors ${category.IsActive ? "bg-primary" : "bg-gray-300"}`} />
+            <div className={`absolute left-1 top-1 bg-white w-3 h-3 rounded-full transition-transform ${category.IsActive ? "transform translate-x-5" : ""}`} />
+          </div>
+
+          <button
+            title="Delete"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDeleteSingle(category);
+            }}
+            className="text-black cursor-pointer hover:text-red-500"
+          >
+            <Trash2 size={18} />
           </button>
         </div>
       ),
@@ -69,6 +88,8 @@ const CategoryList = ({
         <CategoryGrid
           categories={filteredCategories}
           handleEditCategory={handleEditCategory}
+          handleDeleteSingle={handleDeleteSingle}
+          handleToggleActive={handleToggleActive}
           onReorder={onReorder}
           isLoading={false}
           isError={false}
@@ -87,6 +108,7 @@ const CategoryList = ({
       idField="Id"
       data={filteredCategories}
       emptyMessage="No Category found"
+      onRowClick={(category) => handleEditCategory(category)}
     />
   );
 };

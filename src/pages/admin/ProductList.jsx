@@ -77,11 +77,19 @@ const ProductList = () => {
 
   const handleEditProduct = (product) => {
     setIsEditing(true);
+
+    // Strip HTML from legacy descriptions saved by RichTextEditor
+    const stripHtml = (html) => {
+      if (!html) return "";
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      return doc.body.textContent || "";
+    };
+
     setFormData({
       ...product,
       id: product.ProductID,
       name: product.ProductName,
-      description: product.Description,
+      description: stripHtml(product.Description),
       categoryName: product.Categorie,
       price: product.Price,
       discountPrice: product.Discount,
@@ -158,10 +166,10 @@ const ProductList = () => {
       ImageUrl6: null,
       SecondaryName: null,
       ProductVariants: newData.variants?.map(v => ({
-        VariantName: v.variantName || v.VariantName,
-        variantID: v.variantID || 0,
-        Price: v.price || v.Price,
-        IsStock: true
+        VariantName: v.name || v.variantName || v.VariantName || "",
+        variantID: v.variantID || v.VariantID || 0,
+        Price: v.price || v.Price || 0,
+        IsStock: v.inStock !== undefined ? v.inStock : (v.IsStock !== undefined ? v.IsStock : true)
       })) || []
     };
 

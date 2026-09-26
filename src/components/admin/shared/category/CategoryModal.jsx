@@ -10,17 +10,9 @@ const CategoryModal = ({
   formData,
   handleInputChange,
   handleImageUploaded,
+  handleRemoveImage,
   isLoading,
 }) => {
-  const handleToggleChange = () => {
-    handleInputChange({
-      target: {
-        name: "IsActive",
-        value: !formData.IsActive,
-      },
-    });
-  };
-
   const handleMainToggleChange = () => {
     handleInputChange({
       target: {
@@ -44,16 +36,20 @@ const CategoryModal = ({
         <label className="block text-sm font-medium text-[#1A1A2E] mb-2">
           Category Image
         </label>
-        <ImageUploader
-          maxHeight={3000} 
-          max_Width={3000} 
-          aspectRatio="aspect-auto"
-          maxWidth="max-w-full"
-          initialImage={formData.imageUrl}
-          onImageUpload={handleImageUploaded}
-          containerClassName=" max-[250px] "
-          category="category"
-        />
+        <div className="w-[200px]">
+          <ImageUploader
+            initialImage={formData.imageUrl}
+            onImageUpload={handleImageUploaded}
+            onImageDelete={handleRemoveImage}
+            category="categories"
+            aspectRatio="aspect-square"
+            minWidth={300}
+            minHeight={300}
+            max_Width={800}
+            maxHeight={800}
+            maxWidth="w-full"
+          />
+        </div>
       </div>
 
       <div>
@@ -86,38 +82,6 @@ const CategoryModal = ({
       </div>
 
       <div className="flex gap-8">
-        {/* Toggle button for active status */}
-        <div>
-          <label className="flex items-center space-x-2 cursor-pointer">
-            <div className="relative">
-              <input
-                type="checkbox"
-                className="sr-only"
-                checked={formData.isActive}
-                onChange={handleToggleChange}
-              />
-              <div
-                className={`block w-12 h-6 rounded-full transition-colors ${
-                  formData.IsActive ? "bg-primary " : "bg-[#E3F0E2]"
-                }`}
-              ></div>
-              <div
-                className={`absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform ${
-                  formData.IsActive ? "transform translate-x-6" : ""
-                }`}
-              ></div>
-            </div>
-            <span className="text-sm font-medium text-[#1A1A2E]">
-              {formData.IsActive ? "Active" : "Inactive"}
-            </span>
-          </label>
-          <p className="text-xs text-gray-500 mt-1">
-            {formData.IsActive
-             ? "This brand will be visible to customers"
-            : "This brand will be hidden from customers"}
-          </p>
-        </div>
-
         {/* Toggle button for main status */}
         <div>
           <label className="flex items-center space-x-2 cursor-pointer">

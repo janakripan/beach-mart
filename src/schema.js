@@ -23,11 +23,7 @@ export const PRODUCT_VALIDATION = (enableVariants) =>
 
     categoryName: Yup.string().required("Category is required"),
 
-    ...(!enableVariants
-      ? {
-          price: Yup.number()
-            .required("Price is required")
-            .min(0, "Price must be greater than or equal to 0"),
-        }
-      : {}),
+    price: enableVariants
+      ? Yup.number().min(0, "Price must be greater than or equal to 0").nullable()
+      : Yup.number().required("Price is required").min(0, "Price must be greater than or equal to 0"),
   });

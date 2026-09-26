@@ -6,7 +6,7 @@ const SplashScreen = ({ isDataLoaded, onFinish }) => {
   useEffect(() => {
     if (isDataLoaded) {
       setExiting(true);
-      const finishTimer = setTimeout(() => onFinish(), 700);
+      const finishTimer = setTimeout(() => onFinish(), 200);
       return () => clearTimeout(finishTimer);
     }
   }, [isDataLoaded, onFinish]);
@@ -63,7 +63,7 @@ const SplashScreen = ({ isDataLoaded, onFinish }) => {
 
       {/* Full-screen overlay */}
       <div
-        className={`fixed inset-0 z-[9999] flex items-center justify-center bg-white transition-opacity duration-700 ease-in-out ${
+        className={`fixed inset-0 z-[9999] flex items-center justify-center bg-white transition-opacity duration-200 ease-in-out ${
           exiting ? 'opacity-0 pointer-events-none' : 'opacity-100'
         }`}
       >

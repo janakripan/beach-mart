@@ -12,9 +12,12 @@ import {
   editProduct,
   getDeliveryLocations,
   getDeliveryModes,
-  getPaymentModes,
   getOrderes,
   uploadImage,
+  addCategory,
+  updateCategory,
+  deleteCategory,
+  activeCategory,
 } from "./service";
 import { useState } from "react";
 export { useGetBanner, useGetProducts, useGetCategories, useGetVariants } from "../shared/hooks";
@@ -85,8 +88,29 @@ export const useDeleteProduct = () =>
   });
 
 //////////////////////   CATEGORY SECTION ⚠️⚠️⚠️⚠️⚠️⚠️   ////////////////////////////
+export const useAddCategory = () =>
+  useMutation({
+    mutationKey: ["addCategory"],
+    mutationFn: addCategory,
+  });
 
+export const useEditCategory = () =>
+  useMutation({
+    mutationKey: ["editCategory"],
+    mutationFn: updateCategory,
+  });
 
+export const useDeleteCategory = () =>
+  useMutation({
+    mutationKey: ["deleteCategory"],
+    mutationFn: deleteCategory,
+  });
+
+export const useActiveCategory = () =>
+  useMutation({
+    mutationKey: ["activeCategory"],
+    mutationFn: activeCategory,
+  });
 
 //////////////////////   VARIANTS SECTION ⚠️⚠️⚠️⚠️⚠️⚠️   ////////////////////////////
 

@@ -26,6 +26,7 @@ export const DELETE_PRODUCT = "7366/ecom/deleteProduct";
 export const GET_CATEGORIES = "7366/ecom/getCategoriesMaster";
 export const POST_CATEGORIES = "7366/ecom/postCategoriesMaster";
 export const PUT_CATEGORIES = "7366/ecom/putCategoriesMaster";
+export const ACTIVATE_CATEGORY = "7366/putCategoryMasterUpdate"
 export const DELETE_CATEGORIES = "7366/ecom/deleteCategory";
 
 // order

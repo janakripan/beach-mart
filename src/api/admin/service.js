@@ -15,6 +15,10 @@ import {
   POST_PRODUCT,
   PUT_BANNER,
   DELETE_PRODUCT,
+  POST_CATEGORIES,
+  PUT_CATEGORIES,
+  ACTIVATE_CATEGORY,
+  DELETE_CATEGORIES,
 } from "./endpoint";
 import apiClient from "../apiClient";
 export { getProducts, getCategories, getVariants, getBanner } from "../shared/service";
@@ -117,9 +121,40 @@ export const deleteProduct = (productId) => {
 };
 
 //////////////////////   CATEGORY SECTION ⚠️⚠️⚠️⚠️⚠️⚠️   ////////////////////////////
+//////////////////////   CATEGORIES SECTION ⚠️⚠️⚠️⚠️⚠️⚠️   ////////////////////////////
 
+export const addCategory = async (categoryData) => {
+  const response = await apiClient.post(POST_CATEGORIES, categoryData);
+  return response.data;
+};
 
+export const updateCategory = async ({categoryData, categoryId}) => {
+  const response = await apiClient.put(PUT_CATEGORIES, categoryData, {
+    headers: {
+      id: categoryId
+    }
+  });
+  return response.data;
+};
 
+export const deleteCategory = async (categoryId) => {
+  const response = await apiClient.delete(DELETE_CATEGORIES, {
+    headers: {
+      categoryID: categoryId
+    }
+  });
+  return response.data;
+};
+
+export const activeCategory = async ({ categoryId, status }) => {
+  const response = await apiClient.put(ACTIVATE_CATEGORY, {}, {
+    headers: {
+      categoryID: categoryId,
+      _status: status.toString()
+    }
+  });
+  return response.data;
+};
 //////////////////////   VARIANTS SECTION ⚠️⚠️⚠️⚠️⚠️⚠️   ////////////////////////////
 
 
