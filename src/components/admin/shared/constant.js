@@ -117,49 +117,37 @@ export const BANNER_INITIAL_VALUE = {
       imgurl_6: "",
     },
   ],
-  tab: [
-    {
-      imgurl_1: "",
-      imgurl_2: "",
-      imgurl_3: "",
-      imgurl_4: "",
-      imgurl_5: "",
-      imgurl_6: "",
-    },
-  ],
   settings: "",
 };
 export const BANNER_DEV_CONFIG = {
   desktop: {
     title: "Desktop Banners",
-    description: "Display ONLY on desktop and large screens",
-    aspectRatio: "aspect-[16/5]", // Widescreen aspect ratio for desktop
+    description: "Display ONLY on desktop and large screens. For best quality and performance, maintain a 1440:662 aspect ratio.",
+    aspectRatio: "aspect-[1440/662]",
     maxWidth: "max-w-4xl",
-    recommendedWidth: 1920,
-    recommendedHeight: 800,
+    recommendedWidth: 1440,
+    recommendedHeight: 662,
+    minWidth: 1024,
+    minHeight: 470,
+    maxWidthLimit: 1920,
+    maxHeightLimit: 882,
     previewWidth: "1200px",
     displayName: "Desktop",
   },
   mobile: {
     title: "Mobile Banners",
-    description: "Display ONLY on mobile devices",
-    aspectRatio: "aspect-[4/5]", // Portrait aspect ratio for mobile
+    description: "Display ONLY on mobile devices. For optimal mobile viewing, maintain a 4:3 or 4:5 aspect ratio.",
+    aspectRatio: "aspect-[4/3]",
     maxWidth: "max-w-md",
     recommendedWidth: 800,
-    recommendedHeight: 1000,
+    recommendedHeight: 600,
+    minWidth: 600,
+    minHeight: 450,
+    maxWidthLimit: 1200,
+    maxHeightLimit: 900,
     previewWidth: "375px",
     displayName: "Mobile",
-  },
-  tab: {
-    title: "Tablet Banners",
-    description: "Display ONLY on tablet devices",
-    aspectRatio: "aspect-[4/3]", // Standard tablet aspect ratio
-    maxWidth: "max-w-2xl",
-    recommendedWidth: 1024,
-    recommendedHeight: 768,
-    previewWidth: "768px",
-    displayName: "Tablet",
-  },
+  }
 };
 
 export const INITIAL_PRODUCT_DETAILS = {

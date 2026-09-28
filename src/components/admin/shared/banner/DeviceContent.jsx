@@ -24,10 +24,10 @@ const DeviceContent = ({
               initialImage={bannerData[image]}
               buttonText={`Upload ${activeTab} Banner`}
               placeholderText={`Upload ${activeTab}-only banner ${index}`}
-              minWidth={400}
-              minHeight={300}
-              max_Width={2000}
-              maxHeight={1500}
+              minWidth={BANNER_DEV_CONFIG[activeTab].minWidth}
+              minHeight={BANNER_DEV_CONFIG[activeTab].minHeight}
+              max_Width={BANNER_DEV_CONFIG[activeTab].maxWidthLimit}
+              maxHeight={BANNER_DEV_CONFIG[activeTab].maxHeightLimit}
               recommendedWidth={BANNER_DEV_CONFIG[activeTab].recommendedWidth}
               recommendedHeight={BANNER_DEV_CONFIG[activeTab].recommendedHeight}
               onImageUpload={(data) =>
@@ -35,6 +35,7 @@ const DeviceContent = ({
               }
               onImageDelete={() => handleImageDelete(activeTab, index + 1)}
               containerClassName="mb-2"
+              category="banner"
             />
             <p className="text-xs text-gray-500 mt-2">
               This image will only appear on {activeTab} devices

@@ -7,14 +7,14 @@ const CONTACT_INFO = [
   {
     icon: MapPin,
     label: 'Our Location',
-    value: 'Beach Circle Mini Mart LLC, Dubai, UAE',
+    value: 'MEYAN MALL - Al Thanya St - near Burj Al Arab - Umm Suqeim Second - Umm Suqeim 2 - Dubai',
     href: 'https://www.google.com/maps/place/BEACH+CIRCLE+MINI+MART+LLC/@25.1447029,55.1988754,788m/data=!3m1!1e3!4m6!3m5!1s0x3e5f6bf6fd84746d:0x5d6c138c7301fe01!8m2!3d25.1447541!4d55.1988443',
   },
   {
     icon: PhoneCall,
     label: 'Phone Number',
-    value: '+971 55 123 4567',
-    href: 'tel:+971551234567',
+    value: '+971 56 199 9705',
+    href: 'tel:+971561999705',
   },
   {
     icon: Mail,

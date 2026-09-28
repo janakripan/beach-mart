@@ -23,6 +23,7 @@ import {
   POST_DELIVERY_LOCATION,
   POST_DELIVERY_MODES,
   POST_PAYMENT_MODES,
+  PUT_ORDER_STATUS,
 } from "./endpoint";
 import apiClient from "../apiClient";
 export { getProducts, getCategories, getVariants, getBanner } from "../shared/service";
@@ -34,13 +35,24 @@ export const uploadImage = async ({file, category}) => {
   formData.append("imageFiles", file);
   const response = await axios.post(IMAGE_UPLOAD_ENDPOINT, formData, {
     headers: {
-      // "Content-Type": "multipart/form-data",
       clientID: import.meta.env.VITE_CLIENT_ID,
       Token: import.meta.env.VITE_UPLOAD_TOKEN,
       imageClassification: category,
     },
   });
   return response.data;
+};
+
+export const uploadBannerImages = async (files) => {
+  const fileArray = Array.isArray(files) ? files : [files];
+  const results = await Promise.all(
+    fileArray.map((file) => uploadImage({ file, category: "banner" }))
+  );
+  return results.map((res) => res?.url || res);
+};
+
+export const deleteBannerImage = async (url) => {
+  return await deleteImage({ url, category: "banner" });
 };
 
 export const deleteImage = async ({url, category = "products"}) => {
@@ -81,7 +93,7 @@ export const adminLogin = (credential) =>
 //////////////////////   BANNER SECTION ⚠️⚠️⚠️⚠️⚠️⚠️   ////////////////////////////
 
 export const addBanner = (bannerDetails) =>
-  apiClient.post(POST_BANNER, { ...bannerDetails, settings: "" }).then(
+  apiClient.post(POST_BANNER, bannerDetails).then(
     (res) => res.data
   );
 
@@ -114,6 +126,20 @@ export const activeProduct = ({ productId, status }) => {
       },
     }
   ).then(res => res.data);
+};
+
+export const updateOrderStatus = async (orderId, orderStatus) => {
+  const response = await apiClient.put(
+    PUT_ORDER_STATUS,
+    {},
+    {
+      headers: {
+        orderid: orderId,
+        orderstatus: orderStatus,
+      },
+    }
+  );
+  return response.data;
 };
 
 export const deleteProduct = (productId) => {

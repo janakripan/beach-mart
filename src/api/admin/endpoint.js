@@ -11,7 +11,7 @@ export const GET_VARIANT = "7366/ecom/getProductVariants";
 export const POST_VARIANT = "7366/ecom/postVariantMaster";
 
 // banner
-export const POST_BANNER = "7366/ecom/postBannerImage";
+export const POST_BANNER = "7366/ecom/postBannerImages";
 export const PUT_BANNER = "7366/ecom/putBannerImage";
 export const GET_BANNER = "7366/ecom/getBannerImage";
 
@@ -33,6 +33,7 @@ export const DELETE_CATEGORIES = "7366/ecom/deleteCategory";
 export const GET_ORDERS = "7364/ecom/getOrders";
 export const POST_ECOM_ORDER = "7364/ecom/postOrderInfo";
 export const GET_CUSTOMER_DETAILS = "7364/ecom/getCustomerDetailsByMobileNo";
+export const PUT_ORDER_STATUS = "7364/ecom/putOrderStatus";
 
 // delivery location
 export const GET_DELIVERY_LOCATION = "7366/ecom/getdeliveryLocation";

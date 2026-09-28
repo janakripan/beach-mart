@@ -105,7 +105,7 @@ export default function Footer() {
             <div className="flex flex-col gap-5">
               <div className="flex items-start gap-3">
                 <MapPin size={20} className="text-primary shrink-0 mt-0.5" />
-                <span className="font-poppins text-[15px] text-gray-200 leading-snug">Beach Circle Mini Mart LLC, Dubai, UAE</span>
+                <span className="font-poppins text-[15px] text-gray-200 leading-snug">MEYAN MALL - Al Thanya St - near Burj Al Arab - Umm Suqeim Second - Umm Suqeim 2 - Dubai</span>
               </div>
               <div className="flex items-start gap-3">
                 <Mail size={20} className="text-primary shrink-0 mt-0.5" />
@@ -113,7 +113,7 @@ export default function Footer() {
               </div>
               <div className="flex items-start gap-3">
                 <PhoneCall size={20} className="text-primary shrink-0 mt-0.5" />
-                <span className="font-poppins text-[15px] text-gray-200 leading-snug">91+123456789</span>
+                <span className="font-poppins text-[15px] text-gray-200 leading-snug">+971 56 199 9705</span>
               </div>
             </div>
           </div>

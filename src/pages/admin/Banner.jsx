@@ -4,6 +4,9 @@ import DeviceInfo from "../../components/admin/shared/banner/DeviceInfo";
 import { DevicePreview } from "../../components/admin/shared/banner/DevicePreview";
 import TabNavigation from '../../components/admin/shared/banner/TabNavigation'
 import { BANNER_DEV_CONFIG, BANNER_INITIAL_VALUE } from "../../components/admin/shared/constant";
+import { useAddBanner } from "../../api/admin/hooks";
+import { useGetBanner } from "../../api/shared/hooks";
+import { Loader2 } from "lucide-react";
 
 const BannerManagement = () => {
   const [activeTab, setActiveTab] = useState("desktop");
@@ -13,7 +16,17 @@ const BannerManagement = () => {
   const [localBannerData, setLocalBannerData] = useState(JSON.parse(JSON.stringify(BANNER_INITIAL_VALUE)));
   const [updateTrigger, setUpdateTrigger] = useState(0); 
 
-  const isLoading = false;
+  const { mutate: submitBanners, isLoading: isSubmitting } = useAddBanner();
+  const { data: fetchedBanners, isLoading: isFetchingBanners } = useGetBanner();
+console.log(fetchedBanners);
+
+  useEffect(() => {
+    if (fetchedBanners) {
+      setLocalBannerData(JSON.parse(JSON.stringify(fetchedBanners)));
+    }
+  }, [fetchedBanners]);
+
+  const isLoading = isFetchingBanners;
   const currentBannerData = localBannerData;
 
   // Function to handle image upload for specific device type
@@ -121,6 +134,39 @@ const BannerManagement = () => {
     }
   };
 
+  const handleSaveBanners = () => {
+    if (!currentBannerData) return;
+
+    // Extract desktop banner urls exactly into imageUrl1...6
+    const desktopBanners = currentBannerData.desktop[0];
+    const payload = {
+      imageUrl1: desktopBanners.imgurl_1 || "",
+      imageUrl2: desktopBanners.imgurl_2 || "",
+      imageUrl3: desktopBanners.imgurl_3 || "",
+      imageUrl4: desktopBanners.imgurl_4 || "",
+      imageUrl5: desktopBanners.imgurl_5 || "",
+      imageUrl6: desktopBanners.imgurl_6 || ""
+    };
+
+    submitBanners(payload, {
+      onSuccess: () => {
+        setSaveMessage({
+          type: "success",
+          text: "Banners successfully published to live website!",
+        });
+        setTimeout(() => setSaveMessage({ type: "", text: "" }), 3000);
+      },
+      onError: (error) => {
+        console.error("Failed to publish banners:", error);
+        setSaveMessage({
+          type: "error",
+          text: "Failed to publish banners.",
+        });
+        setTimeout(() => setSaveMessage({ type: "", text: "" }), 3000);
+      }
+    });
+  };
+
   if (isLoading && !localBannerData) {
     return <ShimmerLoading />;
   }
@@ -141,6 +187,24 @@ const BannerManagement = () => {
           </div>
         )}
 
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-xl font-bold text-[#1A1A2E]">Banner Management</h1>
+          <button
+            onClick={handleSaveBanners}
+            disabled={isSubmitting}
+            className="bg-[#2E5B32] hover:bg-[#1A381D] text-white px-6 py-2 rounded-lg font-medium transition-colors flex items-center gap-2"
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Publishing...
+              </>
+            ) : (
+              "Publish Banners"
+            )}
+          </button>
+        </div>
+
         {/* Tab Navigation with upload stats */}
         {currentBannerData && (
           <TabNavigation
@@ -158,6 +222,10 @@ const BannerManagement = () => {
             device={activeTab}
             recommendedWidth={BANNER_DEV_CONFIG[activeTab].recommendedWidth}
             recommendedHeight={BANNER_DEV_CONFIG[activeTab].recommendedHeight}
+            minWidth={BANNER_DEV_CONFIG[activeTab].minWidth}
+            minHeight={BANNER_DEV_CONFIG[activeTab].minHeight}
+            maxWidthLimit={BANNER_DEV_CONFIG[activeTab].maxWidthLimit}
+            maxHeightLimit={BANNER_DEV_CONFIG[activeTab].maxHeightLimit}
           />
         )}
 

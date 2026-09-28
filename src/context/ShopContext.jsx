@@ -58,6 +58,11 @@ export const ShopProvider = ({ children }) => {
     setCartItems((prev) => prev.filter((item) => item.product.id !== productId));
   };
 
+  const clearCart = () => {
+    setCartItems([]);
+    localStorage.removeItem('shop-cart');
+  };
+
   const updateQuantity = (productId, amount) => {
     setCartItems((prev) =>
       prev.map((item) =>
@@ -101,6 +106,7 @@ export const ShopProvider = ({ children }) => {
     cartCount,
     addToCart,
     removeFromCart,
+    clearCart,
     updateQuantity,
     isCartOpen,
     setIsCartOpen,

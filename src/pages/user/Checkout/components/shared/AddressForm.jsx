@@ -162,7 +162,7 @@ const AddressForm = () => {
     fetchData();
   }, []);
   
-  const { cartItems, cartTotal } = useShop();
+  const { cartItems, cartTotal, clearCart } = useShop();
 
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
@@ -288,15 +288,49 @@ const AddressForm = () => {
         placeName: values.locationPlace || values.address,
       };
 
-      await OrderService.postOrder(payload);
+      const response = await OrderService.postOrder(payload);
       
+      let orderId = "Unknown";
+      if (response) {
+        if (response.OrderID) orderId = response.OrderID;
+        else if (response.OrderId) orderId = response.OrderId;
+        else if (response.orderID) orderId = response.orderID;
+        else if (response.id) orderId = response.id;
+        else if (response.data?.OrderID) orderId = response.data.OrderID;
+        else if (Array.isArray(response) && response[0]?.OrderID) orderId = response[0].OrderID;
+        else if (Array.isArray(response.data) && response.data[0]?.OrderID) orderId = response.data[0].OrderID;
+      }
+
       message.success("Order placed successfully!");
       
+      // WhatsApp message generation
+      let waMessage = `🛍️ NEW ORDER — #${orderId}\n🏪 BEACH CIRCLE MINI MART LLC\n\n🟠 STATUS: AWAITING CONFIRMATION\n\n━━━━━━━━━━━━━━━━━━\n📦 ORDER SUMMARY\n━━━━━━━━━━━━━━━━━━\n\n`;
+      
+      cartItems.forEach((item, index) => {
+        waMessage += `${index + 1}. ${item.product.name}\nQuantity: ${item.quantity} × AED ${parseFloat(item.product.price).toFixed(2)}\nSubtotal: AED ${(item.quantity * parseFloat(item.product.price)).toFixed(2)}\n\n`;
+      });
+      
+      let formattedPhoneStr = String(values.phoneNumber);
+      if (!formattedPhoneStr.startsWith("+")) {
+        formattedPhoneStr = "+971" + formattedPhoneStr;
+      }
+      
+      const confirmLink = `${window.location.origin}/beachmart/confirm-order?orderId=${orderId}&name=${encodeURIComponent(values.userName)}&number=${encodeURIComponent(formattedPhoneStr)}`;
+      waMessage += `━━━━━━━━━━━━━━━━━━\n 💰 TOTAL: AED ${parseFloat(cartTotal).toFixed(2)}\n━━━━━━━━━━━━━━━━━━\n\n 👤 CUSTOMER DETAILS\n\nName: ${values.userName}\nContact: ${formattedPhoneStr}\nAddress: ${values.address}\nArea: ${values.district}\n\n 🚚 Delivery: ${values.addressLabel || "CARD"}\n 💵 Payment: ${values.deliveryModes || "Cash on Deliver"}\n\n━━━━━━━━━━━━━━━━━━\n ✅ ACTION REQUIRED\n\nConfirm the order and begin preparation:\n\n${confirmLink}\n\nPlease verify product availability before confirming.\n\n 🌐 Order received through beachmarts.com\n 📞 Support: +971561999705`;
+      
+      const whatsappUrl = `https://api.whatsapp.com/send?phone=971561999705&text=${encodeURIComponent(waMessage)}`;
+
       markCompleted();
+      clearCart();
+      
+      // Use window.location.assign to redirect securely
+      window.location.assign(whatsappUrl);
+      
+      // Navigate to success internally if they ever click back
       navigate("/purchase-success", {
         replace: true,
         state: {
-          orderId: "DUMMY-ORDER-" + Math.floor(Math.random() * 1000000),
+          orderId: orderId,
         },
       });
 

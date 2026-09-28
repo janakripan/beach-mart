@@ -18,6 +18,22 @@ export default function Hero() {
     const data = Array.isArray(bannerData) ? bannerData[0] : bannerData;
     const items = [];
     
+    // Handle the new flat format
+    if (data && data.ImageUrl1 !== undefined) {
+      for (let i = 1; i <= 6; i++) {
+        const url = data[`ImageUrl${i}`];
+        if (url) {
+          items.push({
+            id: i,
+            pc: url,
+            mobile: url
+          });
+        }
+      }
+      return items;
+    }
+    
+    // Handle legacy nested format
     for (let i = 1; i <= 6; i++) {
       const pc = data?.desktop?.[0]?.[`imgurl_${i}`];
       const mobile = data?.mobile?.[0]?.[`imgurl_${i}`];

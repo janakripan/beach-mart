@@ -32,16 +32,13 @@ const BannerManagement = lazy(() => import("./pages/admin/Banner"));
 const DeliveryLocation = lazy(() => import("./pages/admin/DeliveryLocation"));
 const DeliveryMode = lazy(() => import("./pages/admin/DeliveryMode"));
 const PaymentMode = lazy(() => import("./pages/admin/PaymentMode"));
+const ConfirmOrder = lazy(() => import("./pages/admin/ConfirmOrder/ConfirmOrder"));
 
 const AppRoutes = () => {
   return (
     <Router>
       <ScrollToTop />
-      <Suspense fallback={
-        <div className="flex items-center justify-center min-h-screen bg-white">
-          <DotWaveLoader />
-        </div>
-      }>
+      <Suspense fallback={<div className="min-h-screen bg-white"></div>}>
         <Routes>
           <Route path="/adminlogin" element={<AdminLoginPage />} />
           
@@ -53,6 +50,9 @@ const AppRoutes = () => {
             <Route path="/wishlist" element={<Wishlist />} />
             <Route path="/purchase-success" element={<PurchaseSuccess />} />
           </Route>
+          
+          {/* Standalone Admin/Staff screens */}
+          <Route path="/beachmart/confirm-order" element={<ConfirmOrder />} />
 
           {/* Checkout routes */}
           <Route element={<UserLayout />}>

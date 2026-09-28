@@ -6,6 +6,9 @@ import PageHeader from "../../components/admin/shared/shared/PageHeader";
 import OrderCard from "../../components/admin/shared/orders/OrderCard";
 import ConfirmModal from "../../components/admin/shared/shared/ConfirmModal";
 import { useGetOrders } from "../../api/admin/hooks";
+import { toast } from "sonner";
+import { queryClient } from "../../utils/queryClient";
+import { updateOrderStatus } from "../../api/admin/service";
 
 const Orders = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -54,9 +57,15 @@ const Orders = () => {
     }));
   };
 
-  const handleOrderStatus = (orderId, newStatus) => {
-    // API integration needed for status update
-    console.log("Update status", orderId, newStatus);
+  const handleOrderStatus = async (orderId, newStatus) => {
+    try {
+      await updateOrderStatus(orderId, newStatus);
+      toast.success(`Order #${orderId} status updated to ${newStatus}`);
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
+    } catch (error) {
+      console.error("Failed to update order status:", error);
+      toast.error("Failed to update order status");
+    }
   };
 
   const handleEditOrder = (order) => {
@@ -169,7 +178,7 @@ const Orders = () => {
               ...order,
               orderNo: order.orderID || order.orderNo,
               address: order.customerAddress || order.address,
-              status: order.orderStatus || order.status || "pending",
+              status: (order.orderStatus || order.OrderStatus || order.status || "pending").toLowerCase(),
               totalAmount: order.totalAmount || order.TotalAmount || 0,
               orderDate: order.orderDate || order.createdDate || order.date,
               paymentMethod: order.paymentMode || order.paymentMethod,

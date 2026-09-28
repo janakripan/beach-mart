@@ -1,7 +1,9 @@
 import { Info } from "lucide-react";
 import React from "react";
 
-const DeviceInfo = ({ title, device, recommendedWidth, recommendedHeight }) => {
+const DeviceInfo = ({ title, device, recommendedWidth, recommendedHeight, minWidth, minHeight, maxWidthLimit, maxHeightLimit }) => {
+  const uploadMinWidth = Math.round((minWidth + maxWidthLimit) / 2);
+  const uploadMinHeight = Math.round((minHeight + maxHeightLimit) / 2);
   return (
     <div className="bg-[#F8FCF8] border-l-4 border-[#34C759] px-4 py-3 mb-2 flex items-start">
       <Info className="text-[#34C759] w-5 h-5 mr-2 flex-shrink-0 mt-0.5" />
@@ -14,7 +16,9 @@ const DeviceInfo = ({ title, device, recommendedWidth, recommendedHeight }) => {
           They will not appear on other device types.
         </p>
         <p className="text-xs text-gray-500 mt-1">
-          Recommended size: {recommendedWidth} × {recommendedHeight}px
+          <strong>Recommended:</strong> {recommendedWidth} × {recommendedHeight}px<br />
+          <strong>Upload Minimum:</strong> {uploadMinWidth} × {uploadMinHeight}px (midpoint between allowed limits)<br />
+          <strong>Maximum Limit:</strong> {maxWidthLimit} × {maxHeightLimit}px (Exceeding this may cause performance lag)
         </p>
       </div>
     </div>

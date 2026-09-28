@@ -225,7 +225,7 @@ const OrderDetails = () => {
 
               <div className="flex justify-between text-sm text-gray-600 mb-2">
                 <span>Order Status</span>
-                <span>{order.orderStatus}</span>
+                <span className="capitalize">{order.orderStatus || order.OrderStatus || "Pending"}</span>
               </div>
 
               <div className="flex justify-between text-sm font-semibold text-gray-900">
