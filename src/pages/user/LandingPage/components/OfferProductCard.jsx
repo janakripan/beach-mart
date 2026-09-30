@@ -48,12 +48,20 @@ export default function OfferProductCard({ product, isLoading: propIsLoading }) 
       `}
     >
       {/* Product Image Box */}
-      <div className="w-full aspect-square rounded-[16px] md:rounded-[20px] lg:rounded-[48px] bg-gray-50 flex items-center justify-center overflow-hidden isolate">
-        <img
-          src={product.image}
-          alt={product.name}
-          className="w-full h-full object-contain"
-        />
+      <div className="w-full aspect-square rounded-[16px] md:rounded-[20px] lg:rounded-[48px] bg-gray-50 flex items-center justify-center overflow-hidden isolate p-1">
+        {product.image ? (
+          <img
+            src={product.image}
+            alt={product.name}
+            className="w-full h-full object-contain mix-blend-multiply"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-center p-2">
+            <span className="text-gray-400 font-medium text-[10px] md:text-xs line-clamp-4 leading-snug">
+              {product.name}
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Product Details & Cart */}

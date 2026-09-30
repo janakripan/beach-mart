@@ -91,15 +91,15 @@ const ProductList = () => {
       name: product.ProductName,
       description: stripHtml(product.Description),
       categoryName: product.Categorie,
-      price: product.Price,
+      price: product.Price !== undefined ? product.Price : (product.price !== undefined ? product.price : ""),
       discountPrice: product.Discount,
       discountType: product.DiscMode === "Fixed" ? "fixed" : "percentage",
       images: [
-        product.ImageUrl1 || null,
-        product.ImageUrl2 || null,
-        product.ImageUrl3 || null,
-        product.ImageUrl4 || null,
-        product.ImageUrl5 || null,
+        product.ImageUrl1 || product.imageUrl1 || null,
+        product.ImageUrl2 || product.imageUrl2 || null,
+        product.ImageUrl3 || product.imageUrl3 || null,
+        product.ImageUrl4 || product.imageUrl4 || null,
+        product.ImageUrl5 || product.imageUrl5 || null,
       ],
       variants: product.ProductVariants || [],
       enableVariant: product.ProductVariants && product.ProductVariants.length > 0
@@ -210,8 +210,8 @@ const ProductList = () => {
       header: "Image",
       render: (product) => (
         <div className="h-12 w-12 rounded-md overflow-hidden bg-gray-100 flex items-center justify-center">
-          {product.ImageUrl1 ? (
-            <img src={product.ImageUrl1} alt={product.ProductName} className="h-full w-full object-cover" />
+          {(product.ImageUrl1 || product.imageUrl1) ? (
+            <img src={product.ImageUrl1 || product.imageUrl1} alt={product.ProductName} className="h-full w-full object-cover" />
           ) : (
             <span className="text-gray-400 text-xs">No img</span>
           )}

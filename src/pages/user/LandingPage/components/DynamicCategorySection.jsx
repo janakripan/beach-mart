@@ -1,26 +1,29 @@
 import React, { useMemo } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay } from 'swiper/modules';
+import 'swiper/css';
 import ProductCard from './ProductCard';
-import { useAppLoading } from '../../../../context/AppLoadingContext';
 import ProductCardShimmer from '../../Shop/components/ProductCardShimmer';
-import { useAppStore } from '../../../../store/appStore';
+import { useGetProducts } from '../../../../api/shared/hooks';
 
-export default function VegetablesSection() {
-  const { isLoading: appLoading } = useAppLoading();
-  const rawProductsRaw = useAppStore(state => state.products);
-  const rawProducts = rawProductsRaw || [];
-  const rawCategories = useAppStore(state => state.categories) || [];
+export default function DynamicCategorySection({ category }) {
   const navigate = useNavigate();
-
   const targetCategoryIds = useMemo(() => {
-    return rawCategories
-      .filter(c => c.CategoryName?.toLowerCase().includes('fruit') || c.CategoryName?.toLowerCase().includes('vegetable'))
-      .map(c => c.CategoryID);
-  }, [rawCategories]);
+    return [category.CategoryID || category.categoryId];
+  }, [category]);
+
+  const { data, isLoading } = useGetProducts({
+    categoryIDs: targetCategoryIds,
+    page: 1,
+    pageSize: 10
+  });
+
+  const rawProducts = data?.products || [];
 
   const products = rawProducts
-    .filter(p => p.IsActive && targetCategoryIds.includes(p.Categorie))
+    .filter(p => p.IsActive)
     .map(product => {
       let priceVal = product.Price;
       if (product.ProductVariants?.length > 0) {
@@ -34,9 +37,10 @@ export default function VegetablesSection() {
         categoryId: product.Categorie,
         brandId: null,
       };
-    }).slice(0, 15); // Show at least 15 products to ensure 3 rows on large screens
+    });
 
-  const isLoading = appLoading || rawProductsRaw === null;
+  const desktopProducts = products.slice(0, 10);
+  const mobileProducts = products.slice(0, 6);
 
   const handleViewAll = () => {
     if (targetCategoryIds.length > 0) {
@@ -56,7 +60,7 @@ export default function VegetablesSection() {
             <h2 
               className="font-marcellus font-normal text-[22px] sm:text-[24px] md:text-[32px] leading-[120%] m-0 whitespace-nowrap text-text-main uppercase"
             >
-              Vegetables and Fruits
+              {category.CategoryName || category.categoryName}
             </h2>
           </div>
           
@@ -79,14 +83,43 @@ export default function VegetablesSection() {
           </button>
         </div>
 
-        {/* Products Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-[4px] xs:gap-[8px] md:gap-[16px]">
+        {/* Products Grid (Mobile Only) */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-[4px] xs:gap-[8px] md:hidden">
           {isLoading 
-            ? Array.from({ length: 15 }).map((_, i) => <ProductCardShimmer key={i} />)
-            : products.length > 0 ? products.map((product) => (
+            ? Array.from({ length: 6 }).map((_, i) => <ProductCardShimmer key={i} />)
+            : mobileProducts.length > 0 ? mobileProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
-              )) : <p>No products found</p>
+              )) : <p className="col-span-2 text-center text-gray-500 py-4">No products found</p>
           }
+        </div>
+
+        {/* Products Carousel (Tablet/Desktop Only) */}
+        <div className="hidden md:block w-full">
+          {isLoading ? (
+            <div className="grid grid-cols-4 xl:grid-cols-5 gap-[16px]">
+              {Array.from({ length: 5 }).map((_, i) => <ProductCardShimmer key={i} />)}
+            </div>
+          ) : desktopProducts.length > 0 ? (
+            <Swiper
+              modules={[Autoplay]}
+              spaceBetween={16}
+              slidesPerView={4}
+              breakpoints={{
+                1280: { slidesPerView: 5 }, // xl screens
+              }}
+              loop={desktopProducts.length > 5} // Only loop if enough products
+              autoplay={{ delay: 3000, disableOnInteraction: false }}
+              className="w-full !pb-4"
+            >
+              {desktopProducts.map((product) => (
+                <SwiperSlide key={product.id}>
+                  <ProductCard product={product} />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          ) : (
+            <p className="text-center text-gray-500 py-4">No products found</p>
+          )}
         </div>
 
       </div>

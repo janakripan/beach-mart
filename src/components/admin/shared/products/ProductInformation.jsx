@@ -143,7 +143,7 @@ const ProductInformation = ({
         
         {/* Base Price */}
         <div>
-          <label className="block text-sm font-medium text-[#1A1A2E] mb-2">Base Price (AED)</label>
+          <label className="block text-sm font-medium text-[#1A1A2E] mb-2">Price (AED)</label>
           <input
             type="number"
             name="price"

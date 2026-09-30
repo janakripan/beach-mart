@@ -53,18 +53,28 @@ export const useAdminLogin = () =>
 
 //////////////////////   BANNER SECTION ⚠️⚠️⚠️⚠️⚠️⚠️   ////////////////////////////
 // ADD BANNER
-export const useAddBanner = () =>
-  useMutation({
+export const useAddBanner = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
     mutationKey: ["addBanner"],
     mutationFn: addBanner,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["getBanners"] });
+    },
   });
+};
 
 // EDIT BANNER
-export const useEditBanner = () =>
-  useMutation({
+export const useEditBanner = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
     mutationKey: ["editBanner"],
     mutationFn: editBanner,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["getBanners"] });
+    },
   });
+};
 
 //////////////////////   PRODUCT SECTION ⚠️⚠️⚠️⚠️⚠️⚠️   ////////////////////////////
 

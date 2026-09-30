@@ -64,15 +64,18 @@ export const deleteImage = async ({url, category = "products"}) => {
   const payload = {
     fileNames: [filename],
   };
-  const response = await axios.delete(IMAGE_DELETE_ENDPOINT, {
-    headers: {
-      Token: import.meta.env.VITE_UPLOAD_TOKEN,
-      clientID: import.meta.env.VITE_CLIENT_ID,
-      imageClassification: category,
-      "Content-Type": "application/json",
-    },
-    data: payload,
-  });
+  const response = await axios.delete(
+    IMAGE_DELETE_ENDPOINT,
+    {
+      data: payload,
+      headers: {
+        Token: import.meta.env.VITE_UPLOAD_TOKEN,
+        clientID: import.meta.env.VITE_CLIENT_ID,
+        imageClassification: category,
+        "Content-Type": "application/json",
+      },
+    }
+  );
 
   return response.data;
 };

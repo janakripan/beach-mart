@@ -44,12 +44,20 @@ export default function ProductCard({ product }) {
       </div>
 
       {/* Product Image */}
-      <div className="w-full aspect-square flex items-center justify-center overflow-hidden p-[5px]">
-        <img
-          src={product.image}
-          alt={product.name}
-          className="w-full h-full object-contain mix-blend-multiply rounded-t-[11px]" 
-        />
+      <div className="w-full aspect-square flex items-center justify-center overflow-hidden p-[5px] bg-gray-50 rounded-t-[11px]">
+        {product.image ? (
+          <img
+            src={product.image}
+            alt={product.name}
+            className="w-full h-full object-contain mix-blend-multiply rounded-t-[11px]" 
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-center p-2">
+            <span className="text-gray-400 font-medium text-xs sm:text-sm line-clamp-4 leading-snug">
+              {product.name}
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Product Details & Cart */}

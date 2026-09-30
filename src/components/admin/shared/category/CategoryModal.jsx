@@ -69,15 +69,15 @@ const CategoryModal = ({
 
       <div>
         <label className="block text-sm font-medium text-[#1A1A2E] mb-2">
-          Description
+          Secondary Name
         </label>
-        <textarea
-          name="description"
-          value={formData.description}
+        <input
+          type="text"
+          name="secondaryName"
+          value={formData.secondaryName}
           onChange={handleInputChange}
           className="w-full border border-[#E3F0E2] bg-[#F8FCF8] rounded-[12px] p-3 text-sm text-[#1A1A2E] focus:outline-none focus:border-primary transition-colors"
-          placeholder="Enter category description"
-          rows="3"
+          placeholder="Enter category secondary name"
         />
       </div>
 

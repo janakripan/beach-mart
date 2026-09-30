@@ -11,9 +11,10 @@ export const GET_VARIANT = "7366/ecom/getProductVariants";
 export const POST_VARIANT = "7366/ecom/postVariantMaster";
 
 // banner
-export const POST_BANNER = "7366/ecom/postBannerImages";
-export const PUT_BANNER = "7366/ecom/putBannerImage";
-export const GET_BANNER = "7366/ecom/getBannerImage";
+export const POST_BANNER = "7366/ecom/postEcommerceBanner";
+export const PUT_BANNER = "7366/ecom/putEcommerceBanner";
+export const GET_BANNER = "7366/ecom/getEcommerceBanner";
+export const DELETE_BANNER = "7366/ecom/deleteEcommerceBanner";
 
 // product
 export const GET_PRODUCTS = "7366/ecom/getProductMaster";

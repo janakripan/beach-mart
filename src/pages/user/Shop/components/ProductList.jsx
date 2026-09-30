@@ -1,30 +1,21 @@
 
-import React, { useState } from "react";
+import React, { useEffect, useRef } from "react";
 import ProductCard from "../../LandingPage/components/ProductCard";
 import NoProduct from "../../../../assets/NoProducts.gif";
 import ProductCardShimmer from './ProductCardShimmer';
-import { useAppStore } from '../../../../store/appStore';
-import { useAppLoading } from '../../../../context/AppLoadingContext';
+import { useGetInfiniteProducts } from '../../../../api/shared/hooks';
 
 const ProductList = ({ filters }) => {
-  const { isLoading: appLoading } = useAppLoading();
-  const rawProducts = useAppStore(state => state.products) || [];
-  
-  // Client-side filtering
-  const filteredProducts = rawProducts.filter(p => {
-    if (!p.IsActive) return false;
-    if (filters?.categoryIDs?.length > 0) {
-      const catIds = filters.categoryIDs.map(id => Number(id));
-      if (!catIds.includes(p.Categorie)) return false;
-    }
-    if (filters?.search && !p.ProductName?.toLowerCase().includes(filters.search.toLowerCase())) {
-      return false;
-    }
-    return true;
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = useGetInfiniteProducts({
+    categoryIDs: filters?.categoryIDs?.map(Number) || [],
+    productName: filters?.search || "",
+    pageSize: 24,
   });
 
-  const isLoading = appLoading || rawProducts.length === 0;
-  const isFetching = false;
+  const rawProducts = data?.pages?.flatMap(page => page.products) || [];
+  
+  // Backend already filters by category and search
+  const filteredProducts = rawProducts.filter(p => p.IsActive);
 
   // Map backend products to the format expected by ProductCard
   const products = filteredProducts.map(product => {
@@ -35,20 +26,37 @@ const ProductList = ({ filters }) => {
     return {
       id: product.ProductID,
       name: product.ProductName,
-      image: product.ImageUrl1 || "https://placehold.co/400",
+      image: product.ImageUrl1 || product.imageUrl1 || "",
       price: priceVal,
       categoryId: product.Categorie,
       brandId: null,
-      // Pass the original object just in case
       original: product
     };
   });
 
+  const loaderRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    }, { threshold: 0.1, rootMargin: '400px' });
+
+    if (loaderRef.current) {
+      observer.observe(loaderRef.current);
+    }
+
+    return () => {
+      if (loaderRef.current) observer.unobserve(loaderRef.current);
+    };
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
   return (
     <div>
       {isLoading ? (
-        <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 p-4">
-          {Array.from({ length: 8 }).map((_, index) => (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4">
+          {Array.from({ length: 24 }).map((_, index) => (
             <ProductCardShimmer key={index} />
           ))}
         </div>
@@ -59,15 +67,19 @@ const ProductList = ({ filters }) => {
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 p-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4">
             {products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
-          {/* Simple pagination UI or load indicator if needed */}
-          {isFetching && !isLoading && (
-             <div className="h-12 flex justify-center items-center">
-               <DotWaveLoader />
+          {/* Invisible loader element at the bottom */}
+          <div ref={loaderRef} className="h-4 w-full" />
+          
+          {isFetchingNextPage && (
+             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4">
+               {Array.from({ length: 4 }).map((_, index) => (
+                 <ProductCardShimmer key={index} />
+               ))}
              </div>
           )}
         </>

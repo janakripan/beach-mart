@@ -27,7 +27,7 @@ const Categories = () => {
   });
   const [formData, setFormData] = useState({
     name: "",
-    description: "",
+    secondaryName: "",
     imageUrl: "",
     IsActive: true,
     isMain: false,
@@ -51,10 +51,10 @@ const Categories = () => {
       const mapped = fetchedCategories.map((c) => ({
         Id: c.CategoryID || c.CategorieID,
         Name: c.CategoryName || c.CategorieName,
-        CategoryDescription: c.Description || "",
-        ImageUrl: c.ImageUrl,
-        IsActive: c.IsActive !== undefined ? c.IsActive : true,
-        isMain: false,
+        SecondaryName: c.secondaryName || c.SecondaryName || "",
+        ImageUrl: c.ImageUrl || c.imageUrl,
+        IsActive: c.IsActive !== undefined ? c.IsActive : (c.isActive !== undefined ? c.isActive : true),
+        isMain: c.isHome !== undefined ? c.isHome : (c.IsHome !== undefined ? c.IsHome : false),
         ParentCategoryId: null,
       }));
       setCategories(mapped);
@@ -85,7 +85,7 @@ const Categories = () => {
   const handleAddCategory = () => {
     setIsEditing(false);
     setCurrentCategory(null);
-    setFormData({ name: "", description: "", imageUrl: "", IsActive: true, isMain: false });
+    setFormData({ name: "", secondaryName: "", imageUrl: "", IsActive: true, isMain: false });
     setIsModalOpen(true);
   };
 
@@ -95,7 +95,7 @@ const Categories = () => {
     setCurrentCategory(category);
     setFormData({
       name: category.Name,
-      description: category.CategoryDescription,
+      secondaryName: category.SecondaryName,
       imageUrl: category.ImageUrl,
       parentId: category.ParentCategoryId,
       IsActive: category.IsActive,
@@ -115,13 +115,11 @@ const Categories = () => {
     setIsLoading(true);
 
     const payload = {
-      Name: formData.name,
-      SecondaryName: "",
-      CategoryDescription: formData.description || "",
-      ImageUrl: formData.imageUrl || "",
-      IsActive: formData.IsActive,
-      IsMain: formData.isMain || false,
-      ParentCategoryId: formData.parentId || 0
+      name: formData.name,
+      imageUrl: formData.imageUrl || "",
+      secondaryName: formData.secondaryName || "",
+      sortOrder: 0,
+      isHome: formData.isMain || false
     };
 
     if (isEditing && currentCategory) {

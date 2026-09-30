@@ -315,8 +315,10 @@ const AddressForm = () => {
         formattedPhoneStr = "+971" + formattedPhoneStr;
       }
       
+      const mapLink = `https://www.google.com/maps?q=${markerPos.lat},${markerPos.lng}`;
       const confirmLink = `${window.location.origin}/beachmart/confirm-order?orderId=${orderId}&name=${encodeURIComponent(values.userName)}&number=${encodeURIComponent(formattedPhoneStr)}`;
-      waMessage += `━━━━━━━━━━━━━━━━━━\n 💰 TOTAL: AED ${parseFloat(cartTotal).toFixed(2)}\n━━━━━━━━━━━━━━━━━━\n\n 👤 CUSTOMER DETAILS\n\nName: ${values.userName}\nContact: ${formattedPhoneStr}\nAddress: ${values.address}\nArea: ${values.district}\n\n 🚚 Delivery: ${values.addressLabel || "CARD"}\n 💵 Payment: ${values.deliveryModes || "Cash on Deliver"}\n\n━━━━━━━━━━━━━━━━━━\n ✅ ACTION REQUIRED\n\nConfirm the order and begin preparation:\n\n${confirmLink}\n\nPlease verify product availability before confirming.\n\n 🌐 Order received through beachmarts.com\n 📞 Support: +971561999705`;
+      
+      waMessage += `━━━━━━━━━━━━━━━━━━\n 💰 TOTAL: AED ${parseFloat(cartTotal).toFixed(2)}\n━━━━━━━━━━━━━━━━━━\n\nCustomer Information:\n      👤 Name: ${values.userName}\n      📞 Contact: ${formattedPhoneStr}\n      🏠 Address: ${values.address}\n\n      📌 Place: ${values.locationPlace || values.district}\n      📍 Map: ${mapLink}\n\n 🚚 Delivery: ${values.addressLabel || "CARD"}\n 💵 Payment: ${values.paymentMode || "Cash on Deliver"}\n\n━━━━━━━━━━━━━━━━━━\n ✅ ACTION REQUIRED\n\nConfirm the order and begin preparation:\n\n${confirmLink}\n\nPlease verify product availability before confirming.\n\n 🌐 Order received through beachmarts.com\n 📞 Support: +971561999705`;
       
       const whatsappUrl = `https://api.whatsapp.com/send?phone=971561999705&text=${encodeURIComponent(waMessage)}`;
 

@@ -117,6 +117,16 @@ export const BANNER_INITIAL_VALUE = {
       imgurl_6: "",
     },
   ],
+  tab: [
+    {
+      imgurl_1: "",
+      imgurl_2: "",
+      imgurl_3: "",
+      imgurl_4: "",
+      imgurl_5: "",
+      imgurl_6: "",
+    },
+  ],
   settings: "",
 };
 export const BANNER_DEV_CONFIG = {
@@ -141,12 +151,26 @@ export const BANNER_DEV_CONFIG = {
     maxWidth: "max-w-md",
     recommendedWidth: 800,
     recommendedHeight: 600,
-    minWidth: 600,
-    minHeight: 450,
+    minWidth: 320,
+    minHeight: 150,
     maxWidthLimit: 1200,
     maxHeightLimit: 900,
     previewWidth: "375px",
     displayName: "Mobile",
+  },
+  tab: {
+    title: "Tablet Banners",
+    description: "Display ONLY on tablet devices. For optimal tablet viewing, maintain a 3:2 or 16:9 aspect ratio.",
+    aspectRatio: "aspect-[16/9]",
+    maxWidth: "max-w-2xl",
+    recommendedWidth: 1024,
+    recommendedHeight: 576,
+    minWidth: 768,
+    minHeight: 432,
+    maxWidthLimit: 1440,
+    maxHeightLimit: 810,
+    previewWidth: "768px",
+    displayName: "Tablet",
   }
 };
 

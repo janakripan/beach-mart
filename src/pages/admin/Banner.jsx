@@ -4,8 +4,10 @@ import DeviceInfo from "../../components/admin/shared/banner/DeviceInfo";
 import { DevicePreview } from "../../components/admin/shared/banner/DevicePreview";
 import TabNavigation from '../../components/admin/shared/banner/TabNavigation'
 import { BANNER_DEV_CONFIG, BANNER_INITIAL_VALUE } from "../../components/admin/shared/constant";
-import { useAddBanner } from "../../api/admin/hooks";
+import { useAddBanner, useEditBanner } from "../../api/admin/hooks";
 import { useGetBanner } from "../../api/shared/hooks";
+import { getBanner } from "../../api/shared/service";
+import { useAppStore } from "../../store/appStore";
 import { Loader2 } from "lucide-react";
 
 const BannerManagement = () => {
@@ -16,9 +18,10 @@ const BannerManagement = () => {
   const [localBannerData, setLocalBannerData] = useState(JSON.parse(JSON.stringify(BANNER_INITIAL_VALUE)));
   const [updateTrigger, setUpdateTrigger] = useState(0); 
 
-  const { mutate: submitBanners, isLoading: isSubmitting } = useAddBanner();
+  const { mutate: addBanners, isLoading: isAdding } = useAddBanner();
+  const { mutate: editBanners, isLoading: isEditing } = useEditBanner();
   const { data: fetchedBanners, isLoading: isFetchingBanners } = useGetBanner();
-console.log(fetchedBanners);
+  const isSubmitting = isAdding || isEditing;
 
   useEffect(() => {
     if (fetchedBanners) {
@@ -137,19 +140,25 @@ console.log(fetchedBanners);
   const handleSaveBanners = () => {
     if (!currentBannerData) return;
 
-    // Extract desktop banner urls exactly into imageUrl1...6
-    const desktopBanners = currentBannerData.desktop[0];
     const payload = {
-      imageUrl1: desktopBanners.imgurl_1 || "",
-      imageUrl2: desktopBanners.imgurl_2 || "",
-      imageUrl3: desktopBanners.imgurl_3 || "",
-      imageUrl4: desktopBanners.imgurl_4 || "",
-      imageUrl5: desktopBanners.imgurl_5 || "",
-      imageUrl6: desktopBanners.imgurl_6 || ""
+      desktop: currentBannerData.desktop,
+      mobile: currentBannerData.mobile,
+      tab: currentBannerData.tab,
+      settings: currentBannerData.settings || ""
     };
 
-    submitBanners(payload, {
-      onSuccess: () => {
+    const submitAction = currentBannerData.isExisting ? editBanners : addBanners;
+
+    submitAction(payload, {
+      onSuccess: async () => {
+        // Also update the global app store so the landing page updates instantly
+        try {
+          const freshData = await getBanner();
+          useAppStore.getState().setBanner(freshData);
+        } catch (err) {
+          console.error("Failed to update app store with fresh banners:", err);
+        }
+
         setSaveMessage({
           type: "success",
           text: "Banners successfully published to live website!",

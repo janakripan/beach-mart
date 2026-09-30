@@ -12,13 +12,14 @@ export default function Categories() {
   const rawCategories = useAppStore((state) => state.categories);
   const navigate = useNavigate();
 
-  const categories = (rawCategories || []).map(c => ({
-    id: c.CategoryID,
-    title: c.CategoryName,
-    image: c.ImageUrl || "https://placehold.co/400"
-  }));
+  const categories = (rawCategories || [])
+    .map(c => ({
+      id: c.CategoryID || c.id || c.CategorieID,
+      title: c.CategoryName || c.name || c.CategorieName,
+      image: c.ImageUrl || c.imageUrl || ""
+    }));
 
-  const isLoading = appLoading || (!rawCategories || rawCategories.length === 0);
+  const isLoading = appLoading || rawCategories === null;
 
   return (
     <section className="relative w-full bg-white border-b border-border-light py-[40px] md:py-[60px] xl:py-[80px] overflow-hidden">
@@ -98,14 +99,6 @@ export default function Categories() {
               />
             ))
           )}
-        </div>
-
-        {/* View All Button */}
-        <div className="flex justify-end w-full max-w-[1120px] mx-auto mt-8">
-          <button className="flex items-center gap-1 text-primary hover:text-secondary font-arial font-bold text-[16px] transition-colors group">
-            View All 
-            <ArrowUpRight className="w-5 h-5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" strokeWidth={2.5} />
-          </button>
         </div>
 
       </div>

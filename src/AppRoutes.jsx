@@ -7,7 +7,7 @@ import DotWaveLoader from "./components/admin/DotWaveLoader";
 import ScrollToTop from "./components/admin/ScrollToTop";
 
 // Public pages for beach-mart (lazy-loaded to reduce initial bundle)
-const LandingPage = lazy(() => import("./pages/user/LandingPage/LandingPage"));
+import LandingPage from "./pages/user/LandingPage/LandingPage";
 const Shop        = lazy(() => import("./pages/user/Shop/Shop"));
 const Contact     = lazy(() => import("./pages/user/Contact/Contact"));
 

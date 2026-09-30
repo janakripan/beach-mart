@@ -7,7 +7,8 @@ import { useAppStore } from "../../../../store/appStore";
 
 export default function OfferSection() {
   const { isLoading: appLoading } = useAppLoading();
-  const rawProducts = useAppStore(state => state.products) || [];
+  const rawProductsRaw = useAppStore(state => state.products);
+  const rawProducts = rawProductsRaw || [];
   const rawCategories = useAppStore(state => state.categories) || [];
 
   const targetCategoryIds = useMemo(() => {
@@ -35,7 +36,7 @@ export default function OfferSection() {
     return {
       id: product.ProductID,
       name: product.ProductName,
-      image: product.ImageUrl1 || "https://placehold.co/400",
+      image: product.ImageUrl1 || product.imageUrl1 || "",
       price: Math.max(0, priceVal).toFixed(2),
       originalPrice: product.Discount > 0 ? originalPrice.toFixed(2) : null,
       categoryId: product.Categorie,
@@ -43,7 +44,7 @@ export default function OfferSection() {
     };
   }).slice(0, 15); // Show up to 15 products
 
-  const isLoading = appLoading || rawProducts.length === 0;
+  const isLoading = appLoading || rawProductsRaw === null;
 
   return (
     <section className="w-full flex justify-center bg-white py-6 lg:py-12">

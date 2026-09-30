@@ -1,24 +1,27 @@
 import { create } from 'zustand';
 
 export const useAppStore = create((set) => ({
-  categories: [],
+  categories: null, // null means loading
   setCategories: (categories) => set({ categories }),
   
-  products: [],
+  homeCategories: null,
+  setHomeCategories: (homeCategories) => set({ homeCategories }),
+  
+  products: null,
   setProducts: (products) => set({ products }),
   
-  variants: [],
+  variants: null,
   setVariants: (variants) => set({ variants }),
   
   banner: null,
   setBanner: (banner) => set({ banner }),
   
-  deliveryLocations: [],
+  deliveryLocations: null,
   setDeliveryLocations: (deliveryLocations) => set({ deliveryLocations }),
   
-  deliveryModes: [],
+  deliveryModes: null,
   setDeliveryModes: (deliveryModes) => set({ deliveryModes }),
   
-  paymentModes: [],
+  paymentModes: null,
   setPaymentModes: (paymentModes) => set({ paymentModes }),
 }));

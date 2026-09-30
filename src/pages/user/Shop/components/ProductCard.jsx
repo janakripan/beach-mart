@@ -108,8 +108,16 @@ const ProductCard = ({ variantID = -1, productID, img, name, price, discountPric
   return (
     <div className='p-2 cursor-pointer  border border-[#B3B3B3] flex flex-col gap-1  rounded-2xl font-montserrat h-full'>
       {/* Image Section - Fixed Height */}
-      <div className='h-40 md:h-60   w-full bg-gray-400 rounded-2xl overflow-hidden relative shrink-0'>
-        <img src={img} alt="product" className='h-full w-full object-cover' />
+      <div className='h-40 md:h-60   w-full bg-gray-100 rounded-2xl overflow-hidden relative shrink-0'>
+        {img ? (
+          <img src={img} alt={name || "product"} className='h-full w-full object-cover' />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-center p-4">
+            <span className="text-gray-500 font-medium text-sm line-clamp-3 leading-snug">
+              {name}
+            </span>
+          </div>
+        )}
         {hasDiscount && (<div className='absolute top-2 left-2 border border-[#D6AD67] text-[#D6AD67] rounded-md py-1 px-3 bg-white text-xs'>
           <span className='text-[clamp(0.8rem,1.5vw,1rem)]'>{discountPercent}% off</span>
         </div>)}

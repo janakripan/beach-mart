@@ -1,29 +1,55 @@
 import { useState, useRef, useEffect } from 'react';
-import { Search, ShoppingCart } from 'lucide-react';
-import { allProducts } from "../../../constants/data";
+import { Search, ShoppingCart, Loader2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import DirhamIcon from '../CustomIcons/DirhamIcon';
 import { useShop } from '../../../context/ShopContext';
+import { useGetProducts } from '../../../api/shared/hooks';
 
 export default function SearchBar() {
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState([]);
+  const [debouncedQuery, setDebouncedQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   const { addToCart } = useShop();
+  const navigate = useNavigate();
+
+  // Debounce the query to avoid spamming the backend on every keystroke
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedQuery(query);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [query]);
+
+  // Fetch from backend
+  const { data, isLoading } = useGetProducts(
+    { productName: debouncedQuery, pageSize: 10, page: 1 },
+    { enabled: debouncedQuery.trim() !== '' }
+  );
+
+  const rawProducts = data?.products || [];
+
+  // Filter out inactive products and format them
+  const results = rawProducts
+    .filter(p => p.IsActive)
+    .map(product => {
+      let priceVal = product.Price;
+      if (product.ProductVariants?.length > 0) {
+        priceVal = product.ProductVariants[0]?.price?.price ?? priceVal;
+      }
+      return {
+        id: product.ProductID,
+        name: product.ProductName,
+        image: product.ImageUrl1 || product.imageUrl1 || "",
+        price: priceVal,
+        categoryId: product.Categorie,
+        brandId: null,
+        original: product
+      };
+    });
 
   // Filter products based on query
-  useEffect(() => {
-    if (query.trim() === '') {
-      setResults([]);
-      return;
-    }
-    
-    const lowercaseQuery = query.toLowerCase();
-    const filtered = allProducts.filter((product) => 
-      product.name.toLowerCase().includes(lowercaseQuery)
-    );
-    setResults(filtered);
-  }, [query]);
+  // Remove old client-side filter logic
 
   // Handle outside click to close dropdown
   useEffect(() => {
@@ -51,9 +77,21 @@ export default function SearchBar() {
           }}
           onFocus={() => setIsOpen(true)}
           placeholder="Search for groceries..." 
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && query.trim()) {
+              navigate(`/shop?search=${encodeURIComponent(query.trim())}`);
+              setIsOpen(false);
+            }
+          }}
           className="flex-1 h-full pl-4 pr-2 bg-transparent outline-none text-[#1A1A2E] text-[16px] placeholder:text-[#757575] font-arial"
         />
         <button 
+          onClick={() => {
+            if (query.trim()) {
+              navigate(`/shop?search=${encodeURIComponent(query.trim())}`);
+              setIsOpen(false);
+            }
+          }}
           className="h-[44px] w-[68px] bg-[#406547] flex items-center justify-center hover:bg-[#2D4535] transition-colors rounded-r-[12px] shrink-0"
         >
           <Search className="w-4 h-4 text-[#57E77B]" strokeWidth={2.5} />
@@ -63,7 +101,11 @@ export default function SearchBar() {
       {/* Search Dropdown Results */}
       {isOpen && query.trim() !== '' && (
         <div className="absolute top-[52px] left-0 w-full bg-white rounded-[12px] shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-border-light max-h-[300px] overflow-y-auto z-100">
-          {results.length > 0 ? (
+          {isLoading && debouncedQuery !== '' ? (
+            <div className="p-4 flex items-center justify-center text-primary">
+              <Loader2 className="w-6 h-6 animate-spin" />
+            </div>
+          ) : results.length > 0 ? (
             <div className="flex flex-col p-2">
               {results.map((product) => (
                 <div 
